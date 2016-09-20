@@ -8,4 +8,13 @@
     tools:context="com.mottc.chat.SplashActivity">
     <!--TODO:更改开屏页背景图-->
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="200dp"
+        android:text="@string/app_name"
+        android:textColor="#FF5722"
+        android:textSize="50sp"/>
+
 </RelativeLayout>
