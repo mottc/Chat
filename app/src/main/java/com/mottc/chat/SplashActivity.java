@@ -18,7 +18,7 @@ public class SplashActivity extends Activity {
         setContentView(R.layout.activity_splash);
 
         rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-        AlphaAnimation animation = new AlphaAnimation(0.3f, 1.0f);
+        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
         animation.setDuration(sleepTime);
 
         rootLayout.startAnimation(animation);
