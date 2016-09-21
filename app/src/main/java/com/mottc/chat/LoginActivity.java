@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 loginPass.setError("");
 
-                Toast.makeText(LoginActivity.this,"Login success!",Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this,"Login success!",Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
                 registerPassRep.setError("");
 
-                Toast.makeText(LoginActivity.this,"Register success!",Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this,"Register success!",Toast.LENGTH_SHORT).show();
 
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
 
