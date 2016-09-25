@@ -33,20 +33,18 @@ public class SplashActivity extends Activity {
         new Thread(new Runnable() {
             public void run() {
 
+
                 try {
                     Thread.sleep(sleepTime);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
                 }
-
-
-                /*TODO:*/
-                //进入主页面
                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                 finish();
-
             }
+
         }).start();
     }
+
 
 }
