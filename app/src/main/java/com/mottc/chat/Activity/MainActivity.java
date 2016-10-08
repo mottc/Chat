@@ -1,5 +1,6 @@
-package com.mottc.chat;
+package com.mottc.chat.Activity;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +17,11 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
+
+import com.hyphenate.EMCallBack;
+import com.mottc.chat.MyApplication;
+import com.mottc.chat.R;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -89,6 +95,46 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            final ProgressDialog pd = new ProgressDialog(MainActivity.this);
+            String st = getResources().getString(R.string.Are_logged_out);
+            pd.setMessage(st);
+            pd.setCanceledOnTouchOutside(false);
+            pd.show();
+            MyApplication.getInstance().logout(false,new EMCallBack() {
+
+                @Override
+                public void onSuccess() {
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            pd.dismiss();
+                            // 重新显示登陆页面
+                            finish();
+                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onProgress(int progress, String status) {
+
+                }
+
+                @Override
+                public void onError(int code, String message) {
+                    runOnUiThread(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            // TODO Auto-generated method stub
+                            pd.dismiss();
+                            Toast.makeText(MainActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+
+
+                        }
+                    });
+                }
+            });
 
         }
 
