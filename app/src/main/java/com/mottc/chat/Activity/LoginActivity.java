@@ -37,19 +37,18 @@ public class LoginActivity extends AppCompatActivity {
     private boolean progressShow;
     private boolean autoLogin = false;
 
-    private String user;
-    private String pass;
-    private String ruser;
-    private String rpass;
-    private String rpassRep;
-
+    private String loginUserName;
+    private String loginPassword;
+    private String RegisterUserName;
+    private String RegisterPassword;
+    private String RegisterPasswordRep;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-         //如果登录成功过，直接进入主页面
+        //如果登录成功过，直接进入主页面
         if (EMClient.getInstance().isLoggedInBefore()) {
             autoLogin = true;
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
@@ -70,15 +69,15 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
                 //Handle login
-                user = loginUser.getEditText().getText().toString();
-                if (user.isEmpty()) {
+                loginUserName = loginUser.getEditText().getText().toString();
+                if (loginUserName.isEmpty()) {
                     loginUser.setError("User name can't be empty");
                     return;
                 }
                 loginUser.setError("");
 
-                pass = loginPass.getEditText().getText().toString();
-                if (pass.isEmpty()) {
+                loginPassword = loginPass.getEditText().getText().toString();
+                if (loginPassword.isEmpty()) {
                     loginPass.setError("Password can't be empty");
                     return;
                 }
@@ -99,11 +98,11 @@ public class LoginActivity extends AppCompatActivity {
                 pd.show();
                 // close it before login to make sure DemoDB not overlap
                 DBManager.getInstance().closeDB();
-                // reset current user name before login
-                MyApplication.getInstance().setCurrentUserName(user);
+                // reset current loginUserName name before login
+                MyApplication.getInstance().setCurrentUserName(loginUserName);
                 // 调用sdk登陆方法登陆聊天服务器
                 Log.d(TAG, "EMClient.getInstance().login");
-                EMClient.getInstance().login(user, pass, new EMCallBack() {
+                EMClient.getInstance().login(loginUserName, loginPassword, new EMCallBack() {
 
                     @Override
                     public void onSuccess() {
@@ -120,8 +119,7 @@ public class LoginActivity extends AppCompatActivity {
                         getFriends();
 
                         // 进入主页面
-                        Intent intent = new Intent(LoginActivity.this,
-                                MainActivity.class);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
 
                         finish();
@@ -164,28 +162,28 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onRegister(TextInputLayout registerUser, TextInputLayout registerPass, TextInputLayout registerPassRep) {
                 //Handle register
-                ruser = registerUser.getEditText().getText().toString();
-                if (ruser.isEmpty()) {
+                RegisterUserName = registerUser.getEditText().getText().toString();
+                if (RegisterUserName.isEmpty()) {
                     registerUser.setError("User name can't be empty");
                     return;
                 }
                 registerUser.setError("");
 
-                rpass = registerPass.getEditText().getText().toString();
-                if (rpass.isEmpty()) {
+                RegisterPassword = registerPass.getEditText().getText().toString();
+                if (RegisterPassword.isEmpty()) {
                     registerPass.setError("Password can't be empty");
                     return;
                 }
                 registerPass.setError("");
 
-                rpassRep = registerPassRep.getEditText().getText().toString();
-                if (!rpass.equals(rpassRep)) {
+                RegisterPasswordRep = registerPassRep.getEditText().getText().toString();
+                if (!RegisterPassword.equals(RegisterPasswordRep)) {
                     registerPassRep.setError("Passwords are different");
                     return;
                 }
                 registerPassRep.setError("");
 
-                if (!TextUtils.isEmpty(ruser) && !TextUtils.isEmpty(rpass)) {
+                if (!TextUtils.isEmpty(RegisterUserName) && !TextUtils.isEmpty(RegisterPassword)) {
                     final ProgressDialog pd = new ProgressDialog(LoginActivity.this);
                     pd.setMessage(getResources().getString(R.string.Is_the_registered));
                     pd.show();
@@ -194,13 +192,13 @@ public class LoginActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 // 调用sdk注册方法
-                                EMClient.getInstance().createAccount(ruser, rpass);
+                                EMClient.getInstance().createAccount(RegisterUserName, RegisterPassword);
                                 runOnUiThread(new Runnable() {
                                     public void run() {
                                         if (!LoginActivity.this.isFinishing())
                                             pd.dismiss();
                                         // 保存用户名
-                                        MyApplication.getInstance().setCurrentUserName(ruser);
+                                        MyApplication.getInstance().setCurrentUserName(RegisterUserName);
                                         Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registered_successfully), Toast.LENGTH_LONG).show();
                                         startActivity(new Intent(LoginActivity.this, LoginActivity.class));
                                     }
@@ -210,16 +208,16 @@ public class LoginActivity extends AppCompatActivity {
                                     public void run() {
                                         if (!LoginActivity.this.isFinishing())
                                             pd.dismiss();
-                                        int errorCode=e.getErrorCode();
-                                        if(errorCode== EMError.NETWORK_ERROR){
+                                        int errorCode = e.getErrorCode();
+                                        if (errorCode == EMError.NETWORK_ERROR) {
                                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.network_anomalies), Toast.LENGTH_SHORT).show();
-                                        }else if(errorCode == EMError.USER_ALREADY_EXIST){
+                                        } else if (errorCode == EMError.USER_ALREADY_EXIST) {
                                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.User_already_exists), Toast.LENGTH_SHORT).show();
-                                        }else if(errorCode == EMError.USER_AUTHENTICATION_FAILED){
+                                        } else if (errorCode == EMError.USER_AUTHENTICATION_FAILED) {
                                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.registration_failed_without_permission), Toast.LENGTH_SHORT).show();
-                                        }else if(errorCode == EMError.USER_ILLEGAL_ARGUMENT){
-                                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.illegal_user_name),Toast.LENGTH_SHORT).show();
-                                        }else{
+                                        } else if (errorCode == EMError.USER_ILLEGAL_ARGUMENT) {
+                                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.illegal_user_name), Toast.LENGTH_SHORT).show();
+                                        } else {
                                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.Registration_failed) + e.getMessage(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
@@ -227,7 +225,6 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     }).start();
-
 
 
                 }
@@ -242,19 +239,16 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private  void  getFriends(){
+    private void getFriends() {
         try {
             List<String> usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
-            Map<String ,EaseUser> users=new HashMap<String ,EaseUser>();
-            for(String username:usernames){
-                EaseUser user=new EaseUser(username);
+            Map<String, EaseUser> users = new HashMap<String, EaseUser>();
+            for (String username : usernames) {
+                EaseUser user = new EaseUser(username);
                 users.put(username, user);
-
-
             }
 
             MyApplication.getInstance().setContactList(users);
-
 
         } catch (HyphenateException e) {
             e.printStackTrace();

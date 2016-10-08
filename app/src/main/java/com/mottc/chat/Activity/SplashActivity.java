@@ -13,17 +13,17 @@ public class SplashActivity extends Activity {
 
     private RelativeLayout rootLayout;
 
-    private static final int sleepTime = 2000;
+    private static final int sleepTime = 500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
+//      淡入动画
         rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
         AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
         animation.setDuration(sleepTime);
-
         rootLayout.startAnimation(animation);
     }
 
@@ -55,7 +55,7 @@ public class SplashActivity extends Activity {
                     //进入主页面
                     startActivity(new Intent(SplashActivity.this, MainActivity.class));
                     finish();
-                }else {
+                } else {
                     try {
                         Thread.sleep(sleepTime);
                     } catch (InterruptedException e) {

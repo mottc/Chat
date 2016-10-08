@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +99,7 @@ public class MainActivity extends AppCompatActivity
             pd.setMessage(st);
             pd.setCanceledOnTouchOutside(false);
             pd.show();
-            MyApplication.getInstance().logout(false,new EMCallBack() {
-
+            MyApplication.getInstance().logout(false, new EMCallBack() {
                 @Override
                 public void onSuccess() {
                     runOnUiThread(new Runnable() {
@@ -110,14 +108,12 @@ public class MainActivity extends AppCompatActivity
                             // 重新显示登陆页面
                             finish();
                             startActivity(new Intent(MainActivity.this, LoginActivity.class));
-
                         }
                     });
                 }
 
                 @Override
                 public void onProgress(int progress, String status) {
-
                 }
 
                 @Override
@@ -129,8 +125,6 @@ public class MainActivity extends AppCompatActivity
                             // TODO Auto-generated method stub
                             pd.dismiss();
                             Toast.makeText(MainActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
-
-
                         }
                     });
                 }
