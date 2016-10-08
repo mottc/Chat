@@ -15,3 +15,8 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+
+
+# APP 打包混淆
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**

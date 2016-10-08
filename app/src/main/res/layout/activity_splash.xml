@@ -5,7 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@color/colorMain"
-    tools:context="com.mottc.chat.SplashActivity">
+    tools:context="com.mottc.chat.Activity.SplashActivity">
     <!--TODO:更改开屏页背景图-->
 
     <TextView
