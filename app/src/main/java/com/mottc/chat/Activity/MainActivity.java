@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
@@ -19,6 +21,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 
@@ -26,13 +29,30 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
+
+
+        ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
+        MyViewPagerAdapter viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new ItemFragment(), "消息");//添加Fragment
+        viewPagerAdapter.addFragment(new ItemFragment(), "通讯录");
+        viewpager.setAdapter(viewPagerAdapter);//设置适配器
+
+
+        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        mTabLayout.addTab(mTabLayout.newTab().setText("消息"));//给TabLayout添加Tab
+        mTabLayout.addTab(mTabLayout.newTab().setText("通讯录"));
+        mTabLayout.setupWithViewPager(viewpager);//给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -51,6 +71,11 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
+
+
+
+
+
 
 
     @Override

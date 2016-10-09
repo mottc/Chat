@@ -54,6 +54,7 @@ public class MyApplication extends Application{
         boolean success = initSDK(context, options);
         if (success) {
             // 设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
+//          TODO:
             EMClient.getInstance().setDebugMode(true);
             // 初始化数据库
             initDbDao(context);
