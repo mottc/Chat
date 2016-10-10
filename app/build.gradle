@@ -26,6 +26,7 @@ dependencies {
         transitive = true;
     }
 
+    compile 'com.lzp.floatingactionbutton:floatingactionbuttonplus:1.0.0'
     compile 'com.android.support:appcompat-v7:24.2.0'
     compile 'com.android.support:design:24.2.0'
     compile 'com.github.shem8:material-login:2.1.1'
