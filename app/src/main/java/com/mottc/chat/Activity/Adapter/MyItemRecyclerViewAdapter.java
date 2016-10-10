@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.Activity.Adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mottc.chat.Activity.Adapter.MyItemRecyclerViewAdapter;
 import com.mottc.chat.Activity.dummy.DummyContent;
 import com.mottc.chat.Activity.dummy.DummyContent.DummyItem;
 import com.mottc.chat.R;
