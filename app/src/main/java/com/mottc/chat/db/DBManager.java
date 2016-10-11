@@ -45,7 +45,8 @@ public class DBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (db.isOpen()) {
 //            TODO:找不到表
-            //db.delete(UserDao.TABLE_NAME, null, null);
+
+            db.delete(UserDao.TABLE_NAME, null, null);
             for (EaseUser user : contactList) {
                 ContentValues values = new ContentValues();
                 values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
@@ -226,7 +227,7 @@ public class DBManager {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<InviteMessage> msgs = new ArrayList<InviteMessage>();
         if(db.isOpen()){
-            Cursor cursor = db.rawQuery("select * from " + InviteMessageDao.TABLE_NAME + " desc",null);
+            Cursor cursor = db.rawQuery("select * from " + InviteMessageDao.TABLE_NAME ,null);
             while(cursor.moveToNext()){
                 InviteMessage msg = new InviteMessage();
                 int id = cursor.getInt(cursor.getColumnIndex(InviteMessageDao.COLUMN_NAME_ID));

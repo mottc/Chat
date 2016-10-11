@@ -62,6 +62,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         return  MyApplication.getInstance().getCurrentUserName() + "_demo.db";
     }
 
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(USERNAME_TABLE_CREATE);

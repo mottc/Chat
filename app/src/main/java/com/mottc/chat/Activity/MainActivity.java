@@ -16,16 +16,21 @@ import android.support.v7.widget.Toolbar;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.lzp.floatingactionbuttonplus.FabTagLayout;
+import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
 import com.mottc.chat.Activity.dummy.DummyContent;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,ItemFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, ItemFragment.OnListFragmentInteractionListener {
 
 
 
@@ -36,6 +41,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+//      Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -43,8 +49,8 @@ public class MainActivity extends AppCompatActivity
 
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
         MyViewPagerAdapter viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new ItemFragment(), "消息");//添加Fragment
-        viewPagerAdapter.addFragment(new ItemFragment(), "通讯录");
+        viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "消息");//添加Fragment
+        viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "通讯录");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
 
@@ -61,6 +67,20 @@ public class MainActivity extends AppCompatActivity
 //            }
 //        });
 
+
+        FloatingActionButtonPlus mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.FabPlus);
+        mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
+            @Override
+            public void onItemClick(FabTagLayout tagView, int position) {
+                if (position == 0) {
+                    startActivity(new Intent(MainActivity.this, NewFriendsMsgActivity.class));
+                } else if (position == 1) {
+                    startActivity(new Intent(MainActivity.this, AddContactActivity.class));
+                }
+
+            }
+        });
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -69,13 +89,17 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        View headerView = navigationView.getHeaderView(0);
+        TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
+        textView.setText(getCurrentUser());
+
     }
 
 
-
-
-
-
+    public String getCurrentUser() {
+        return EMClient.getInstance().getCurrentUser();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,15 +129,9 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
+        if (id == R.id.nav_share) {
+            finish();
+            startActivity(new Intent(MainActivity.this, ContactActivity.class));
 
         } else if (id == R.id.nav_send) {
             final ProgressDialog pd = new ProgressDialog(MainActivity.this);
