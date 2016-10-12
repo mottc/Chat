@@ -13,6 +13,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
@@ -28,18 +30,35 @@ import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
 import com.mottc.chat.Activity.dummy.DummyContent;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.db.EaseUser;
+import com.mottc.chat.db.InviteMessage;
+import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
+import com.mottc.chat.db.InviteMessageDao;
+import com.mottc.chat.db.UserDao;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ItemFragment.OnListFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ItemFragment.OnListFragmentInteractionListener,View.OnClickListener {
 
-
-
-
+    private InviteMessageDao inviteMessgeDao;
+    private UserDao userDao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        inviteMessgeDao = new InviteMessageDao(MainActivity.this);
+        userDao = new UserDao(MainActivity.this);
+        //注册联系人变动监听
+        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
+
+
 
 //      Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -231,5 +250,139 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(DummyContent.DummyItem item) {
 
+    }
+
+    @Override
+    public void onClick(View v) {
+
+    }
+    /***
+     * 好友变化listener
+     *
+     */
+    public class MyContactListener implements EMContactListener {
+
+        @Override
+        public void onContactAdded(final String username) {
+            // 保存增加的联系人
+            Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+            Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
+            EaseUser user = new EaseUser(username);
+            // 添加好友时可能会回调added方法两次
+            if (!localUsers.containsKey(username)) {
+                userDao.saveContact(user);
+            }
+            toAddUsers.put(username, user);
+            localUsers.putAll(toAddUsers);
+            runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "增加联系人：+"+username, Toast.LENGTH_SHORT).show();
+                }
+
+
+            });
+
+
+        }
+
+        @Override
+        public void onContactDeleted(final String username) {
+            // 被删除
+            Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+            localUsers.remove(username);
+            userDao.deleteContact(username);
+            inviteMessgeDao.deleteMessage(username);
+
+            runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "删除联系人：+"+username, Toast.LENGTH_SHORT).show();
+                }
+
+
+            });
+
+        }
+
+        @Override
+        public void onContactInvited(final String username, String reason) {
+            // 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不需要重复提醒
+            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
+
+            for (InviteMessage inviteMessage : msgs) {
+                if (inviteMessage.getGroupId() == null && inviteMessage.getFrom().equals(username)) {
+                    inviteMessgeDao.deleteMessage(username);
+                }
+            }
+            // 自己封装的javabean
+            InviteMessage msg = new InviteMessage();
+            msg.setFrom(username);
+            msg.setTime(System.currentTimeMillis());
+            msg.setReason(reason);
+
+            // 设置相应status
+            msg.setStatus(InviteMessage.InviteMessageStatus.BEINVITEED);
+            notifyNewIviteMessage(msg);
+            runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "收到好友申请：+"+username, Toast.LENGTH_SHORT).show();
+                }
+
+
+            });
+
+        }
+
+        @Override
+        public void onContactAgreed(final String username) {
+            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
+            for (InviteMessage inviteMessage : msgs) {
+                if (inviteMessage.getFrom().equals(username)) {
+                    return;
+                }
+            }
+            // 自己封装的javabean
+            InviteMessage msg = new InviteMessage();
+            msg.setFrom(username);
+            msg.setTime(System.currentTimeMillis());
+
+            msg.setStatus(InviteMessageStatus.BEAGREED);
+            notifyNewIviteMessage(msg);
+            runOnUiThread(new Runnable(){
+
+                @Override
+                public void run() {
+                    Toast.makeText(getApplicationContext(), "好友申请同意：+"+username, Toast.LENGTH_SHORT).show();
+                }
+
+
+            });
+
+        }
+
+        @Override
+        public void onContactRefused(String username) {
+            // 参考同意，被邀请实现此功能,demo未实现
+            Log.d(username, username + "拒绝了你的好友请求");
+        }
+    }
+    /**
+     * 保存并提示消息的邀请消息
+     * @param msg
+     */
+    private void notifyNewIviteMessage(InviteMessage msg){
+        if(inviteMessgeDao == null){
+            inviteMessgeDao = new InviteMessageDao(MainActivity.this);
+        }
+        inviteMessgeDao.saveMessage(msg);
+        //保存未读数，这里没有精确计算
+        inviteMessgeDao.saveUnreadMessageCount(1);
+        // 提示有新消息
+        //响铃或其他操作
     }
 }

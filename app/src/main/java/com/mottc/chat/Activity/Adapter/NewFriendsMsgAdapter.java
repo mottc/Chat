@@ -15,7 +15,8 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
 import com.mottc.chat.db.InviteMessage;
-import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
+import com.mottc.chat.db.InviteMessage.InviteMessageStatus
+        ;
 import com.mottc.chat.db.InviteMessageDao;
 
 import java.util.List;
@@ -23,18 +24,18 @@ import java.util.List;
 /**
  * Created with Android Studio
  * User: mottc
- * Date: 2016/10/10
- * Time: 9:50
+ * Date: 2016/10/12
+ * Time: 8:16
  */
 public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
 
     private Context context;
-    private InviteMessageDao messageDao;
+    private InviteMessageDao messgeDao;
 
     public NewFriendsMsgAdapter(Context context, int textViewResourceId, List<InviteMessage> objects) {
         super(context, textViewResourceId, objects);
         this.context = context;
-        messageDao = new InviteMessageDao(context);
+        messgeDao = new InviteMessageDao(context);
     }
 
     @Override
@@ -64,6 +65,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
             holder.btn_agree.setVisibility(View.INVISIBLE);
 
 
+
             holder.tv_reason.setText(msg.getReason());
             holder.tv_name.setText(msg.getFrom());
             if (msg.getStatus() == InviteMessage.InviteMessageStatus.BEAGREED) {
@@ -83,17 +85,17 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                     @Override
                     public void onClick(View v) {
                         // 同意别人发的好友请求
-                        acceptInvitation(holder.btn_agree, msg);
+                        acceptInvitation(holder.btn_agree,   msg);
                     }
                 });
 
-            } else if (msg.getStatus() == InviteMessage.InviteMessageStatus.AGREED) {
+            } else if (msg.getStatus() == InviteMessageStatus.AGREED) {
 
-            } else if (msg.getStatus() == InviteMessage.InviteMessageStatus.REFUSED) {
+            } else if(msg.getStatus() == InviteMessageStatus.REFUSED){
 
-            } else if (msg.getStatus() == InviteMessageStatus.GROUPINVITATION_ACCEPTED) {
+            } else if(msg.getStatus() == InviteMessageStatus.GROUPINVITATION_ACCEPTED){
 
-            } else if (msg.getStatus() == InviteMessageStatus.GROUPINVITATION_DECLINED) {
+            } else if(msg.getStatus() == InviteMessageStatus.GROUPINVITATION_DECLINED){
 
             }
 
@@ -105,8 +107,10 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
     /**
      * 同意好友请求或者群申请
      *
+     * @param button
+     * @param username
      */
-    private void acceptInvitation(final Button buttonAgree, final InviteMessage msg) {
+    private void acceptInvitation(final Button buttonAgree , final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
         String str1 = context.getResources().getString(R.string.Are_agree_with);
         final String str2 = context.getResources().getString(R.string.Has_agreed_to);
@@ -130,7 +134,7 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
                     // 更新db
                     ContentValues values = new ContentValues();
                     values.put(InviteMessageDao.COLUMN_NAME_STATUS, msg.getStatus().ordinal());
-                    messageDao.updateMessage(msg.getId(), values);
+                    messgeDao.updateMessage(msg.getId(), values);
                     ((Activity) context).runOnUiThread(new Runnable() {
 
                         @SuppressWarnings("deprecation")

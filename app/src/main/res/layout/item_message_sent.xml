@@ -3,8 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:orientation="vertical">
 
     <TextView
         android:visibility="gone"
@@ -16,7 +15,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_chat_activity" >
+        >
 
         <ImageView
             android:id="@+id/iv_userhead"
@@ -25,6 +24,7 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
+            android:layout_marginTop="5dp"
             android:background="@drawable/default_avatar"
             android:scaleType="fitXY" />
 
@@ -85,6 +85,16 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/tv_chatcontent"
             />
+        <TextView
+            android:id="@+id/tv_userid"
+            style="@style/chat_text_name_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/iv_userhead"
+            android:layout_toRightOf="@id/tv_chatcontent"
+            android:maxLines="1"
+            android:visibility="invisible"/>
     </RelativeLayout>
 
 </LinearLayout>

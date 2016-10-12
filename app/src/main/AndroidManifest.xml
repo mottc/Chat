@@ -43,7 +43,8 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activity.LoginActivity"
-            android:theme="@style/LoginTheme"></activity>
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustPan"></activity>
         <activity
             android:name=".Activity.AddContactActivity"
             android:theme="@style/LoginTheme"></activity>
@@ -55,7 +56,8 @@
             android:theme="@style/LoginTheme"></activity>
         <activity
             android:name=".Activity.ChatActivity"
-            android:theme="@style/LoginTheme"></activity>
+            android:theme="@style/LoginTheme"
+            android:windowSoftInputMode="stateAlwaysHidden"></activity>
 
         <!-- 设置环信应用的AppKey -->
         <meta-data

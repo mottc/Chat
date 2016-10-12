@@ -1,11 +1,14 @@
 package com.mottc.chat.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,38 +24,55 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.DisplayUtils;
 import com.mottc.chat.utils.EaseCommonUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ChatActivity extends AppCompatActivity {
+/**
+ * Created with Android Studio
+ * User: mottc
+ * Date: 2016/10/12
+ * Time: 12:14
+ */
+public class ChatActivity extends Activity {
+
     private ListView listView;
     private int chatType = 1;
     private String toChatUsername;
     private Button btn_send;
     private EditText et_content;
     private List<EMMessage> msgList;
-    ChatActivity.MessageAdapter adapter;
+    MessageAdapter adapter;
     private EMConversation conversation;
     protected int pagesize = 20;
 
+    List<View> excludeViews = new ArrayList<View>();
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+
+    protected void onCreate(Bundle arg0) {
+        super.onCreate(arg0);
         setContentView(R.layout.activity_chat);
 
 
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
+
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);
         et_content = (EditText) this.findViewById(R.id.et_content);
         getAllMessage();
         msgList = conversation.getAllMessages();
-        adapter = new MessageAdapter(msgList, ChatActivity.this);
+        adapter = new MessageAdapter(msgList,toChatUsername,ChatActivity.this);
         listView.setAdapter(adapter);
         listView.setSelection(listView.getCount() - 1);
+
+        excludeViews.add(btn_send);
+
+
         btn_send.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -66,13 +86,32 @@ public class ChatActivity extends AppCompatActivity {
             }
 
         });
+
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
+
     }
 
-    public void back(View v) {
-        finish();
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+            startActivity(new Intent(ChatActivity.this, ContactActivity.class));
+            return false;
+
+        } else {
+            return super.onKeyDown(keyCode, event);
+        }
+
     }
+
+
+    /*点击非键盘区，键盘落下*/
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        DisplayUtils.hideInputWhenTouchOtherView(this, ev, excludeViews);
+        return super.dispatchTouchEvent(ev);
+    }
+
 
     protected void getAllMessage() {
         // 获取当前conversation对象
@@ -130,18 +169,27 @@ public class ChatActivity extends AppCompatActivity {
                 }
                 // 如果是当前会话的消息，刷新聊天页面
                 if (username.equals(toChatUsername)) {
-                    msgList.addAll(messages);
-                    adapter.notifyDataSetChanged();
-                    if (msgList.size() > 0) {
-                        et_content.setSelection(listView.getCount() - 1);
 
+                    msgList.addAll(messages);
+                    adapter.setMsgs(msgList);
+                    adapter.notifyDataSetChanged();
+
+
+                    if (msgList.size() > 0) {
+
+                        et_content.setSelection(listView.getCount() - 1);
                     }
+
+
+
 
                 }
             }
 
             // 收到消息
         }
+
+
 
         @Override
         public void onCmdMessageReceived(List<EMMessage> messages) {
@@ -170,16 +218,23 @@ public class ChatActivity extends AppCompatActivity {
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
+
     @SuppressLint("InflateParams")
     class MessageAdapter extends BaseAdapter {
         private List<EMMessage> msgs;
         private Context context;
         private LayoutInflater inflater;
+        private String tousername;
 
-        public MessageAdapter(List<EMMessage> msgs, Context context_) {
+        public MessageAdapter(List<EMMessage> msgs, String toUserName, Context context_) {
             this.msgs = msgs;
             this.context = context_;
             inflater = LayoutInflater.from(context);
+            this.tousername = toUserName;
+        }
+
+        public void setMsgs(List<EMMessage> msgs) {
+            this.msgs = msgs;
         }
 
         @Override
@@ -211,12 +266,14 @@ public class ChatActivity extends AppCompatActivity {
         @SuppressLint("InflateParams")
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+
             EMMessage message = getItem(position);
             int viewType = getItemViewType(position);
             if (convertView == null) {
                 if (viewType == 0) {
                     convertView = inflater.inflate(R.layout.item_message_received, parent, false);
                 } else {
+
                     convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
                 }
             }
@@ -224,23 +281,26 @@ public class ChatActivity extends AppCompatActivity {
             if (holder == null) {
                 holder = new ViewHolder();
                 holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
+                holder.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
                 convertView.setTag(holder);
+            } else {
+                holder = (ViewHolder) convertView.getTag();
             }
 
             EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
             holder.tv.setText(txtBody.getMessage());
+            holder.toUsername.setText(tousername);
             return convertView;
         }
 
-    }
 
-    public static class ViewHolder {
+        public class ViewHolder {
 
-        TextView tv;
+            TextView tv;
+            TextView toUsername;
 
+        }
     }
 
 
 }
-
-
