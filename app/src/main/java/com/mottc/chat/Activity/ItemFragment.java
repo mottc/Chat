@@ -90,23 +90,6 @@ public class ItemFragment extends Fragment {
             }
             recyclerView.setAdapter(new MyItemRecyclerViewAdapter(contactList, mListener));
 
-//            recyclerView.addOnItemTouchListener(new ItemClickListener(recyclerView,
-//                    new ItemClickListener.OnItemClickListener() {
-//
-//                        @Override
-//                        public void onItemClick(View view, int position) {
-////                            startActivity(new Intent(this, ChatActivity.class).putExtra("username", MyItemRecyclerViewAdapter.getItem(position).getUsername()));
-////                            finish();
-//
-//
-//                        }
-//
-//                        @Override
-//                        public void onItemLongClick(View view, int position) {
-//
-//
-//                        }
-//                    }));
         }
 
         return view;
