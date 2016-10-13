@@ -27,8 +27,9 @@
     <RelativeLayout
         android:id="@+id/re_bottom"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="53dp"
         android:layout_alignParentBottom="true"
+
         android:clickable="true">
 
         <Button
@@ -38,24 +39,27 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
+            android:layout_marginBottom="15dp"
             android:background="@color/colorMain"
-            android:padding="8dp"
+
+
             android:text="发送"
             android:textColor="#fff"
-            android:textSize="16sp" />
+            android:textSize="14sp" />
 
         <EditText
             android:id="@+id/et_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_margin="10dp"
             android:layout_toLeftOf="@id/btn_send"
-            android:background="#f0f0f0"
+
             android:hint="请输入内容"
             android:paddingLeft="10dp"
             android:textSize="14sp" />
     </RelativeLayout>
+
+
     <ListView
         android:id="@+id/listView"
         android:layout_width="match_parent"

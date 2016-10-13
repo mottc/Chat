@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,6 +55,7 @@ public class ChatActivity extends Activity {
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
         setContentView(R.layout.activity_chat);
 
 
@@ -95,7 +97,7 @@ public class ChatActivity extends Activity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            startActivity(new Intent(ChatActivity.this, ContactActivity.class));
+            startActivity(new Intent(ChatActivity.this, MainActivity.class));
             return false;
 
         } else {
@@ -169,22 +171,19 @@ public class ChatActivity extends Activity {
                 }
                 // 如果是当前会话的消息，刷新聊天页面
                 if (username.equals(toChatUsername)) {
-
                     msgList.addAll(messages);
-                    adapter.setMsgs(msgList);
-                    adapter.notifyDataSetChanged();
-
-
-                    if (msgList.size() > 0) {
-
-                        et_content.setSelection(listView.getCount() - 1);
-                    }
-
-
-
-
                 }
             }
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    adapter.notifyDataSetChanged();
+                    if (msgList.size() > 0) {
+                        listView.setSelection(listView.getCount() - 1);
+                    }
+                }
+            });
+
 
             // 收到消息
         }

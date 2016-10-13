@@ -57,7 +57,7 @@
         <activity
             android:name=".Activity.ChatActivity"
             android:theme="@style/LoginTheme"
-            android:windowSoftInputMode="stateAlwaysHidden"></activity>
+            android:windowSoftInputMode="adjustPan|adjustResize"></activity>
 
         <!-- 设置环信应用的AppKey -->
         <meta-data

@@ -27,7 +27,6 @@ import com.hyphenate.chat.EMClient;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
-import com.mottc.chat.Activity.dummy.DummyContent;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
@@ -42,7 +41,7 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ItemFragment.OnListFragmentInteractionListener,View.OnClickListener {
+        ItemFragment.OnListFragmentInteractionListener{
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -149,8 +148,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_share) {
-            finish();
-            startActivity(new Intent(MainActivity.this, ContactActivity.class));
+            Toast.makeText(MainActivity.this, "我还没实现分享", Toast.LENGTH_LONG).show();
 
         } else if (id == R.id.nav_send) {
             final ProgressDialog pd = new ProgressDialog(MainActivity.this);
@@ -248,14 +246,12 @@ public class MainActivity extends AppCompatActivity
 
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(EaseUser item) {
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()));
+        finish();
 
     }
 
-    @Override
-    public void onClick(View v) {
-
-    }
     /***
      * 好友变化listener
      *
