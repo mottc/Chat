@@ -5,5 +5,6 @@
     <color name="colorAccent">#ff4081</color>
     <color name="colorMain">#8BC34A</color>
     <color name="btn_gray_normal">#aaaaaa</color>
+    <color name="chat_back">#ffffff</color>
 
 </resources>

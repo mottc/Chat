@@ -1,11 +1,16 @@
 package com.mottc.chat.Activity;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -39,6 +44,13 @@ import java.util.List;
  */
 public class ChatActivity extends Activity {
 
+    //记录手指按下时的横坐标。
+    private float xDown;
+    //记录手指移动时的横坐标。
+    private float xMove;
+    View decorView;
+    float screenWidth, screenHeight;
+
     private ListView listView;
     private int chatType = 1;
     private String toChatUsername;
@@ -59,6 +71,16 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.activity_chat);
 
 
+        // 获得decorView
+        decorView = getWindow().getDecorView();
+
+        // 获得手机屏幕的宽度和高度，单位像素
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        screenWidth = metrics.widthPixels;
+        screenHeight = metrics.heightPixels;
+
+
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
@@ -68,7 +90,7 @@ public class ChatActivity extends Activity {
         et_content = (EditText) this.findViewById(R.id.et_content);
         getAllMessage();
         msgList = conversation.getAllMessages();
-        adapter = new MessageAdapter(msgList,toChatUsername,ChatActivity.this);
+        adapter = new MessageAdapter(msgList, toChatUsername, ChatActivity.this);
         listView.setAdapter(adapter);
         listView.setSelection(listView.getCount() - 1);
 
@@ -94,6 +116,47 @@ public class ChatActivity extends Activity {
 
     }
 
+
+    /**
+     * 从当前位置一直往右滑动到消失。
+     * 这里使用了属性动画。
+     */
+    private void continueMove(float moveDistanceX) {
+        // 从当前位置移动到右侧。
+        ValueAnimator anim = ValueAnimator.ofFloat(moveDistanceX, screenWidth);
+        anim.setDuration(300); // 一秒的时间结束, 为了简单这里固定为1秒
+        anim.start();
+
+        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                // 位移
+                float x = (float) (animation.getAnimatedValue());
+                decorView.setX(x);
+            }
+        });
+
+        // 动画结束时结束当前Activity
+        anim.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+
+                startActivity(new Intent(ChatActivity.this, MainActivity.class));
+                finish();
+            }
+
+        });
+    }
+
+    /**
+     * Activity被滑动到中途时，滑回去~
+     */
+    private void rebackToLeft(float moveDistanceX) {
+        ObjectAnimator.ofFloat(decorView, "X", moveDistanceX, 0).setDuration(300).start();
+    }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -107,13 +170,47 @@ public class ChatActivity extends Activity {
     }
 
 
-    /*点击非键盘区，键盘落下*/
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        DisplayUtils.hideInputWhenTouchOtherView(this, ev, excludeViews);
-        return super.dispatchTouchEvent(ev);
-    }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent event) {
+/*点击非键盘区，键盘落下*/
+        DisplayUtils.hideInputWhenTouchOtherView(this, event, excludeViews);
+
+//        createVelocityTracker(event);
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                xDown = event.getRawX();
+
+                break;
+            case MotionEvent.ACTION_MOVE:
+                xMove = event.getRawX();
+
+                //滑动的距离
+                int distanceX = (int) (xMove - xDown);
+
+
+                if (distanceX > 0) {
+                    decorView.setX(distanceX);
+                }
+
+                break;
+            case MotionEvent.ACTION_UP:
+//                recycleVelocityTracker();
+
+                float moveDistanceX = event.getX() - xDown;
+            if (moveDistanceX > screenWidth / 4) {
+                // 如果滑动的距离超过了手机屏幕的四分之一, 滑动处屏幕后再结束当前Activity
+                continueMove(moveDistanceX);
+            } else {
+                // 如果滑动距离没有超过一半, 往回滑动
+                rebackToLeft(moveDistanceX);
+            }
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(event);
+    }
 
     protected void getAllMessage() {
         // 获取当前conversation对象
@@ -187,7 +284,6 @@ public class ChatActivity extends Activity {
 
             // 收到消息
         }
-
 
 
         @Override
