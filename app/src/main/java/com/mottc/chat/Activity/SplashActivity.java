@@ -22,7 +22,6 @@ public class SplashActivity extends Activity {
     private ImageView imageView;
     public static final String TAG = "Splash_TAG";
     RequestQueue queue;
-
     private static final int sleepTime = 1000;
 
     @Override

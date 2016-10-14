@@ -32,9 +32,9 @@ import shem.com.materiallogin.DefaultRegisterView;
 import shem.com.materiallogin.MaterialLoginView;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+
     private static final String TAG = "LoginActivity";
     public static final int REQUEST_CODE_SETNICK = 1;
-
 
     private boolean progressShow;
     private boolean autoLogin = false;
@@ -58,6 +58,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         setContentView(R.layout.activity_login);
+
+//        使界面可以接受点击事件，以便相应软键盘消失。
         findViewById(R.id.login_layout).setOnClickListener(this);
 
         //登陆
@@ -149,12 +151,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 });
 
-//                Toast.makeText(LoginActivity.this,"Login success!",Toast.LENGTH_SHORT).show();
-//
-//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-//
-//
-//                //Snackbar.make(login, "Login success!", Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -229,15 +225,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }).start();
 
-
                 }
 
-//                Toast.makeText(LoginActivity.this,"Register success!",Toast.LENGTH_SHORT).show();
-//
-//                startActivity(new Intent(LoginActivity.this, MainActivity.class));
-
-
-                //Snackbar.make(login, "Register success!", Snackbar.LENGTH_LONG).show();
             }
         });
     }
@@ -272,7 +261,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-
+//点击非编辑框区域，软键盘消失
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

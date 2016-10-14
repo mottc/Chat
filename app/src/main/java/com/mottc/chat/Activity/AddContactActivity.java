@@ -36,7 +36,6 @@ public class AddContactActivity extends AppCompatActivity {
                 String reason = et_reason.getText().toString().trim();
 
                 if (TextUtils.isEmpty(username)) {
-
                     Toast.makeText(getApplicationContext(), "请输入用户名", Toast.LENGTH_SHORT).show();
                     return;
 
@@ -57,7 +56,6 @@ public class AddContactActivity extends AppCompatActivity {
 
     /**
      * 添加contact
-     *
      *
      */
     public void addContact(final String username,final String reason) {

@@ -54,8 +54,9 @@ public class MainActivity extends AppCompatActivity
     private DrawerLayout drawer;
     MyViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
-    NotificationManager manager;//通知控制类
+    NotificationManager manager;//通知栏控制类
     int notification_ID;
+    int notification_ID2;
 
 
     @Override
@@ -89,25 +90,17 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.setupWithViewPager(viewpager);//给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
 
 
-//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-//        fab.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                startActivity(new Intent(MainActivity.this, AddContactActivity.class));
-//            }
-//        });
-
-
         FloatingActionButtonPlus mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.FabPlus);
         mActionButtonPlus.setOnItemClickListener(new FloatingActionButtonPlus.OnItemClickListener() {
             @Override
             public void onItemClick(FabTagLayout tagView, int position) {
                 if (position == 0) {
+//                  好友请求界面
                     startActivity(new Intent(MainActivity.this, NewFriendsMsgActivity.class));
                 } else if (position == 1) {
+//                  添加好友界面
                     startActivity(new Intent(MainActivity.this, AddContactActivity.class));
                 }
-
             }
         });
 
@@ -120,10 +113,12 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+//      设置右滑界面中的用户名
         View headerView = navigationView.getHeaderView(0);
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         textView.setText(getCurrentUser());
 
+        //注册消息变动监听
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
     }
@@ -140,6 +135,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onMessageReceived(List<EMMessage> messages) {
 
+            // 收到消息
             for (EMMessage message : messages) {
                 String username = null;
                 String info = null;
@@ -148,17 +144,17 @@ public class MainActivity extends AppCompatActivity
                     username = message.getTo();
                 } else {
                     // 单聊消息
-                    username = message.getFrom();
+                    username = message.getFrom();//获取发来消息的用户名
+
+//                  获取发来的消息
                     info = message.toString();
                     int start = info.indexOf("txt:\"");
                     int end = info.lastIndexOf("\"");
-                    info = info.substring((start+5), end);
+                    info = info.substring((start + 5), end);
 
                 }
                 sendNotification(username, info);
             }
-
-            // 收到消息
         }
 
         @Override
@@ -182,14 +178,13 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
+    //  收到新消息，在通知栏显示通知
     private void sendNotification(String username, String info) {
 
         Intent intent = new Intent(MainActivity.this, ChatActivity.class).putExtra("username", username);
-
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
-
         builder.setWhen(System.currentTimeMillis());//设置时间
         builder.setContentTitle(username);//设置标题
         builder.setContentText(info);//设置通知内容
@@ -201,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         manager.notify(notification_ID, notification);
     }
 
-
+    //  获取当前用户名
     public String getCurrentUser() {
         return EMClient.getInstance().getCurrentUser();
     }
@@ -283,12 +278,11 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-
     private void showVersionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("版本号");//设置标题
 //        builder.setIcon(R.drawable.version);//设置图标
-        builder.setMessage("0.1.3.161014_alpha_cl");//设置内容
+        builder.setMessage("0.1.4.161014_alpha_cl");//设置内容
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -303,8 +297,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * 在主界面点击返回键时，不会回到登陆界面。而是弹出提示是否要推出程序
      */
-
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
@@ -380,7 +372,6 @@ public class MainActivity extends AppCompatActivity
 
                     /*增加好友后，更新列表*/
 //                    TODO:
-
                     Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
@@ -436,8 +427,6 @@ public class MainActivity extends AppCompatActivity
                 public void run() {
                     Toast.makeText(getApplicationContext(), "收到好友申请：+" + username, Toast.LENGTH_SHORT).show();
                 }
-
-
             });
 
         }
@@ -464,8 +453,6 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(getApplicationContext(), "好友申请同意：+" + username, Toast.LENGTH_SHORT).show();
 
                 }
-
-
             });
 
         }
@@ -491,5 +478,29 @@ public class MainActivity extends AppCompatActivity
         inviteMessgeDao.saveUnreadMessageCount(1);
         // 提示有新消息
         //响铃或其他操作
+//        TODO:添加通知栏通知
+        String username = msg.getFrom();
+        String reason = msg.getReason();
+
+        sendNewFriendsNotification(username, reason);
     }
+
+    private void sendNewFriendsNotification(String username, String reason) {
+
+        Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
+        builder.setWhen(System.currentTimeMillis());//设置时间
+        builder.setContentTitle(username);//设置标题
+        builder.setContentText(reason);//设置通知内容
+        builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
+//        Notification notification = builder.build();//4.1以上
+        Notification notification = builder.getNotification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
+        manager.notify(notification_ID2, notification);
+    }
+
+
 }

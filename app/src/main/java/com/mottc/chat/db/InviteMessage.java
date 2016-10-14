@@ -26,6 +26,8 @@ public class InviteMessage {
 
     private int id;
 
+
+
     public String getFrom() {
         return from;
     }

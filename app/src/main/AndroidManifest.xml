@@ -52,9 +52,6 @@
             android:name=".Activity.NewFriendsMsgActivity"
             android:theme="@style/LoginTheme"></activity>
         <activity
-            android:name=".Activity.ContactActivity"
-            android:theme="@style/LoginTheme"></activity>
-        <activity
             android:name=".Activity.ChatActivity"
             android:theme="@style/LoginTheme"
             android:windowSoftInputMode="adjustPan|adjustResize"></activity>
