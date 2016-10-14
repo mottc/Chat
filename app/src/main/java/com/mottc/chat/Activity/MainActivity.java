@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("版本号");//设置标题
 //        builder.setIcon(R.drawable.version);//设置图标
-        builder.setMessage("0.1.1.161014_alpha_cl");//设置内容
+        builder.setMessage("0.1.2.161014_alpha_cl");//设置内容
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

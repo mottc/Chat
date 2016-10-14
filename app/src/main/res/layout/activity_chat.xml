@@ -28,7 +28,8 @@
             android:layout_height="wrap_content"
             android:background="#00000000"
             android:src="@mipmap/left_arrow"
-            android:layout_marginLeft="10dp"
+            android:layout_marginLeft="5dp"
+            android:padding="10dp"
             android:layout_centerVertical="true"
              />
 
