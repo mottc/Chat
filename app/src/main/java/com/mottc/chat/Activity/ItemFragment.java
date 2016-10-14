@@ -39,6 +39,7 @@ public class ItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    MyItemRecyclerViewAdapter myItemRecyclerViewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -88,7 +89,8 @@ public class ItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyItemRecyclerViewAdapter(contactList, mListener));
+            myItemRecyclerViewAdapter=new MyItemRecyclerViewAdapter(contactList, mListener);
+            recyclerView.setAdapter(myItemRecyclerViewAdapter);
 
         }
 

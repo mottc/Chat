@@ -1,6 +1,10 @@
 package com.mottc.chat.Activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,7 +27,9 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMContactListener;
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMMessage;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
@@ -46,6 +52,11 @@ public class MainActivity extends AppCompatActivity
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
     private DrawerLayout drawer;
+    MyViewPagerAdapter viewPagerAdapter;
+    ViewPager viewpager;
+    NotificationManager manager;//通知控制类
+    int notification_ID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +64,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
 
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
         //注册联系人变动监听
@@ -64,9 +76,8 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-
-        ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
-        MyViewPagerAdapter viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
+        viewpager = (ViewPager) findViewById(R.id.viewpager);
+        viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "通讯录");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
@@ -76,6 +87,7 @@ public class MainActivity extends AppCompatActivity
         mTabLayout.addTab(mTabLayout.newTab().setText("消息"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("通讯录"));
         mTabLayout.setupWithViewPager(viewpager);//给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
+
 
 //        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 //        fab.setOnClickListener(new View.OnClickListener() {
@@ -112,6 +124,81 @@ public class MainActivity extends AppCompatActivity
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         textView.setText(getCurrentUser());
 
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+    }
+
+    EMMessageListener msgListener = new EMMessageListener() {
+
+        @Override
+        public void onMessageReceived(List<EMMessage> messages) {
+
+            for (EMMessage message : messages) {
+                String username = null;
+                String info = null;
+                // 群组消息
+                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                    username = message.getTo();
+                } else {
+                    // 单聊消息
+                    username = message.getFrom();
+                    info = message.toString();
+                    int start = info.indexOf("txt:\"");
+                    int end = info.lastIndexOf("\"");
+                    info = info.substring((start+5), end);
+
+                }
+                sendNotification(username, info);
+            }
+
+            // 收到消息
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> messages) {
+            // 收到透传消息
+        }
+
+        @Override
+        public void onMessageReadAckReceived(List<EMMessage> messages) {
+            // 收到已读回执
+        }
+
+        @Override
+        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
+            // 收到已送达回执
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage message, Object change) {
+            // 消息状态变动
+        }
+    };
+
+    private void sendNotification(String username, String info) {
+
+        Intent intent = new Intent(MainActivity.this, ChatActivity.class).putExtra("username", username);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,0);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
+
+        builder.setWhen(System.currentTimeMillis());//设置时间
+        builder.setContentTitle(username);//设置标题
+        builder.setContentText(info);//设置通知内容
+        builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
+//        Notification notification = builder.build();//4.1以上
+        Notification notification = builder.getNotification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
+        manager.notify(notification_ID, notification);
     }
 
 
@@ -290,6 +377,10 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void run() {
+
+                    /*增加好友后，更新列表*/
+//                    TODO:
+
                     Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
@@ -311,6 +402,7 @@ public class MainActivity extends AppCompatActivity
 
                 @Override
                 public void run() {
+
                     Toast.makeText(getApplicationContext(), "删除联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
@@ -370,6 +462,7 @@ public class MainActivity extends AppCompatActivity
                 @Override
                 public void run() {
                     Toast.makeText(getApplicationContext(), "好友申请同意：+" + username, Toast.LENGTH_SHORT).show();
+
                 }
 
 

@@ -107,8 +107,6 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
     /**
      * 同意好友请求或者群申请
      *
-     * @param button
-     * @param username
      */
     private void acceptInvitation(final Button buttonAgree , final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
