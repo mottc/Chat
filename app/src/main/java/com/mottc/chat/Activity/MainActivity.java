@@ -41,10 +41,11 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        ItemFragment.OnListFragmentInteractionListener{
+        ItemFragment.OnListFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,6 @@ public class MainActivity extends AppCompatActivity
         userDao = new UserDao(MainActivity.this);
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
-
 
 
 //      Toolbar
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -145,11 +145,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
+//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         int id = item.getItemId();
 
         if (id == R.id.nav_share) {
             Toast.makeText(MainActivity.this, "我还没实现分享", Toast.LENGTH_LONG).show();
-
         } else if (id == R.id.nav_send) {
             final ProgressDialog pd = new ProgressDialog(MainActivity.this);
             String st = getResources().getString(R.string.Are_logged_out);
@@ -187,11 +187,29 @@ public class MainActivity extends AppCompatActivity
                 }
             });
 
+        } else if (id == R.id.nav_manage) {
+
+            showVersionDialog();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+
+    private void showVersionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("版本号");//设置标题
+//        builder.setIcon(R.drawable.version);//设置图标
+        builder.setMessage("0.1.1.161014_alpha_cl");//设置内容
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+            }
+        });
+
+        AlertDialog dialog = builder.create();//获取dialog
+        dialog.show();//显示对话框
     }
 
 
@@ -253,7 +271,6 @@ public class MainActivity extends AppCompatActivity
 
     /***
      * 好友变化listener
-     *
      */
     public class MyContactListener implements EMContactListener {
 
@@ -269,11 +286,11 @@ public class MainActivity extends AppCompatActivity
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
-            runOnUiThread(new Runnable(){
+            runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "增加联系人：+"+username, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -290,11 +307,11 @@ public class MainActivity extends AppCompatActivity
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);
 
-            runOnUiThread(new Runnable(){
+            runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "删除联系人：+"+username, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "删除联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -321,11 +338,11 @@ public class MainActivity extends AppCompatActivity
             // 设置相应status
             msg.setStatus(InviteMessage.InviteMessageStatus.BEINVITEED);
             notifyNewIviteMessage(msg);
-            runOnUiThread(new Runnable(){
+            runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "收到好友申请：+"+username, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "收到好友申请：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -348,11 +365,11 @@ public class MainActivity extends AppCompatActivity
 
             msg.setStatus(InviteMessageStatus.BEAGREED);
             notifyNewIviteMessage(msg);
-            runOnUiThread(new Runnable(){
+            runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    Toast.makeText(getApplicationContext(), "好友申请同意：+"+username, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "好友申请同意：+" + username, Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -366,12 +383,14 @@ public class MainActivity extends AppCompatActivity
             Log.d(username, username + "拒绝了你的好友请求");
         }
     }
+
     /**
      * 保存并提示消息的邀请消息
+     *
      * @param msg
      */
-    private void notifyNewIviteMessage(InviteMessage msg){
-        if(inviteMessgeDao == null){
+    private void notifyNewIviteMessage(InviteMessage msg) {
+        if (inviteMessgeDao == null) {
             inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         }
         inviteMessgeDao.saveMessage(msg);
