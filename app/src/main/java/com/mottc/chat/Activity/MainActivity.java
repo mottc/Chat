@@ -249,7 +249,6 @@ public class MainActivity extends AppCompatActivity
     public void onListFragmentInteraction(EaseUser item) {
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()));
 
-
     }
 
     /***
