@@ -61,13 +61,10 @@ public class ItemFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         getContactList();
-
-
     }
 
 
@@ -82,8 +79,6 @@ public class ItemFragment extends Fragment {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
 
-
-
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -91,7 +86,6 @@ public class ItemFragment extends Fragment {
             }
             myItemRecyclerViewAdapter=new MyItemRecyclerViewAdapter(contactList, mListener);
             recyclerView.setAdapter(myItemRecyclerViewAdapter);
-
         }
 
         return view;
@@ -177,4 +171,8 @@ public class ItemFragment extends Fragment {
         // TODO: Update argument type and name
         void onListFragmentInteraction(EaseUser item);
     }
+
+
+
+
 }

@@ -487,14 +487,16 @@ public class MainActivity extends AppCompatActivity
 
     private void sendNewFriendsNotification(String username, String reason) {
 
+
         Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
         builder.setWhen(System.currentTimeMillis());//设置时间
-        builder.setContentTitle(username);//设置标题
+        builder.setContentTitle(username+",请求加你为好友：");//设置标题
         builder.setContentText(reason);//设置通知内容
         builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setDefaults(Notification.DEFAULT_LIGHTS);//设置呼吸灯
         builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
 //        Notification notification = builder.build();//4.1以上
         Notification notification = builder.getNotification();
