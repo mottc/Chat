@@ -2,17 +2,13 @@ package com.mottc.chat.Activity;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
 
@@ -20,16 +16,19 @@ public class SplashActivity extends Activity {
 
     private RelativeLayout rootLayout;
     private ImageView imageView;
-    public static final String TAG = "Splash_TAG";
-    RequestQueue queue;
-    private static final int sleepTime = 1000;
+    private static final int sleepTime = 2500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         imageView = (ImageView) findViewById(R.id.splash_image);
-        loadSplashImage();
+        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/splash.png";
+        Glide
+                .with(this)
+                .load(Url)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imageView);
 
 //      淡入动画
         rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
@@ -38,24 +37,6 @@ public class SplashActivity extends Activity {
         rootLayout.startAnimation(animation);
     }
 
-    private void loadSplashImage() {
-        queue = Volley.newRequestQueue(this);
-        ImageRequest imageRequest = new ImageRequest(
-                "http://7xktkd.com1.z0.glb.clouddn.com/splash.png",
-                new Response.Listener<Bitmap>() {
-                    @Override
-                    public void onResponse(Bitmap response) {
-                        imageView.setImageBitmap(response);
-                    }
-                }, 0, 0, Bitmap.Config.RGB_565, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                imageView.setImageResource(R.mipmap.splash);
-            }
-        });
-        imageRequest.setTag(TAG);
-        queue.add(imageRequest);
-    }
 
     @Override
     protected void onStart() {
@@ -98,12 +79,8 @@ public class SplashActivity extends Activity {
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-        if (queue != null) {
-            queue.cancelAll(TAG);
-        }
+    protected void onDestroy() {
+        super.onDestroy();
+        Glide.get(this).clearMemory();//清理内存缓存 可以在UI主线程中进行
     }
-
-
 }
