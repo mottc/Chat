@@ -81,6 +81,14 @@ public class SplashActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Glide.get(this).clearMemory();//清理内存缓存 可以在UI主线程中进行
+        Glide.get(this).clearMemory();//清理内存缓存 在UI主线程中进行
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Glide.get(SplashActivity.this).clearDiskCache();//清理磁盘缓存 不能在UI主线程中进行
+            }
+        }).start();
+
     }
 }
