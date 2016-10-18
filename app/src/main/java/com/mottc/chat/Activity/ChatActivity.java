@@ -1,10 +1,10 @@
 package com.mottc.chat.Activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,7 +38,7 @@ import java.util.List;
  * Date: 2016/10/12
  * Time: 12:14
  */
-public class ChatActivity extends Activity {
+public class ChatActivity extends AppCompatActivity {
 
     private ListView listView;
     private int chatType = 1;
@@ -57,13 +57,21 @@ public class ChatActivity extends Activity {
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+
+
+//      软键盘弹起不会遮挡文字
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
         setContentView(R.layout.activity_chat);
 
 
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
+
+
+
 
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);

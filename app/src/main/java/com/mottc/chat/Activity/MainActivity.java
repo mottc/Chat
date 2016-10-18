@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return EMClient.getInstance().getCurrentUser();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
