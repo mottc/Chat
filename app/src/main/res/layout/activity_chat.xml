@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eeeeee">
@@ -24,68 +23,60 @@
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:src="@mipmap/left_arrow"
-            android:layout_marginLeft="5dp"
-            android:padding="10dp"
             android:layout_centerVertical="true"
-            />
+            android:layout_marginLeft="5dp"
+            android:background="#00000000"
+            android:padding="10dp"
+            android:src="@mipmap/left_arrow" />
 
     </RelativeLayout>
-    <LinearLayout
+
+    <RelativeLayout
+        android:id="@+id/re_bottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/title"
-        android:orientation="vertical">
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="#eeeeee"
+        android:clickable="true">
 
-        <ListView
-            android:id="@+id/listView"
+        <Button
+            android:id="@+id/btn_send"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:cacheColorHint="#00000000"
-            android:background="#eeeeee"
-            android:divider="@null"
-            android:dividerHeight="5dp"
-            />
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="5dp"
+            android:background="@color/colorMain"
+            android:text="发送"
+            android:textColor="#fff"
+            android:textSize="14sp" />
 
-        <RelativeLayout
-            android:id="@+id/re_bottom"
+        <EditText
+            android:id="@+id/et_content"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#eeeeee"
-            android:clickable="true">
-
-            <Button
-                android:id="@+id/btn_send"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="5dp"
-                android:background="@color/colorMain"
-                android:text="发送"
-                android:textColor="#fff"
-                android:textSize="14sp" />
-
-            <EditText
-                android:id="@+id/et_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerVertical="true"
-                android:layout_toLeftOf="@id/btn_send"
-                android:background="#ffffff"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginLeft="5dp"
-                android:paddingLeft="5dp"
-                android:hint="请输入内容"
-                android:textSize="14sp" />
-        </RelativeLayout>
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_toLeftOf="@id/btn_send"
+            android:background="#ffffff"
+            android:hint="请输入内容"
+            android:paddingLeft="5dp"
+            android:textSize="14sp" />
+    </RelativeLayout>
 
 
-
-    </LinearLayout>
+    <ListView
+        android:id="@+id/listView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/re_bottom"
+        android:layout_below="@id/title"
+        android:background="#eeeeee"
+        android:cacheColorHint="#00000000"
+        android:divider="@null"
+        android:dividerHeight="5dp" />
 
 
 </RelativeLayout>

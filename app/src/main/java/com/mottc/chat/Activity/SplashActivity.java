@@ -30,7 +30,7 @@ public class SplashActivity extends Activity {
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
 
-//      淡入动画
+//      渐深动画
         rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
         AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
         animation.setDuration(sleepTime);

@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
-        //注册联系人变动监听
-        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
-
 
 //      Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -81,7 +78,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "通讯录");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
-
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mTabLayout.addTab(mTabLayout.newTab().setText("消息"));//给TabLayout添加Tab
@@ -115,10 +111,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //      设置右滑界面中的用户名
         View headerView = navigationView.getHeaderView(0);
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
-        textView.setText(getCurrentUser());
+        textView.setText(EMClient.getInstance().getCurrentUser());//  获取当前用户名
 
         //注册消息变动监听
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        //注册联系人变动监听
+        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
 
     }
 
@@ -193,11 +191,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Notification notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
         manager.notify(notification_ID, notification);
-    }
-
-    //  获取当前用户名
-    public String getCurrentUser() {
-        return EMClient.getInstance().getCurrentUser();
     }
 
 
@@ -288,14 +281,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(DialogInterface dialog, int which) {
             }
         });
-
         AlertDialog dialog = builder.create();//获取dialog
         dialog.show();//显示对话框
     }
 
 
     /**
-     * 在主界面点击返回键时，不会回到登陆界面。而是弹出提示是否要推出程序
+     * 在主界面点击返回键时，弹出提示是否要推出程序
      */
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -319,10 +311,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showTips() {
 
-        AlertDialog alertDialog = new AlertDialog.Builder(this).setTitle("提醒")
+        AlertDialog alertDialog = new AlertDialog
+                .Builder(this)
+                .setTitle("提醒")
                 .setMessage("是否退出程序")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-
                     public void onClick(DialogInterface dialog, int which) {
                         Intent intent = new Intent(Intent.ACTION_MAIN);
                         intent.addCategory(Intent.CATEGORY_HOME);
@@ -330,14 +323,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         startActivity(intent);
                         android.os.Process.killProcess(android.os.Process.myPid());
                     }
-
-                }).setNegativeButton("取消",
-
+                })
+                .setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
                                 return;
                             }
-                        }).create(); // 创建对话框
+                        })
+                .create(); // 创建对话框
+
         alertDialog.show(); // 显示对话框
     }
 
@@ -365,20 +359,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
             toAddUsers.put(username, user);
             localUsers.putAll(toAddUsers);
+
             runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-
                     /*增加好友后，更新列表*/
 //                    TODO:
+                    viewPagerAdapter.notifyDataSetChanged();//TODO:添加好友后，更新列表
                     Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
-
-
             });
-
-
         }
 
         @Override
@@ -396,8 +387,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     Toast.makeText(getApplicationContext(), "删除联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
-
-
             });
 
         }
@@ -421,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             // 设置相应status
             msg.setStatus(InviteMessage.InviteMessageStatus.BEINVITEED);
             notifyNewIviteMessage(msg);
+            sendNewFriendsNotification(username, reason);
             runOnUiThread(new Runnable() {
 
                 @Override
@@ -479,10 +469,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // 提示有新消息
         //响铃或其他操作
 
-        String username = msg.getFrom();
-        String reason = msg.getReason();
-
-        sendNewFriendsNotification(username, reason);
     }
 
     //  添加通知栏通知
