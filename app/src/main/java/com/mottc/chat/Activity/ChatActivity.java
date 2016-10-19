@@ -32,13 +32,14 @@ import com.mottc.chat.utils.EaseCommonUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created with Android Studio
  * User: mottc
  * Date: 2016/10/12
  * Time: 12:14
  */
-public class ChatActivity extends AppCompatActivity {
+public class ChatActivity extends AppCompatActivity implements View.OnLayoutChangeListener {
 
     private ListView listView;
     private int chatType = 1;
@@ -53,11 +54,18 @@ public class ChatActivity extends AppCompatActivity {
 
     List<View> excludeViews = new ArrayList<View>();
 
+    //Activity最外层的Layout视图
+    private View activityRootView;
+    //屏幕高度
+    private int screenHeight = 0;
+    //软件盘弹起后所占高度阀值
+    private int keyHeight = 0;
+
+
     @Override
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-
 
 
 //      软键盘弹起不会遮挡文字
@@ -65,13 +73,14 @@ public class ChatActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_chat);
 
-
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
 
-
-
+        //获取屏幕高度
+        screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
+        //阀值设置为屏幕高度的1/3
+        keyHeight = screenHeight / 3;
 
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);
@@ -106,6 +115,7 @@ public class ChatActivity extends AppCompatActivity {
         });
 
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        listView.addOnLayoutChangeListener(this);
 
     }
 
@@ -226,6 +236,18 @@ public class ChatActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+    }
+
+
+    /*弹起软键盘时，对话列表上移，使其不受键盘遮挡*/
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom,
+                               int oldLeft, int oldTop, int oldRight, int oldBottom) {
+
+        if (bottom < oldBottom) {
+            listView.smoothScrollToPosition(listView.getCount()-1);
+        }
+
     }
 
 
