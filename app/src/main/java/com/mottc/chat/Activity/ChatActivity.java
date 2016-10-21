@@ -54,21 +54,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
     List<View> excludeViews = new ArrayList<View>();
 
-    //Activity最外层的Layout视图
-    private View activityRootView;
-    //屏幕高度
-    private int screenHeight = 0;
-    //软件盘弹起后所占高度阀值
-    private int keyHeight = 0;
-
-
     @Override
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
 
 
-//      软键盘弹起不会遮挡文字
+//      软键盘弹起,整个页面不上移。
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         setContentView(R.layout.activity_chat);
@@ -76,11 +68,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
-
-        //获取屏幕高度
-        screenHeight = this.getWindowManager().getDefaultDisplay().getHeight();
-        //阀值设置为屏幕高度的1/3
-        keyHeight = screenHeight / 3;
 
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);

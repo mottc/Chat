@@ -159,11 +159,16 @@ public class MyApplication extends Application{
 
     public Map<String, EaseUser> getContactList() {
 
-        if (contactList == null) {
+//        TODO:
 
-            contactList = userDao.getContactList();
+//        if (contactList == null) {
+//
+//            contactList = userDao.getContactList();
+//
+//        }
 
-        }
+
+        contactList = userDao.getContactList();
         return contactList;
 
     }

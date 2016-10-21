@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mottc.chat.Activity.ItemFragment.OnListFragmentInteractionListener;
-
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
 
@@ -22,6 +21,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         mValues = items;
         mListener = listener;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

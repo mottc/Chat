@@ -364,9 +364,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void run() {
-                    /*增加好友后，更新列表*/
-//                    TODO:
-                    viewPagerAdapter.notifyDataSetChanged();//TODO:添加好友后，更新列表
+
                     Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
             });

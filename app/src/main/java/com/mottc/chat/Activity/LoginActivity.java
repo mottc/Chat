@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if (EMClient.getInstance().isLoggedInBefore()) {
             autoLogin = true;
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
             return;
         }
 
@@ -126,7 +127,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // 进入主页面
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
-
                         finish();
                     }
 
@@ -261,7 +261,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-//点击非编辑框区域，软键盘消失
+    //点击非编辑框区域，软键盘消失
     @Override
     public void onClick(View v) {
         switch (v.getId()) {

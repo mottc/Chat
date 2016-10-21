@@ -12,6 +12,11 @@ import com.mottc.chat.MyApplication;
  * Date: 2016/10/8
  * Time: 14:32
  */
+
+
+/**
+ *创建数据库和其中的表
+ */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
     private static final int DATABASE_VERSION = 6;

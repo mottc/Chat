@@ -57,4 +57,5 @@ public class EaseUser extends EMContact{
     public String toString() {
         return nick == null ? username : nick;
     }
+
 }

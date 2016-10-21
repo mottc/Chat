@@ -45,7 +45,6 @@ public class DBManager {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         if (db.isOpen()) {
 //            TODO:找不到表
-
             db.delete(UserDao.TABLE_NAME, null, null);
             for (EaseUser user : contactList) {
                 ContentValues values = new ContentValues();

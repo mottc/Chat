@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.Activity.Adapter.MyItemRecyclerViewAdapter;
 import com.mottc.chat.MyApplication;
@@ -48,6 +49,7 @@ public class ItemFragment extends Fragment {
     public ItemFragment() {
     }
 
+
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
     public static ItemFragment newInstance(int columnCount) {
@@ -65,8 +67,10 @@ public class ItemFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         getContactList();
-    }
 
+        //注册联系人变动监听
+        EMClient.getInstance().contactManager().setContactListener(new ItemContactListener());
+    }
 
 
     @Override
@@ -84,7 +88,7 @@ public class ItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            myItemRecyclerViewAdapter=new MyItemRecyclerViewAdapter(contactList, mListener);
+            myItemRecyclerViewAdapter = new MyItemRecyclerViewAdapter(contactList, mListener);
             recyclerView.setAdapter(myItemRecyclerViewAdapter);
         }
 
@@ -153,10 +157,59 @@ public class ItemFragment extends Fragment {
                     return lhs.getInitialLetter().compareTo(rhs.getInitialLetter());
                 }
 
+           }
+        });
+
+    }
+
+    public void updateAdapter(){
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        getContactList();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                myItemRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
 
     }
+
+
+    public class ItemContactListener implements EMContactListener {
+
+        @Override
+        public void onContactAdded(String s) {
+
+            updateAdapter();
+        }
+
+        @Override
+        public void onContactDeleted(String s) {
+            updateAdapter();
+        }
+
+        @Override
+        public void onContactInvited(String s, String s1) {
+
+        }
+
+        @Override
+        public void onContactAgreed(String s) {
+            updateAdapter();
+
+        }
+
+        @Override
+        public void onContactRefused(String s) {
+
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -167,12 +220,11 @@ public class ItemFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
+
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(EaseUser item);
     }
-
-
 
 
 }
