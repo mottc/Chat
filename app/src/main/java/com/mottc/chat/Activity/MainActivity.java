@@ -113,10 +113,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         textView.setText(EMClient.getInstance().getCurrentUser());//  获取当前用户名
 
-        //注册消息变动监听
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //注册消息变动监听
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
     }
 

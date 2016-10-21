@@ -8,6 +8,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:background="#338bc34a"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.mottc.chat.Activity.ItemFragment"
     tools:listitem="@layout/fragment_item" />
