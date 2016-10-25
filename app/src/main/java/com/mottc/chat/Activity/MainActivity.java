@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -46,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ItemFragment.OnListFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener,ConversationFragment.OnFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -75,8 +76,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "消息");//添加Fragment
-        viewPagerAdapter.addFragment(ItemFragment.newInstance(1), "通讯录");
+        viewPagerAdapter.addFragment(ConversationFragment.newInstance("str1","str2"), "消息");//添加Fragment
+        viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -355,6 +356,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()));
 
     }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
+
 
     /***
      * 好友变化listener

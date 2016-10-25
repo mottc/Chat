@@ -5,13 +5,11 @@
     android:layout_marginTop="1dp"
     android:orientation="horizontal">
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@drawable/touch_bg"
-        android:duplicateParentState="true" >
+        android:duplicateParentState="true">
 
         <ImageView
             android:id="@+id/iv_avatar"
@@ -19,7 +17,6 @@
             android:layout_height="43dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="11dp"
-
             android:src="@mipmap/avatar" />
 
         <TextView
@@ -30,9 +27,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="45"
-            android:textSize="12sp"
-             />
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -41,12 +36,12 @@
             android:layout_toLeftOf="@+id/unread_msg_number"
             android:layout_toRightOf="@id/iv_avatar"
             android:gravity="center_vertical"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_vertical" >
+                android:gravity="center_vertical">
 
                 <TextView
                     android:id="@+id/tv_name"
@@ -54,9 +49,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="4dp"
                     android:ellipsize="end"
+                    android:maxLines="1"
                     android:textColor="#8C8C8C"
-                    android:textSize="16sp"
-                    android:maxLines="1" />
+                    android:textSize="16sp" />
             </LinearLayout>
 
 

@@ -6,6 +6,7 @@
     <color name="colorMain">#8BC34A</color>
     <color name="btn_gray_normal">#aaaaaa</color>
     <color name="chat_back">#ffffff</color>
-    <color name="touch">#dddddd</color>
+    <color name="touch">#EEEEEE</color>
+    <color name="state_focused">#DDDDDD</color>
 
 </resources>

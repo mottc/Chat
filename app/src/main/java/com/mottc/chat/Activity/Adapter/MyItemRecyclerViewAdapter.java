@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.mottc.chat.Activity.ItemFragment.OnListFragmentInteractionListener;
+import com.mottc.chat.Activity.ContactFragment.OnListFragmentInteractionListener;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
 
@@ -34,6 +34,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getUsername());
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
