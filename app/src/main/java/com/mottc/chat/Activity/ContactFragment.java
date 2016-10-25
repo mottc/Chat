@@ -31,7 +31,7 @@ import java.util.Map;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class ItemFragment extends Fragment {
+public class ContactFragment extends Fragment {
 
     protected List<EaseUser> contactList = new ArrayList<EaseUser>();
     private Map<String, EaseUser> contactsMap;
@@ -46,14 +46,14 @@ public class ItemFragment extends Fragment {
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public ItemFragment() {
+    public ContactFragment() {
     }
 
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static ItemFragment newInstance(int columnCount) {
-        ItemFragment fragment = new ItemFragment();
+    public static ContactFragment newInstance(int columnCount) {
+        ContactFragment fragment = new ContactFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -209,6 +209,7 @@ public class ItemFragment extends Fragment {
 
         }
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
