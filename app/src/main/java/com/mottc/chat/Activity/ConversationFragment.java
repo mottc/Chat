@@ -1,9 +1,9 @@
 package com.mottc.chat.Activity;
 
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
@@ -11,9 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
-import com.mottc.chat.Activity.Adapter.ConversationAdapter;
+import com.hyphenate.chat.EMMessage;
+import com.mottc.chat.Activity.Adapter.MyConversationRecyclerViewAdapter;
 import com.mottc.chat.R;
 
 import java.util.ArrayList;
@@ -23,36 +25,28 @@ import java.util.List;
 import java.util.Map;
 
 public class ConversationFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    List<EMConversation> conversationList;
-    ConversationAdapter conversationAdapter;
-    private OnFragmentInteractionListener mListener;
-
-    public ConversationFragment() {
-        // Required empty public constructor
-    }
+    // TODO: Customize parameter argument names
+    private static final String ARG_COLUMN_COUNT = "column-count";
+    // TODO: Customize parameters
+    private int mColumnCount = 1;
+    private OnConversationFragmentInteractionListener mConversationListener;
+    private List<EMConversation> conversationList;
+    MyConversationRecyclerViewAdapter myConversationRecyclerViewAdapter;
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ConversationFragment.
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
      */
-    // TODO: Rename and change types and number of parameters
-    public static ConversationFragment newInstance(String param1, String param2) {
+    public ConversationFragment() {
+    }
+
+    // TODO: Customize parameter initialization
+    @SuppressWarnings("unused")
+    public static ConversationFragment newInstance(int columnCount) {
         ConversationFragment fragment = new ConversationFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
         return fragment;
     }
@@ -60,53 +54,40 @@ public class ConversationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        conversationList = loadConversationList();
+        loadConversationList();
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_item_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_conversation_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-            conversationAdapter = new ConversationAdapter(conversationList);
-            recyclerView.setAdapter(conversationAdapter);
+            if (mColumnCount <= 1) {
+                recyclerView.setLayoutManager(new LinearLayoutManager(context));
+            } else {
+                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
+            }
+            myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
+            recyclerView.setAdapter(myConversationRecyclerViewAdapter);
         }
-
         return view;
     }
 
 
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
+    /**
+     * load conversation list
+     *
+     * @return
+    +    */
     protected List<EMConversation> loadConversationList(){
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
@@ -128,12 +109,20 @@ public class ConversationFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        List<EMConversation> list = new ArrayList<EMConversation>();
+//        List<EMConversation> list = new ArrayList<EMConversation>();
+        conversationList = new ArrayList<EMConversation>();
         for (Pair<Long, EMConversation> sortItem : sortList) {
-            list.add(sortItem.second);
+
+            conversationList.add(sortItem.second);
         }
-        return list;
+        return conversationList;
     }
+
+    /**
+     * sort conversations according time stamp of last message
+     *
+     * @param conversationList
+     */
     private void sortConversationByLastChatTime(List<Pair<Long, EMConversation>> conversationList) {
         Collections.sort(conversationList, new Comparator<Pair<Long, EMConversation>>() {
             @Override
@@ -151,19 +140,87 @@ public class ConversationFragment extends Fragment {
         });
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnConversationFragmentInteractionListener) {
+            mConversationListener = (OnConversationFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnListFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mConversationListener = null;
+    }
+
+
+    EMMessageListener msgListener = new EMMessageListener(){
+
+        @Override
+        public void onMessageReceived(List<EMMessage> list) {
+            update();
+        }
+
+        @Override
+        public void onCmdMessageReceived(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageReadAckReceived(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageDeliveryAckReceived(List<EMMessage> list) {
+
+        }
+
+        @Override
+        public void onMessageChanged(EMMessage emMessage, Object o) {
+            update();
+        }
+    };
+
+    private void update() {
+        loadConversationList();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                myConversationRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
      * to the activity and potentially other fragments contained in that
      * activity.
-     * <p>
+     * <p/>
      * See the Android Training lesson <a href=
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnConversationFragmentInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void onConversationFragmentInteraction(EMConversation item);
     }
 }
-

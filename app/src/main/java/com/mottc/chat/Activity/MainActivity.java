@@ -7,7 +7,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -28,9 +27,8 @@ import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMContactListener;
-import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
+import com.hyphenate.chat.EMConversation;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
@@ -47,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ContactFragment.OnListFragmentInteractionListener,ConversationFragment.OnFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener,ConversationFragment.OnConversationFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -55,9 +53,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
     NotificationManager manager;//通知栏控制类
-    int notification_ID;
-    int notification_ID2;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         viewpager = (ViewPager) findViewById(R.id.viewpager);
         viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(ConversationFragment.newInstance("",""), "消息");//添加Fragment
+        viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
@@ -114,99 +109,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         textView.setText(EMClient.getInstance().getCurrentUser());//  获取当前用户名
 
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
 
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //注册消息变动监听
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
-
-    }
-
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
-    }
-
-    EMMessageListener msgListener = new EMMessageListener() {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-
-            // 收到消息
-            for (EMMessage message : messages) {
-                String username = null;
-                String info = null;
-                // 群组消息
-                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
-                    username = message.getTo();
-                } else {
-                    // 单聊消息
-                    username = message.getFrom();//获取发来消息的用户名
-
-//                  获取发来的消息
-                    info = message.toString();
-                    int start = info.indexOf("txt:\"");
-                    int end = info.lastIndexOf("\"");
-                    info = info.substring((start + 5), end);
-
-                }
-                sendNotification(username, info);
-            }
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            // 收到透传消息
-        }
-
-        @Override
-        public void onMessageReadAckReceived(List<EMMessage> messages) {
-            // 收到已读回执
-        }
-
-        @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-            // 收到已送达回执
-        }
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            // 消息状态变动
-        }
-    };
-
-    //  收到新消息，在通知栏显示通知
-    private void sendNotification(String username, String info) {
-
-        Intent intent = new Intent(MainActivity.this, ChatActivity.class).putExtra("username", username);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        Notification.Builder builder = new Notification.Builder(this);
-        builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
-        builder.setWhen(System.currentTimeMillis());//设置时间
-        builder.setContentTitle(username);//设置标题
-        builder.setContentText(info);//设置通知内容
-        builder.setContentIntent(pendingIntent);//点击后的意图
-        builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
-//        Notification notification = builder.build();//4.1以上
-        Notification notification = builder.getNotification();
-        notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
-        manager.notify(notification_ID, notification);
-    }
 
 
     @Override
@@ -358,8 +265,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public void onConversationFragmentInteraction(EMConversation item) {
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()));
     }
 
 
@@ -505,6 +412,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        Notification notification = builder.build();//4.1以上
         Notification notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
-        manager.notify(notification_ID2, notification);
+        manager.notify((int) System.currentTimeMillis(), notification);
     }
 }

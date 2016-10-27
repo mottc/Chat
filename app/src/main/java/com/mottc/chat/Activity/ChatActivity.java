@@ -1,6 +1,9 @@
 package com.mottc.chat.Activity;
 
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -51,6 +54,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
     MessageAdapter adapter;
     private EMConversation conversation;
     protected int pagesize = 20;
+    NotificationManager manager;//通知栏控制类
+
 
     List<View> excludeViews = new ArrayList<View>();
 
@@ -65,6 +70,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
         setContentView(R.layout.activity_chat);
 
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         toChatUsername = this.getIntent().getStringExtra("username");
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
@@ -183,18 +189,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 // 如果是当前会话的消息，刷新聊天页面
                 if (username.equals(toChatUsername)) {
                     msgList.addAll(messages);
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            adapter.notifyDataSetChanged();
+                            if (msgList.size() > 0) {
+                                listView.setSelection(listView.getCount() - 1);
+                            }
+                        }
+                    });
+                } else {
+                    //                  获取发来的消息
+                    String info = message.toString();
+                    int start = info.indexOf("txt:\"");
+                    int end = info.lastIndexOf("\"");
+                    info = info.substring((start + 5), end);
+                    sendNotification(username, info);
                 }
             }
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    adapter.notifyDataSetChanged();
-                    if (msgList.size() > 0) {
-                        listView.setSelection(listView.getCount() - 1);
-                    }
-                }
-            });
-
             // 收到消息
         }
 
@@ -219,6 +232,25 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         }
     };
 
+    //  收到新消息，在通知栏显示通知
+    private void sendNotification(String username, String info) {
+
+        Intent intent = new Intent(ChatActivity.this, ChatActivity.class).putExtra("username", username);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
+        builder.setWhen(System.currentTimeMillis());//设置时间
+        builder.setContentTitle(username);//设置标题
+        builder.setContentText(info);//设置通知内容
+        builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
+//        Notification notification = builder.build();//4.1以上
+        Notification notification = builder.getNotification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
+        manager.notify((int) System.currentTimeMillis(), notification);
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -232,7 +264,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                                int oldLeft, int oldTop, int oldRight, int oldBottom) {
 
         if (bottom < oldBottom) {
-            listView.smoothScrollToPosition(listView.getCount()-1);
+            listView.smoothScrollToPosition(listView.getCount() - 1);
         }
 
     }

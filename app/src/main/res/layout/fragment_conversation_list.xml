@@ -9,10 +9,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
-    android:background="@color/touch"
+    android:background="#eee"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.mottc.chat.Activity.ContactFragment"
-    />
-
-
-
+    tools:context="com.mottc.chat.Activity.ConversationFragment"
+    tools:listitem="@layout/conversation_item"/>
