@@ -25,8 +25,8 @@
 
         <TextView
             android:id="@+id/unread_msg_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_marginLeft="1dp"
             android:layout_marginTop="1dp"
             android:background="@drawable/ease_unread_count_bg"
@@ -42,7 +42,7 @@
         android:layout_marginLeft="7dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@id/avatar_container"
-        android:textColor="@color/list_itease_primary_color"
+        android:textColor="#111"
         android:textSize="16sp"/>
 
     <TextView
@@ -52,7 +52,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginRight="7dp"
         android:layout_marginTop="6dp"
-        android:textColor="@color/list_itease_secondary_color"
+        android:textColor="#999"
         android:textSize="13sp"/>
 
     <ImageView
@@ -63,7 +63,6 @@
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="7dp"
         android:layout_toRightOf="@id/avatar_container"
-        android:src="@drawable/ease_msg_state_fail_resend"
         android:visibility="gone"/>
 
     <TextView
@@ -75,7 +74,6 @@
         android:paddingBottom="7dp"
         android:paddingLeft="7dp"
         android:paddingTop="7dp"
-        android:text="@string/were_mentioned"
         android:textColor="#e84e40"
         android:textSize="14sp"
         android:visibility="gone"
@@ -91,7 +89,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="7dp"
-        android:textColor="@color/list_itease_secondary_color"
+        android:textColor="#777"
         android:textSize="14sp"/>
 
 </RelativeLayout>
