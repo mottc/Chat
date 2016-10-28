@@ -37,6 +37,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
         holder.mItem = mValues.get(position);
         holder.mNameView.setText(mValues.get(position).getUserName());
         int unread = mValues.get(position).getUnreadMsgCount();
+
         if (unread == 0){
             holder.mUnreadView.setVisibility(View.INVISIBLE);
         }else {
@@ -59,7 +60,6 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
                     // fragment is attached to one) that an item has been selected.
                     mListener.onConversationFragmentInteraction(holder.mItem);
                 }
-                holder.mUnreadView.setVisibility(View.INVISIBLE);
             }
         });
     }

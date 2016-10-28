@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("版本号");//设置标题
 //        builder.setIcon(R.drawable.version);//设置图标
-        builder.setMessage("0.1.6.161019_alpha_cl");//设置内容
+        builder.setMessage("0.2.0.161028_alpha_cl");//设置内容
         builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

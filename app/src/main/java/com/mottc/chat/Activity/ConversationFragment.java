@@ -31,8 +31,9 @@ public class ConversationFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnConversationFragmentInteractionListener mConversationListener;
-    private List<EMConversation> conversationList;
+    List<EMConversation> conversationList;
     MyConversationRecyclerViewAdapter myConversationRecyclerViewAdapter;
+    RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,9 +59,10 @@ public class ConversationFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        loadConversationList();
+        EMClient.getInstance().chatManager().addMessageListener(msgListener);
 
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,14 +72,15 @@ public class ConversationFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
-            recyclerView.setAdapter(myConversationRecyclerViewAdapter);
+//
+//            myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
+//            recyclerView.setAdapter(myConversationRecyclerViewAdapter);
         }
         return view;
     }
@@ -86,9 +89,9 @@ public class ConversationFragment extends Fragment {
     /**
      * load conversation list
      *
-     * @return
-    +    */
-    protected List<EMConversation> loadConversationList(){
+     * @return +
+     */
+    protected List<EMConversation> loadConversationList() {
         // get all conversations
         Map<String, EMConversation> conversations = EMClient.getInstance().chatManager().getAllConversations();
         List<Pair<Long, EMConversation>> sortList = new ArrayList<Pair<Long, EMConversation>>();
@@ -111,10 +114,16 @@ public class ConversationFragment extends Fragment {
         }
 //        List<EMConversation> list = new ArrayList<EMConversation>();
         conversationList = new ArrayList<EMConversation>();
+        conversationList.clear();
         for (Pair<Long, EMConversation> sortItem : sortList) {
 
             conversationList.add(sortItem.second);
         }
+//          检查排序算法，成功
+//        for (int i = 0; i < conversationList.size(); i++) {
+//            String name = conversationList.get(i).getUserName();
+//            Log.i("********", "loadConversationList:"+name);
+//        }
         return conversationList;
     }
 
@@ -130,7 +139,7 @@ public class ConversationFragment extends Fragment {
 
                 if (con1.first.equals(con2.first)) {
                     return 0;
-                } else if (con2.first.longValue() > con1.first.longValue()) {
+                } else if (con2.first > con1.first) {
                     return 1;
                 } else {
                     return -1;
@@ -144,12 +153,12 @@ public class ConversationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+        update();
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
 
@@ -171,7 +180,7 @@ public class ConversationFragment extends Fragment {
     }
 
 
-    EMMessageListener msgListener = new EMMessageListener(){
+    EMMessageListener msgListener = new EMMessageListener() {
 
         @Override
         public void onMessageReceived(List<EMMessage> list) {
@@ -180,17 +189,17 @@ public class ConversationFragment extends Fragment {
 
         @Override
         public void onCmdMessageReceived(List<EMMessage> list) {
-
+            update();
         }
 
         @Override
         public void onMessageReadAckReceived(List<EMMessage> list) {
-
+            update();
         }
 
         @Override
         public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-
+            update();
         }
 
         @Override
@@ -204,7 +213,9 @@ public class ConversationFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                myConversationRecyclerViewAdapter.notifyDataSetChanged();
+//                myConversationRecyclerViewAdapter.notifyDataSetChanged();
+                myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
+                recyclerView.setAdapter(myConversationRecyclerViewAdapter);
             }
         });
     }

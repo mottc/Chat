@@ -75,6 +75,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
 
+        manager.cancel(toChatUsername, 0);
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);
         et_content = (EditText) this.findViewById(R.id.et_content);
@@ -244,12 +245,21 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         builder.setContentText(info);//设置通知内容
         builder.setContentIntent(pendingIntent);//点击后的意图
         builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
-//        Notification notification = builder.build();//4.1以上
-        Notification notification = builder.getNotification();
+        builder.setDefaults(Notification.DEFAULT_VIBRATE);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+
+//        builder.setAutoCancel(true);
+        Notification notification = builder.build();//4.1以上
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
-        manager.notify((int) System.currentTimeMillis(), notification);
+//        manager.notify((int) System.currentTimeMillis(), notification);
+        manager.notify(username, 0, notification);
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        conversation.markAllMessagesAsRead();
+    }
 
     @Override
     protected void onDestroy() {
