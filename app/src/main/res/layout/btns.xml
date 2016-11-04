@@ -36,31 +36,31 @@
     </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
 
-    <!--<com.lzp.floatingactionbuttonplus.FabTagLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:tagText="Send mail"-->
-        <!--&gt;-->
-        <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@mipmap/add"-->
-            <!--app:backgroundTint="#4BB7A7"-->
-            <!--app:fabSize="mini" />-->
-    <!--</com.lzp.floatingactionbuttonplus.FabTagLayout>-->
+    <com.lzp.floatingactionbuttonplus.FabTagLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="新建群组"
+        >
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add"
+            app:backgroundTint="#4BB7A7"
+            app:fabSize="mini" />
+    </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
-    <!--<com.lzp.floatingactionbuttonplus.FabTagLayout-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--app:tagText="shopping list"-->
-        <!--&gt;-->
-        <!--<android.support.design.widget.FloatingActionButton-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@mipmap/add"-->
-            <!--app:backgroundTint="#ff9800"-->
-            <!--app:fabSize="mini" />-->
-    <!--</com.lzp.floatingactionbuttonplus.FabTagLayout>-->
+    <com.lzp.floatingactionbuttonplus.FabTagLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tagText="加入群组"
+        >
+    <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/add"
+            app:backgroundTint="#ff9800"
+            app:fabSize="mini" />
+    </com.lzp.floatingactionbuttonplus.FabTagLayout>
 
     <!--<com.lzp.floatingactionbuttonplus.FabTagLayout-->
         <!--android:layout_width="wrap_content"-->
