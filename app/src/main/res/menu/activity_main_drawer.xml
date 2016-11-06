@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="none">
+    <!--<group android:checkableBehavior="none">-->
         <!--<item-->
             <!--android:id="@+id/nav_camera"-->
             <!--android:icon="@drawable/ic_menu_camera"-->
@@ -14,36 +14,49 @@
             <!--android:id="@+id/nav_slideshow"-->
             <!--android:icon="@drawable/ic_menu_slideshow"-->
             <!--android:title="Slideshow" />-->
-        <item
-            android:id="@+id/nav_send"
-            android:icon="@drawable/ic_menu_send"
-            android:title="切换用户" />
-        <item
-            android:id="@+id/nav_share"
-            android:icon="@drawable/ic_menu_share"
-            android:title="分享" />
-        <item
-            android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="版本" />
-    </group>
 
-    <!--<item android:title="Communicate">-->
-        <!--<menu>-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="切换用户" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="分享" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_manage"-->
-                <!--android:icon="@drawable/ic_menu_manage"-->
-                <!--android:title="版本" />-->
+    <!--</group>-->
 
-        <!--</menu>-->
-    <!--</item>-->
+
+    <item android:title="好友管理">
+        <menu>
+            <item
+                android:id="@+id/add_friends"
+                android:icon="@drawable/ic_menu_send"
+                android:title="添加好友" />
+            <item
+                android:id="@+id/notifition"
+                android:icon="@drawable/ic_menu_share"
+                android:title="好友申请" />
+        </menu>
+    </item>
+
+    <item android:title="群组管理">
+        <menu>
+            <item
+                android:id="@+id/add_group"
+                android:icon="@drawable/ic_menu_send"
+                android:title="加入群组" />
+            <item
+                android:id="@+id/new_group"
+                android:icon="@drawable/ic_menu_share"
+                android:title="新建群组" />
+        </menu>
+    </item>
+    <item android:title="其它">
+       <menu>
+            <item
+                android:id="@+id/change_user"
+                android:icon="@drawable/ic_menu_send"
+                android:title="切换用户" />
+
+            <item
+                android:id="@+id/nav_version"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="版本" />
+
+
+        </menu>
+    </item>
 
 </menu>

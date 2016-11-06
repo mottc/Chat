@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ContactFragment.OnListFragmentInteractionListener,ConversationFragment.OnConversationFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } else if (position == 2) {
 //                    新建群组
                     startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
-                }else if (position == 3) {
+                } else if (position == 3) {
 //                    加入群组
                     startActivity(new Intent(MainActivity.this, AddGroupActivity.class));
                 }
@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());
 
     }
-
 
 
     @Override
@@ -155,10 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         int id = item.getItemId();
-
-        if (id == R.id.nav_share) {
-            Toast.makeText(MainActivity.this, "我还没实现分享", Toast.LENGTH_LONG).show();
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.change_user) {
             final ProgressDialog pd = new ProgressDialog(MainActivity.this);
             String st = getResources().getString(R.string.Are_logged_out);
             pd.setMessage(st);
@@ -195,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-        } else if (id == R.id.nav_manage) {
+        } else if (id == R.id.nav_version) {
 
             showVersionDialog();
         }
@@ -281,31 +277,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     //实现ConnectionListener接口
     private class MyConnectionListener implements EMConnectionListener {
         @Override
         public void onConnected() {
 
         }
+
         @Override
         public void onDisconnected(final int error) {
             runOnUiThread(new Runnable() {
 
                 @Override
                 public void run() {
-                    if(error == EMError.USER_REMOVED){
+                    if (error == EMError.USER_REMOVED) {
                         // 显示帐号已经被移除
                         Toast.makeText(MainActivity.this, "帐号已经被移除", Toast.LENGTH_SHORT).show();
-                    }else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+                    } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                         // 显示帐号在其他设备登录
                         Toast.makeText(MainActivity.this, "帐号在其他设备登录", Toast.LENGTH_SHORT).show();
                     } else {
-                        if (NetUtils.hasNetwork(MainActivity.this)){
+                        if (NetUtils.hasNetwork(MainActivity.this)) {
                             //连接不到聊天服务器
                             Toast.makeText(MainActivity.this, "连接不到聊天服务器", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             //当前网络不可用，请检查网络设置
                             Toast.makeText(MainActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_SHORT).show();
                         }
