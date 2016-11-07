@@ -30,6 +30,7 @@ import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
@@ -47,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener,GroupFragment.OnGroupFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -75,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
-        viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "群组");
+        viewPagerAdapter.addFragment(GroupFragment.newInstance(1), "群组");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View headerView = navigationView.getHeaderView(0);
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         textView.setText(EMClient.getInstance().getCurrentUser());//  获取当前用户名
+
 
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
@@ -267,6 +269,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onConversationFragmentInteraction(EMConversation item) {
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()));
+    }
+
+
+
+    @Override
+    public void onGroupFragmentInteraction(EMGroup item) {
+
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupName()));
+        Log.i("MainActivity", "onGroupFragmentInteraction: " + item.getGroupId());
+
     }
 
 
