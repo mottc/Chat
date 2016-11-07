@@ -19,7 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -76,11 +75,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
+        viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "群组");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
         mTabLayout.addTab(mTabLayout.newTab().setText("消息"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("通讯录"));
+        mTabLayout.addTab(mTabLayout.newTab().setText("群组"));
         mTabLayout.setupWithViewPager(viewpager);//给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
 
 
@@ -126,27 +127,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -154,7 +155,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
 //        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         int id = item.getItemId();
-        if (id == R.id.change_user) {
+
+        if (id == R.id.add_friends) {
+            startActivity(new Intent(MainActivity.this, AddContactActivity.class));
+        } else if (id == R.id.notifition) {
+            startActivity(new Intent(MainActivity.this, NewFriendsMsgActivity.class));
+        } else if (id == R.id.add_group) {
+            startActivity(new Intent(MainActivity.this, AddGroupActivity.class));
+        } else if (id == R.id.new_group) {
+            startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
+        } else if (id == R.id.change_user) {
             final ProgressDialog pd = new ProgressDialog(MainActivity.this);
             String st = getResources().getString(R.string.Are_logged_out);
             pd.setMessage(st);
@@ -191,27 +201,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-        } else if (id == R.id.nav_version) {
-
-            showVersionDialog();
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    private void showVersionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("版本号");//设置标题
-//        builder.setIcon(R.drawable.version);//设置图标
-        builder.setMessage("0.2.0.161028_alpha_cl");//设置内容
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
-        AlertDialog dialog = builder.create();//获取dialog
-        dialog.show();//显示对话框
     }
 
 
