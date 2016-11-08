@@ -48,7 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener,GroupFragment.OnGroupFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener, GroupFragment.OnGroupFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -262,21 +262,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onListFragmentInteraction(EaseUser item) {
-        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()));
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()).putExtra("type", 1));
 
     }
 
     @Override
     public void onConversationFragmentInteraction(EMConversation item) {
+
+        Log.i("MainActivity", "onConversationFragmentInteraction: " + item.isGroup());
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()));
     }
-
 
 
     @Override
     public void onGroupFragmentInteraction(EMGroup item) {
 
-        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupName()));
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupName()).putExtra("type", 2));
 
     }
 
