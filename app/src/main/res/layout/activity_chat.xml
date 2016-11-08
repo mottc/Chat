@@ -17,20 +17,29 @@
             android:id="@+id/tv_toUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="15dp"
+            android:layout_centerInParent="true"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="20sp" />
 
         <ImageButton
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:background="#00000000"
             android:padding="10dp"
             android:src="@mipmap/left_arrow" />
+        <ImageButton
+            android:id="@+id/detail"
+            android:layout_width="23dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:paddingTop="4dp"
+            android:src="@mipmap/detail"
+            android:background="#00000000"/>
 
     </RelativeLayout>
 

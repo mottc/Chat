@@ -90,6 +90,8 @@
             android:name=".Activity.AddGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
+        <activity android:name=".Activity.UserDetailActivity">
+        </activity>
     </application>
 
 </manifest>

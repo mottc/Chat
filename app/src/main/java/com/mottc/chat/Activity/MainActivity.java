@@ -277,7 +277,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onGroupFragmentInteraction(EMGroup item) {
 
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupName()));
-        Log.i("MainActivity", "onGroupFragmentInteraction: " + item.getGroupId());
 
     }
 

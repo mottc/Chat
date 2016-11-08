@@ -51,6 +51,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
     private ImageButton btn_back;
     private EditText et_content;
     private List<EMMessage> msgList;
+    private ImageButton detail;
     MessageAdapter adapter;
     private EMConversation conversation;
     protected int pagesize = 20;
@@ -80,6 +81,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         btn_send = (Button) this.findViewById(R.id.btn_send);
         et_content = (EditText) this.findViewById(R.id.et_content);
         btn_back = (ImageButton) this.findViewById(R.id.back);
+        detail = (ImageButton) findViewById(R.id.detail);
+
         getAllMessage();
         msgList = conversation.getAllMessages();
         adapter = new MessageAdapter(msgList, toChatUsername, ChatActivity.this);
@@ -106,6 +109,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 setMesaage(content);
             }
 
+        });
+        detail.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChatActivity.this, MainActivity.class));
+            }
         });
 
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
