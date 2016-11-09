@@ -20,9 +20,9 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimaryDark">@color/colorMain</item>
         <!-- 右滑返回时，背景透明 -->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
+        <!--<item name="android:windowBackground">@android:color/transparent</item>-->
+        <!--<item name="android:colorBackgroundCacheHint">@null</item>-->
+        <!--<item name="android:windowIsTranslucent">true</item>-->
     </style>
 
 

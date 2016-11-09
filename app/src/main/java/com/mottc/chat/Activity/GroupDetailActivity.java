@@ -11,19 +11,19 @@ import com.mottc.chat.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class UserDetailActivity extends AppCompatActivity {
+public class GroupDetailActivity extends AppCompatActivity {
 
     @BindView(R.id.back)
     ImageButton mBack;
-    @BindView(R.id.detail_avatar)
-    ImageView mDetailAvatar;
-    @BindView(R.id.detail_name)
-    TextView mDetailName;
+    @BindView(R.id.detail_group_avatar)
+    ImageView mDetailGroupAvatar;
+    @BindView(R.id.detail_group_name)
+    TextView mDetailGroupName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_detail);
+        setContentView(R.layout.activity_group_detail);
         ButterKnife.bind(this);
     }
 }

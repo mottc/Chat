@@ -90,7 +90,11 @@
             android:name=".Activity.AddGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
-        <activity android:name=".Activity.UserDetailActivity">
+        <activity android:name=".Activity.UserDetailActivity"
+                  android:theme="@style/LoginTheme">
+        </activity>
+        <activity android:name=".Activity.GroupDetailActivity"
+                  android:theme="@style/LoginTheme">
         </activity>
     </application>
 

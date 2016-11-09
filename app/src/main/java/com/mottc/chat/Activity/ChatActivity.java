@@ -73,6 +73,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         toChatUsername = this.getIntent().getStringExtra("username");
+        chatType = this.getIntent().getIntExtra("type",1);
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         tv_toUsername.setText(toChatUsername);
 
@@ -113,7 +114,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ChatActivity.this, MainActivity.class));
+                if (chatType == 1){
+                    startActivity(new Intent(ChatActivity.this, UserDetailActivity.class));
+                }else {
+                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class));
+                }
             }
         });
 

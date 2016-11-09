@@ -2,12 +2,11 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_user_detail"
+    android:id="@+id/activity_group_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.mottc.chat.Activity.UserDetailActivity">
-
+    tools:context="com.mottc.chat.Activity.GroupDetailActivity">
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
@@ -19,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="用户详情"
+            android:text="群组详情"
             android:textColor="#fff"
             android:textSize="18sp" />
         <ImageButton
@@ -34,25 +33,24 @@
             />
     </RelativeLayout>
 
-
     <ImageView
-        android:id="@+id/detail_avatar"
+        android:id="@+id/detail_group_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:layout_marginTop="30dp"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/avatar"
+        android:src="@drawable/group_icon"
         />
 
     <TextView
-        android:id="@+id/detail_name"
+        android:id="@+id/detail_group_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detail_avatar"
+        android:layout_below="@id/detail_group_avatar"
         android:layout_marginTop="20dp"
         android:layout_centerHorizontal="true"
-        android:text="UserName"
+        android:text="GroupName"
         android:textSize="20sp"/>
 
 </RelativeLayout>
