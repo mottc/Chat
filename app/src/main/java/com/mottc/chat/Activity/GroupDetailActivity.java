@@ -29,14 +29,14 @@ public class GroupDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_detail);
         ButterKnife.bind(this);
 
-
     }
 
 
     @OnClick({R.id.back, R.id.detail_group_avatar, R.id.detail_group_name})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back:
+           case R.id.back:
+                finish();
                 break;
             case R.id.detail_group_avatar:
                 break;
