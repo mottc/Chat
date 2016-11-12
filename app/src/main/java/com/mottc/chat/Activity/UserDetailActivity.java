@@ -38,8 +38,10 @@ public class UserDetailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.detail_avatar:
+                //更换头像
                 break;
             case R.id.detail_name:
+                //修改用户名
                 break;
         }
     }

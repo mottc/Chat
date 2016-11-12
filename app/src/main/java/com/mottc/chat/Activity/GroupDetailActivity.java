@@ -22,6 +22,8 @@ public class GroupDetailActivity extends AppCompatActivity {
     ImageView mDetailGroupAvatar;
     @BindView(R.id.detail_group_name)
     TextView mDetailGroupName;
+    @BindView(R.id.members)
+    TextView mMembers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,15 +34,18 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.back, R.id.detail_group_avatar, R.id.detail_group_name})
+    @OnClick({R.id.back, R.id.detail_group_avatar, R.id.detail_group_name, R.id.members})
     public void onClick(View view) {
         switch (view.getId()) {
-           case R.id.back:
+            case R.id.back:
                 finish();
                 break;
             case R.id.detail_group_avatar:
+
                 break;
             case R.id.detail_group_name:
+                break;
+            case R.id.members:
                 break;
         }
     }

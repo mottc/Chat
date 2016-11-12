@@ -53,4 +53,13 @@
         android:text="GroupName"
         android:textSize="20sp"/>
 
+    <TextView
+        android:id="@+id/members"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/detail_group_name"
+        android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        android:text="群组成员列表"/>
+
 </RelativeLayout>
