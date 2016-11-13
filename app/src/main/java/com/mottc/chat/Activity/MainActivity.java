@@ -151,6 +151,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        return super.onOptionsItemSelected(item);
 //    }
 
+    public void onClick_detail(View view) {
+        startActivity(new Intent(MainActivity.this, UserDetailActivity.class));
+    }
+
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
