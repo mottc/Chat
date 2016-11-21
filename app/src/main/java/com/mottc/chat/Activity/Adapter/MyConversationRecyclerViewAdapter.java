@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.util.DateUtils;
 import com.mottc.chat.Activity.ConversationFragment;
@@ -35,7 +36,12 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mNameView.setText(mValues.get(position).getUserName());
+        if (mValues.get(position).isGroup()){
+            holder.mNameView.setText(EMClient.getInstance().groupManager().getGroup(mValues.get(position).getUserName()).getGroupName());
+        }else{
+            holder.mNameView.setText(mValues.get(position).getUserName());
+        }
+
         int unread = mValues.get(position).getUnreadMsgCount();
 
         if (unread == 0){
