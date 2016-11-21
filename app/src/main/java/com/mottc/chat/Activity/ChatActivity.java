@@ -73,9 +73,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         toChatUsername = this.getIntent().getStringExtra("username");
-        chatType = this.getIntent().getIntExtra("type",1);
+        chatType = this.getIntent().getIntExtra("type", 1);
         TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
-        tv_toUsername.setText(toChatUsername);
+        if (chatType == 1) {
+            tv_toUsername.setText(toChatUsername);
+        } else {
+            tv_toUsername.setText(EMClient.getInstance().groupManager().getGroup(toChatUsername).getGroupName());
+        }
 
         manager.cancel(toChatUsername, 0);
         listView = (ListView) this.findViewById(R.id.listView);
@@ -113,9 +117,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chatType == 1){
+                if (chatType == 1) {
                     startActivity(new Intent(ChatActivity.this, UserDetailActivity.class));
-                }else {
+                } else {
                     startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class));
                 }
             }
@@ -197,11 +201,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 // 群组消息
                 if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                     username = message.getTo();
-                    Log.i("ChatActivity", "onMessageReceived: " + "g" +username);
+                    Log.i("ChatActivity", "onMessageReceived: " + "g" + username);
                 } else {
                     // 单聊消息
                     username = message.getFrom();
-                    Log.i("ChatActivity", "onMessageReceived: " + "dan" +username);
+                    Log.i("ChatActivity", "onMessageReceived: " + "dan" + username);
 
                 }
                 // 如果是当前会话的消息，刷新聊天页面
