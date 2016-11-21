@@ -274,19 +274,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onConversationFragmentInteraction(EMConversation item) {
 
+
         // TODO: 2016/11/9 传入对话类型
+        //对话类型：1为单聊，2为群聊。
         if (item.isGroup()) {
-            startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()).putExtra("type", 2));
+            startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getLastMessage().getTo()).putExtra("type", 2));
         } else {
             startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()).putExtra("type", 1));
         }
+
     }
 
 
     @Override
     public void onGroupFragmentInteraction(EMGroup item) {
 
-        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupName()).putExtra("type", 2));
+        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupId()).putExtra("type", 2));
 
     }
 
