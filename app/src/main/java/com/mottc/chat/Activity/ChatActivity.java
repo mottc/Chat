@@ -371,7 +371,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
             holder.tv.setText(txtBody.getMessage());
-            holder.toUsername.setText(tousername);
+            if (chatType == 1){
+                holder.toUsername.setText(tousername);
+            }else {
+                holder.toUsername.setText(message.getFrom());
+            }
+
             return convertView;
         }
 
