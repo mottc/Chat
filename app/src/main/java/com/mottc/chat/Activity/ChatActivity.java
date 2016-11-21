@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -45,7 +46,7 @@ import java.util.List;
 public class ChatActivity extends AppCompatActivity implements View.OnLayoutChangeListener {
 
     private ListView listView;
-    private int chatType = 1;
+    private int chatType;
     private String toChatUsername;
     private Button btn_send;
     private ImageButton btn_back;
@@ -64,7 +65,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
     protected void onCreate(Bundle arg0) {
         super.onCreate(arg0);
-
 
 //      软键盘弹起,整个页面不上移。
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE | WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
@@ -104,7 +104,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
             public void onClick(View v) {
                 String content = et_content.getText().toString().trim();
                 if (TextUtils.isEmpty(content)) {
-
                     return;
                 }
                 setMesaage(content);
@@ -176,6 +175,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         if (chatType == Constant.CHATTYPE_GROUP)
             message.setChatType(EMMessage.ChatType.GroupChat);
         // 发送消息
+        Log.i("ChatActivity", "setMesaage: " + message.getChatType().toString());
         EMClient.getInstance().chatManager().sendMessage(message);
         msgList.add(message);
 
@@ -195,11 +195,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
             for (EMMessage message : messages) {
                 String username = null;
                 // 群组消息
-                if (message.getChatType() == EMMessage.ChatType.GroupChat || message.getChatType() == EMMessage.ChatType.ChatRoom) {
+                if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                     username = message.getTo();
+                    Log.i("ChatActivity", "onMessageReceived: " + "g" +username);
                 } else {
                     // 单聊消息
                     username = message.getFrom();
+                    Log.i("ChatActivity", "onMessageReceived: " + "dan" +username);
+
                 }
                 // 如果是当前会话的消息，刷新聊天页面
                 if (username.equals(toChatUsername)) {

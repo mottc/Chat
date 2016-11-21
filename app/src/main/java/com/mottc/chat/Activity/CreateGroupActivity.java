@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMGroupManager;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.R;
@@ -78,7 +79,8 @@ public class CreateGroupActivity extends AppCompatActivity {
                     EMGroupManager.EMGroupOptions option = new EMGroupManager.EMGroupOptions();
                     option.maxUsers = 200;
                     option.style = EMGroupManager.EMGroupStyle.EMGroupStylePublicJoinNeedApproval;
-                    EMClient.getInstance().groupManager().createGroup(groupName, desc, allMembers, reason, option);
+                    EMGroup group = EMClient.getInstance().groupManager().createGroup(groupName, desc, allMembers, reason, option);
+                    group.getGroupId();
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progressDialog.dismiss();
