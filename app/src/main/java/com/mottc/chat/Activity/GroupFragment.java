@@ -66,6 +66,7 @@ public class GroupFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
 
+
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -99,14 +100,19 @@ public class GroupFragment extends Fragment {
     }
 
 
-    // TODO: 2016/11/7 获取群组列表存在bug
+    // TODO: 2016/11/7 获取群组列表存在bug。
     protected void getGroupList() {
 
-        try {
-            EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
         groupList = EMClient.getInstance().groupManager().getAllGroups();
         Log.i("GroupFragment", "getGroupList: " + groupList.size());
 
