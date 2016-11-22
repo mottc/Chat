@@ -27,13 +27,17 @@ public class UserDetailActivity extends AppCompatActivity {
     ImageButton mAddF;
 
     String userName;
+    Boolean isNew;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         ButterKnife.bind(this);
-        this.getIntent().getBooleanExtra("isNew", false);
+        isNew = this.getIntent().getBooleanExtra("isNew", false);
+        if (isNew) {
+            mAddF.setVisibility(View.VISIBLE);
+        }
         init();
     }
 

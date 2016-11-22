@@ -26,15 +26,12 @@ public class AddContactActivity extends AppCompatActivity {
         final EditText et_username = (EditText) this.findViewById(R.id.et_username);
         final EditText et_reason = (EditText) this.findViewById(R.id.et_reason);
 
-        String mName = this.getIntent().getStringExtra("userName");
+        String mName = this.getIntent().getStringExtra("username");
 
-        if(TextUtils.isEmpty(mName)){
-
-        }else {
+        if(!(TextUtils.isEmpty(mName))){
             et_username.setText(mName);
+            et_username.setSelection(mName.length());
         }
-
-
 
         Button btn_add = (Button) this.findViewById(R.id.btn_add);
         ImageButton btn_add_back = (ImageButton) this.findViewById(R.id.back);
