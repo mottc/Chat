@@ -57,21 +57,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
     NotificationManager manager;//通知栏控制类
-    View infoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-//        infoView = (LayoutInflater)findViewById(R.id.info);
-//        infoView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
-//            }
-//        });
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
@@ -92,7 +83,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTabLayout.addTab(mTabLayout.newTab().setText("消息"));//给TabLayout添加Tab
         mTabLayout.addTab(mTabLayout.newTab().setText("通讯录"));
         mTabLayout.addTab(mTabLayout.newTab().setText("群组"));
-        mTabLayout.setupWithViewPager(viewpager);//给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
+        //给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
+        mTabLayout.setupWithViewPager(viewpager);
+
 
 
         FloatingActionButtonPlus mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.FabPlus);
@@ -134,6 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());
+        //注册群组变动监听
         EMClient.getInstance().groupManager().addGroupChangeListener(new MyGroupChangeListener());
 
     }
@@ -160,6 +154,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //        return super.onOptionsItemSelected(item);
 //    }
+
+//  侧边栏中，点击自己的信息
     public void detailInfo(View view){
         startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
     }
@@ -205,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 @Override
                 public void onError(int code, String message) {
                     runOnUiThread(new Runnable() {
-
                         @Override
                         public void run() {
                             // TODO Auto-generated method stub
@@ -273,32 +268,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    //对话类型：1为单聊，2为群聊。
     @Override
     public void onListFragmentInteraction(EaseUser item) {
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()).putExtra("type", 1));
-
     }
 
+    //对话类型：1为单聊，2为群聊。
     @Override
     public void onConversationFragmentInteraction(EMConversation item) {
-
-
-        // TODO: 2016/11/9 传入对话类型
-        //对话类型：1为单聊，2为群聊。
         if (item.isGroup()) {
             startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getLastMessage().getTo()).putExtra("type", 2));
         } else {
             startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()).putExtra("type", 1));
         }
-
     }
 
-
+    //对话类型：1为单聊，2为群聊。
     @Override
     public void onGroupFragmentInteraction(EMGroup item) {
-
         startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupId()).putExtra("type", 2));
-
     }
 
 
@@ -306,13 +295,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private class MyConnectionListener implements EMConnectionListener {
         @Override
         public void onConnected() {
-
         }
 
         @Override
         public void onDisconnected(final int error) {
             runOnUiThread(new Runnable() {
-
                 @Override
                 public void run() {
                     if (error == EMError.USER_REMOVED) {

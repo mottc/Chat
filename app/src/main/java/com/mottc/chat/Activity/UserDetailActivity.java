@@ -8,7 +8,12 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
+import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.db.EaseUser;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,25 +32,21 @@ public class UserDetailActivity extends AppCompatActivity {
     ImageButton mAddF;
 
     String userName;
-    Boolean isNew;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         ButterKnife.bind(this);
-        isNew = this.getIntent().getBooleanExtra("isNew", false);
-        if (isNew) {
-            mAddF.setVisibility(View.VISIBLE);
-        }
-        init();
-    }
-
-    private void init() {
         userName = this.getIntent().getStringExtra("username");
         mDetailName.setText(userName);
-
+        Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+        if ((!localUsers.containsKey(userName))&&(!userName.equals(EMClient.getInstance().getCurrentUser()))) {
+            mAddF.setVisibility(View.VISIBLE);
+        }
     }
+
 
     @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name,R.id.add_f})
     public void onClick(View view) {

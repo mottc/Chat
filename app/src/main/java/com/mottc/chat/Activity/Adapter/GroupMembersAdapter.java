@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
 
 import java.util.List;
@@ -53,6 +54,9 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         if (owner.equals(members.get(position))) {
             holder.mOwner.setVisibility(View.VISIBLE);
         }
+        if ((EMClient.getInstance().getCurrentUser()).equals(members.get(position))){
+            holder.mSelf.setVisibility(View.VISIBLE);
+        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +74,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         public final View mView;
         public final TextView mName;
         public final TextView mOwner;
+        public final TextView mSelf;
         public String mItem;
 
         public ViewHolder(View view) {
@@ -77,6 +82,7 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
             mView = view;
             mName = (TextView) view.findViewById(R.id.membersName);
             mOwner = (TextView) view.findViewById(R.id.isOwner);
+            mSelf = (TextView) view.findViewById(R.id.self);
 
         }
 

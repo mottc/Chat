@@ -15,16 +15,27 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:layout_gravity="center_vertical"
-        android:paddingLeft="50dp"
+        android:paddingLeft="30dp"
         android:text="成员"
         android:textSize="20sp"
+        />
+    <TextView
+        android:id="@+id/self"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:layout_gravity="center_vertical"
+        android:text="我"
+        android:textColor="@color/colorMain"
+        android:visibility="gone"
+
         />
 
     <TextView
         android:id="@+id/isOwner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="50dp"
+        android:layout_marginRight="30dp"
         android:layout_gravity="center_vertical"
         android:text="群主"
         android:textColor="@color/colorAccent"
