@@ -120,7 +120,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 if (chatType == 1) {
                     startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", toChatUsername));
                 } else {
-                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class));
+                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class).putExtra("groupId",toChatUsername));
                 }
             }
         });

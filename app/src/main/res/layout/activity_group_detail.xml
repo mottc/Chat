@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_group_detail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
     tools:context="com.mottc.chat.Activity.GroupDetailActivity">
+
     <RelativeLayout
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorMain"
-        android:gravity="center_vertical" >
+        android:gravity="center_vertical">
 
         <TextView
             android:layout_width="wrap_content"
@@ -20,16 +22,17 @@
             android:layout_centerInParent="true"
             android:text="群组详情"
             android:textColor="#fff"
-            android:textSize="18sp" />
+            android:textSize="18sp"/>
+
         <ImageButton
             android:id="@+id/back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#00000000"
-            android:src="@mipmap/left_arrow"
-            android:layout_marginLeft="5dp"
-            android:padding="10dp"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:background="#00000000"
+            android:padding="10dp"
+            android:src="@mipmap/left_arrow"
             />
     </RelativeLayout>
 
@@ -37,29 +40,81 @@
         android:id="@+id/detail_group_avatar"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="30dp"
         android:layout_below="@id/title"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
         android:src="@drawable/group_icon"
         />
 
-    <TextView
-        android:id="@+id/detail_group_name"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/nameLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/detail_group_avatar"
-        android:layout_marginTop="20dp"
-        android:layout_centerHorizontal="true"
-        android:text="GroupName"
-        android:textSize="20sp"/>
+        android:layout_margin="15dp"
+        android:orientation="horizontal"
+
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群组名称："
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/detail_group_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:text="GroupName"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/idLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameLayout"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="群组号码："
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/detail_group_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GroupId"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
 
     <TextView
         android:id="@+id/members"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/detail_group_name"
-        android:layout_marginTop="50dp"
+        android:layout_below="@id/nameLayout"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
         android:text="群组成员列表"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/members_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/members"
+        android:layout_margin="10dp"
+        android:background="#eee"
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.mottc.chat.Activity.GroupDetailActivity"
+        tools:listitem="@layout/group_members_item"/>
+
 
 </RelativeLayout>
