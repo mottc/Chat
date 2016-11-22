@@ -1,5 +1,6 @@
 package com.mottc.chat.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -42,7 +43,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     String owner;
     String groupId;
     String groupName;
-
+    GroupMembersAdapter groupMembersAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,9 +52,17 @@ public class GroupDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         init();
         mMembersList.setLayoutManager(new LinearLayoutManager(this));
-        mMembersList.setAdapter(new GroupMembersAdapter(members, owner));
-        mMembers.setText("群组成员列表(" + members.size()+")");
+        groupMembersAdapter = new GroupMembersAdapter(members, owner);
+        mMembersList.setAdapter(groupMembersAdapter);
+        mMembers.setText("群组成员列表(" + members.size() + ")");
 
+        groupMembersAdapter.setOnGroupMembersListClickListener(new GroupMembersAdapter.OnGroupMembersListClickListener() {
+            @Override
+            public void OnGroupMembersListClick(String item) {
+                startActivity(new Intent(GroupDetailActivity.this, UserDetailActivity.class).putExtra("username", item).putExtra("isNew",true));
+
+            }
+        });
     }
 
     private void init() {
@@ -96,8 +105,8 @@ public class GroupDetailActivity extends AppCompatActivity {
                 break;
             case R.id.detail_group_name:
                 break;
-            case R.id.members:
-                break;
         }
     }
+
+
 }

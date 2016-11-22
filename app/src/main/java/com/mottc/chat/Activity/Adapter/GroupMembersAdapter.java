@@ -21,10 +21,21 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
 
     private final List<String> members;
     private final String owner;
+    private OnGroupMembersListClickListener mOnGroupMembersListClickListener;
 
     public GroupMembersAdapter(List<String> members, String owner) {
         this.members = members;
         this.owner = owner;
+    }
+
+
+    public interface OnGroupMembersListClickListener {
+        // TODO: Update argument type and name
+        void OnGroupMembersListClick(String item);
+    }
+
+    public void setOnGroupMembersListClickListener(OnGroupMembersListClickListener mOnGroupMembersListClickListener) {
+        this.mOnGroupMembersListClickListener = mOnGroupMembersListClickListener;
     }
 
     @Override
@@ -36,12 +47,18 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         holder.mItem = members.get(position);
         holder.mName.setText(members.get(position));
         if (owner.equals(members.get(position))) {
             holder.mOwner.setVisibility(View.VISIBLE);
         }
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnGroupMembersListClickListener.OnGroupMembersListClick(holder.mItem);
+            }
+        });
     }
 
     @Override

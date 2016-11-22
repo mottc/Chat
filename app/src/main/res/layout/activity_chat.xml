@@ -32,12 +32,12 @@
             android:src="@mipmap/left_arrow" />
         <ImageButton
             android:id="@+id/detail"
-            android:layout_width="23dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:paddingTop="4dp"
+
+            android:padding="10dp"
             android:src="@mipmap/detail"
             android:background="#00000000"/>
 

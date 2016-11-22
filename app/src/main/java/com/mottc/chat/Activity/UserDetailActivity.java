@@ -1,5 +1,6 @@
 package com.mottc.chat.Activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -22,6 +23,8 @@ public class UserDetailActivity extends AppCompatActivity {
     ImageView mDetailAvatar;
     @BindView(R.id.detail_name)
     TextView mDetailName;
+    @BindView(R.id.add_f)
+    ImageButton mAddF;
 
     String userName;
 
@@ -30,6 +33,7 @@ public class UserDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_detail);
         ButterKnife.bind(this);
+        this.getIntent().getBooleanExtra("isNew", false);
         init();
     }
 
@@ -39,7 +43,7 @@ public class UserDetailActivity extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name})
+    @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name,R.id.add_f})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -51,6 +55,10 @@ public class UserDetailActivity extends AppCompatActivity {
             case R.id.detail_name:
                 //修改用户名
                 break;
+            case R.id.add_f:
+                startActivity(new Intent(UserDetailActivity.this, AddContactActivity.class).putExtra("username", userName));
+                break;
         }
     }
+
 }
