@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
@@ -38,6 +39,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
         holder.mItem = mValues.get(position);
         if (mValues.get(position).isGroup()){
             holder.mNameView.setText(EMClient.getInstance().groupManager().getGroup(mValues.get(position).getUserName()).getGroupName());
+            holder.mIcon.setImageResource(R.drawable.group_icon);
         }else{
             holder.mNameView.setText(mValues.get(position).getUserName());
         }
@@ -82,6 +84,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
         public final TextView mUnreadView;
         public final TextView mTime;
         public final TextView mContent;
+        public final ImageView mIcon;
         public EMConversation mItem;
 
         public ViewHolder(View view) {
@@ -91,6 +94,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
             mUnreadView = (TextView) view.findViewById(R.id.unread_msg_number);
             mTime = (TextView) view.findViewById(R.id.time);
             mContent = (TextView) view.findViewById(R.id.message);
+            mIcon = (ImageView) view.findViewById(R.id.avatar);
         }
 
 
