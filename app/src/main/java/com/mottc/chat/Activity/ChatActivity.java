@@ -118,7 +118,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
             @Override
             public void onClick(View v) {
                 if (chatType == 1) {
-                    startActivity(new Intent(ChatActivity.this, UserDetailActivity.class));
+                    startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", toChatUsername));
                 } else {
                     startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class));
                 }
