@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/info"
     android:layout_width="match_parent"
     android:layout_height="150dp"
+    android:background="#6fff"
     android:gravity="bottom"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:onClick="onClick_detail"
-    android:background="#6fff"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:src="@android:drawable/sym_def_app_icon" />
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:gravity="bottom"
+        android:src="@mipmap/avatar"
+        android:onClick="detailInfo"
+        />
 
     <TextView
         android:id="@+id/tvusername"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
         android:paddingLeft="15dp"
         android:text="username"
-        android:textSize="25sp"
+        android:onClick="detailInfo"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#000"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        android:textSize="25sp"/>
 
 </LinearLayout>

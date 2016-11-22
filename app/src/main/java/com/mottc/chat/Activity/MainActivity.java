@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
     NotificationManager manager;//通知栏控制类
+    View infoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
 
+//        infoView = (LayoutInflater)findViewById(R.id.info);
+//        infoView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
+//            }
+//        });
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
@@ -150,11 +158,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //
 //        return super.onOptionsItemSelected(item);
 //    }
-
-    public void onClick_detail(View view) {
-        startActivity(new Intent(MainActivity.this, UserDetailActivity.class));
+    public void detailInfo(View view){
+        startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
