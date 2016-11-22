@@ -28,6 +28,7 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.EMError;
+import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
@@ -133,6 +134,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new MyConnectionListener());
+        EMClient.getInstance().groupManager().addGroupChangeListener(new MyGroupChangeListener());
 
     }
 
@@ -330,6 +332,51 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }
             });
+        }
+    }
+
+    /**
+    * 群组状态监听
+    * */
+    public  class MyGroupChangeListener implements EMGroupChangeListener{
+
+        @Override
+        public void onUserRemoved(String groupId, String groupName) {
+            //当前用户被管理员移除出群组
+        }
+        @Override
+        public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
+            //收到加入群组的邀请
+        }
+        @Override
+        public void onInvitationDeclined(String groupId, String invitee, String reason) {
+            //群组邀请被拒绝
+        }
+        @Override
+        public void onInvitationAccepted(String groupId, String inviter, String reason) {
+            //群组邀请被接受
+        }
+        @Override
+        public void onGroupDestroyed(String groupId, String groupName) {
+            //群组被创建者解散
+        }
+
+        @Override
+        public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
+
+        }
+
+        @Override
+        public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
+            //收到加群申请
+        }
+        @Override
+        public void onApplicationAccept(String groupId, String groupName, String accepter) {
+            //加群申请被同意
+        }
+        @Override
+        public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
+            // 加群申请被拒绝
         }
     }
 

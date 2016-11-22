@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#f2f2f2"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:background="#f2f2f2"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/title"
@@ -32,15 +34,24 @@
             />
     </RelativeLayout>
 
-    <ListView
+    <!--<ListView-->
+        <!--android:id="@+id/new_friends_list"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:background="@android:color/transparent"-->
+        <!--android:descendantFocusability="afterDescendants"-->
+        <!--android:divider="#D4D4D4"-->
+        <!--android:dividerHeight="1px"-->
+        <!--android:cacheColorHint="#00000000"-->
+        <!--android:fastScrollEnabled="true" />-->
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/new_friends_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent"
-        android:descendantFocusability="afterDescendants"
-        android:divider="#D4D4D4"
-        android:dividerHeight="1px"
-        android:cacheColorHint="#00000000"
-        android:fastScrollEnabled="true" />
+        app:layoutManager="LinearLayoutManager"
+        tools:context="com.mottc.chat.Activity.NewFriendsMsgActivity"
+        tools:listitem="@layout/item_invite_msg">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>

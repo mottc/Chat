@@ -110,7 +110,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/members"
-        android:layout_margin="10dp"
+        android:layout_marginTop="10dp"
         android:background="#eee"
         app:layoutManager="LinearLayoutManager"
         tools:context="com.mottc.chat.Activity.GroupDetailActivity"

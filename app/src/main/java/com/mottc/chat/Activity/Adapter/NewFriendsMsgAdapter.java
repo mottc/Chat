@@ -5,9 +5,10 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +16,7 @@ import android.widget.Toast;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
 import com.mottc.chat.db.InviteMessage;
-import com.mottc.chat.db.InviteMessage.InviteMessageStatus
-        ;
+import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.db.InviteMessageDao;
 
 import java.util.List;
@@ -27,82 +27,23 @@ import java.util.List;
  * Date: 2016/10/12
  * Time: 8:16
  */
-public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
+public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdapter.ViewHolder> {
 
     private Context context;
     private InviteMessageDao messgeDao;
+    List<InviteMessage> objects;
 
-    public NewFriendsMsgAdapter(Context context, int textViewResourceId, List<InviteMessage> objects) {
-        super(context, textViewResourceId, objects);
+    String str1 = "已同意";
+    String str2 = "同意";
+    String str3 = "请求加你为好友";
+
+    public NewFriendsMsgAdapter(Context context,List<InviteMessage> objects) {
         this.context = context;
         messgeDao = new InviteMessageDao(context);
+        this.objects = objects;
+
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        final ViewHolder holder;
-        if (convertView == null) {
-            holder = new ViewHolder();
-            convertView = View.inflate(context, R.layout.item_invite_msg, null);
-            holder.tv_reason = (TextView) convertView.findViewById(R.id.tv_reason);
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.btn_agree = (Button) convertView.findViewById(R.id.btn_agree);
-
-            convertView.setTag(holder);
-        } else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        String str1 = context.getResources().getString(R.string.Has_agreed_to_your_friend_request);
-        String str2 = context.getResources().getString(R.string.agree);
-
-        String str3 = context.getResources().getString(R.string.Request_to_add_you_as_a_friend);
-
-
-        final InviteMessage msg = getItem(position);
-        if (msg != null) {
-
-            holder.btn_agree.setVisibility(View.INVISIBLE);
-
-
-
-            holder.tv_reason.setText(msg.getReason());
-            holder.tv_name.setText(msg.getFrom());
-            if (msg.getStatus() == InviteMessage.InviteMessageStatus.BEAGREED) {
-                holder.tv_reason.setText(str1);
-            } else if (msg.getStatus() == InviteMessage.InviteMessageStatus.BEINVITEED || msg.getStatus() == InviteMessage.InviteMessageStatus.BEAPPLYED ||
-                    msg.getStatus() == InviteMessage.InviteMessageStatus.GROUPINVITATION) {
-                holder.btn_agree.setVisibility(View.VISIBLE);
-                holder.btn_agree.setEnabled(true);
-                holder.btn_agree.setBackgroundResource(android.R.drawable.btn_default);
-                holder.btn_agree.setText(str2);
-                if (msg.getReason() == null) {
-                    // 如果没写理由
-                    holder.tv_reason.setText(str3);
-                }
-                // 设置点击事件
-                holder.btn_agree.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        // 同意别人发的好友请求
-                        acceptInvitation(holder.btn_agree,   msg);
-                    }
-                });
-
-            } else if (msg.getStatus() == InviteMessageStatus.AGREED) {
-
-            } else if(msg.getStatus() == InviteMessageStatus.REFUSED){
-
-            } else if(msg.getStatus() == InviteMessageStatus.GROUPINVITATION_ACCEPTED){
-
-            } else if(msg.getStatus() == InviteMessageStatus.GROUPINVITATION_DECLINED){
-
-            }
-
-        }
-
-        return convertView;
-    }
 
     /**
      * 同意好友请求或者群申请
@@ -163,10 +104,67 @@ public class NewFriendsMsgAdapter extends ArrayAdapter<InviteMessage> {
     }
 
 
-    private static class ViewHolder {
-        TextView tv_name;
-        TextView tv_reason;
-        Button btn_agree;
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_invite_msg, parent, false);
+        return new ViewHolder(view);
+
+    }
+
+    @Override
+    public void onBindViewHolder(final ViewHolder holder, int position) {
+
+        final InviteMessage msg = objects.get(position);
+        holder.mName.setText(objects.get(position).getFrom());
+        holder.mReason.setText(objects.get(position).getReason());
+        holder.mAgree.setVisibility(View.INVISIBLE);
+        if (objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEAGREED) {
+            holder.mReason.setText(str1);
+        } else if (objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEINVITEED ||
+                objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEAPPLYED ||
+                objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.GROUPINVITATION) {
+            holder.mAgree.setVisibility(View.VISIBLE);
+            holder.mAgree.setEnabled(true);
+            holder.mAgree.setText(str2);
+            if (objects.get(position).getReason() == null) {
+                // 如果没写理由
+                holder.mReason.setText(str3);
+            }
+            // 设置点击事件
+            holder.mAgree.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // 同意别人发的好友请求
+                    acceptInvitation(holder.mAgree, msg);
+                }
+            });
+
+        }
+
+    }
+
+
+    @Override
+    public int getItemCount() {
+        return objects.size();
+    }
+
+
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        public final TextView mName;
+        public final TextView mReason;
+        public final Button mAgree;
+
+        public ViewHolder(View view) {
+            super(view);
+            mView = view;
+            mName = (TextView) view.findViewById(R.id.tv_name);
+            mReason = (TextView) view.findViewById(R.id.tv_reason);
+            mAgree = (Button) view.findViewById(R.id.btn_agree);
+
+        }
 
     }
 

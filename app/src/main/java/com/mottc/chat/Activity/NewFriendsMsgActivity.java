@@ -9,9 +9,10 @@ package com.mottc.chat.Activity;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.mottc.chat.Activity.Adapter.NewFriendsMsgAdapter;
 import com.mottc.chat.R;
@@ -25,7 +26,7 @@ import java.util.List;
  *
  */
 public class NewFriendsMsgActivity extends Activity{
-    private ListView listView;
+    private RecyclerView mRecyclerView;
     private ImageButton btn_newfriends_back;
 
 
@@ -34,7 +35,7 @@ public class NewFriendsMsgActivity extends Activity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_friends_msg);
 
-        listView = (ListView) findViewById(R.id.new_friends_list);
+        mRecyclerView = (RecyclerView) findViewById(R.id.new_friends_list);
         btn_newfriends_back = (ImageButton) findViewById(R.id.back);
         btn_newfriends_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,8 +45,9 @@ public class NewFriendsMsgActivity extends Activity{
         });
         InviteMessageDao dao = new InviteMessageDao(this);
         List<InviteMessage> msgs = dao.getMessagesList();
-        NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this, 1, msgs);
-        listView.setAdapter(adapter);
+        NewFriendsMsgAdapter adapter = new NewFriendsMsgAdapter(this,msgs);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setAdapter(adapter);
         dao.saveUnreadMessageCount(0);
 
     }
