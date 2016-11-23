@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         @Override
         public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-            // 加群申请被拒绝
+            //加群申请被拒绝
         }
     }
 
@@ -389,7 +389,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void run() {
-
                     Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
                 }
             });
