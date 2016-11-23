@@ -112,19 +112,20 @@ public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdap
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
 
-        final InviteMessage msg = objects.get(position);
-        holder.mName.setText(objects.get(position).getFrom());
-        holder.mReason.setText(objects.get(position).getReason());
+        int orderNum = objects.size()-position-1;
+        final InviteMessage msg = objects.get(orderNum);
+        holder.mName.setText(objects.get(orderNum).getFrom());
+        holder.mReason.setText(objects.get(orderNum).getReason());
         holder.mAgree.setVisibility(View.INVISIBLE);
-        if (objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEAGREED) {
+        if (objects.get(orderNum).getStatus() == InviteMessage.InviteMessageStatus.BEAGREED) {
             holder.mReason.setText(str1);
-        } else if (objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEINVITEED ||
-                objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.BEAPPLYED ||
-                objects.get(position).getStatus() == InviteMessage.InviteMessageStatus.GROUPINVITATION) {
+        } else if (objects.get(orderNum).getStatus() == InviteMessage.InviteMessageStatus.BEINVITEED ||
+                objects.get(orderNum).getStatus() == InviteMessage.InviteMessageStatus.BEAPPLYED ||
+                objects.get(orderNum).getStatus() == InviteMessage.InviteMessageStatus.GROUPINVITATION) {
             holder.mAgree.setVisibility(View.VISIBLE);
             holder.mAgree.setEnabled(true);
             holder.mAgree.setText(str2);
-            if (objects.get(position).getReason() == null) {
+            if (objects.get(orderNum).getReason() == null) {
                 // 如果没写理由
                 holder.mReason.setText(str3);
             }
@@ -136,7 +137,11 @@ public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdap
                     acceptInvitation(holder.mAgree, msg);
                 }
             });
-
+        } else if(objects.get(orderNum).getStatus() == InviteMessage.InviteMessageStatus.AGREED){
+            holder.mAgree.setVisibility(View.VISIBLE);
+            holder.mAgree.setText("已同意");
+            holder.mAgree.setBackgroundDrawable(null);
+            holder.mAgree.setEnabled(false);
         }
 
     }
