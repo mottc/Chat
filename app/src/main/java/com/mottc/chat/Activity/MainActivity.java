@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,6 +46,7 @@ import com.mottc.chat.db.InviteMessage;
 import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.db.InviteMessageDao;
 import com.mottc.chat.db.UserDao;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -123,7 +125,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //      设置右滑界面中的用户名
         View headerView = navigationView.getHeaderView(0);
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
-        textView.setText(EMClient.getInstance().getCurrentUser());//  获取当前用户名
+        ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
+        String currentUserName = EMClient.getInstance().getCurrentUser();
+        textView.setText(currentUserName);//  获取当前用户名
+        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
 
 
         //注册联系人变动监听

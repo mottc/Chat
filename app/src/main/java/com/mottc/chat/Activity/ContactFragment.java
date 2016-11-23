@@ -88,7 +88,7 @@ public class ContactFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            myItemRecyclerViewAdapter = new MyItemRecyclerViewAdapter(contactList, mListener);
+            myItemRecyclerViewAdapter = new MyItemRecyclerViewAdapter(getActivity(),contactList, mListener);
             recyclerView.setAdapter(myItemRecyclerViewAdapter);
         }
 

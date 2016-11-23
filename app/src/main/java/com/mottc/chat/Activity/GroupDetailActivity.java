@@ -14,6 +14,7 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.GroupAvatarUtils;
 
 import java.util.List;
 
@@ -21,11 +22,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.mottc.chat.R.id.detail_group_avatar;
+
 public class GroupDetailActivity extends AppCompatActivity {
 
 
 
-    @BindView(R.id.detail_group_avatar)
+    @BindView(detail_group_avatar)
     ImageView mDetailGroupAvatar;
     @BindView(R.id.detail_group_name)
     TextView mDetailGroupName;
@@ -37,6 +40,8 @@ public class GroupDetailActivity extends AppCompatActivity {
     RecyclerView mMembersList;
     @BindView(R.id.back)
     ImageView mBack;
+
+
 
     EMGroup group = null;
     List<String> members;
@@ -70,6 +75,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         mDetailGroupId.setText(groupId);
         groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
         mDetailGroupName.setText(groupName);
+        GroupAvatarUtils.setAvatar(this, groupName, mDetailGroupAvatar);
         //根据群组ID从服务器获取群组基本信息
 
         new Thread(new Runnable() {
@@ -95,10 +101,10 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.detail_group_avatar, R.id.detail_group_name, R.id.back})
+    @OnClick({detail_group_avatar, R.id.detail_group_name, R.id.back})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.detail_group_avatar:
+            case detail_group_avatar:
                 break;
             case R.id.detail_group_name:
                 break;

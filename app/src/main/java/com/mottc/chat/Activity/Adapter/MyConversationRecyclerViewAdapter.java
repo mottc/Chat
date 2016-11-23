@@ -1,5 +1,6 @@
 package com.mottc.chat.Activity.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.util.DateUtils;
 import com.mottc.chat.Activity.ConversationFragment;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.GroupAvatarUtils;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -21,10 +24,12 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
 
     private final List<EMConversation> mValues;
     private final ConversationFragment.OnConversationFragmentInteractionListener mListener;
+    private final Context mContext;
 
-    public MyConversationRecyclerViewAdapter(List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
+    public MyConversationRecyclerViewAdapter(Context context,List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -38,10 +43,14 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         if (mValues.get(position).isGroup()){
-            holder.mNameView.setText(EMClient.getInstance().groupManager().getGroup(mValues.get(position).getUserName()).getGroupName());
+            String groupName = EMClient.getInstance().groupManager().getGroup(mValues.get(position).getUserName()).getGroupName();
+            holder.mNameView.setText(groupName);
             holder.mIcon.setImageResource(R.drawable.group_icon);
+            GroupAvatarUtils.setAvatar(mContext,groupName , holder.mIcon);
+
         }else{
             holder.mNameView.setText(mValues.get(position).getUserName());
+            PersonAvatarUtils.setAvatar(mContext, mValues.get(position).getUserName(), holder.mIcon);
         }
 
         int unread = mValues.get(position).getUnreadMsgCount();

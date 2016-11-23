@@ -20,6 +20,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -30,6 +31,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.PersonAvatarUtils;
 import com.mottc.chat.utils.DisplayUtils;
 import com.mottc.chat.utils.EaseCommonUtils;
 
@@ -120,7 +122,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 if (chatType == 1) {
                     startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", toChatUsername));
                 } else {
-                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class).putExtra("groupId",toChatUsername));
+                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class).putExtra("groupId", toChatUsername));
                 }
             }
         });
@@ -355,7 +357,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 if (viewType == 0) {
                     convertView = inflater.inflate(R.layout.item_message_received, parent, false);
                 } else {
-
                     convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
                 }
             }
@@ -364,6 +365,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 holder = new ViewHolder();
                 holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
                 holder.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
+                holder.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
                 convertView.setTag(holder);
             } else {
                 holder = (ViewHolder) convertView.getTag();
@@ -371,11 +373,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
             holder.tv.setText(txtBody.getMessage());
-            if (chatType == 1){
+            if (chatType == 1) {
                 holder.toUsername.setText(tousername);
-            }else {
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+
+            } else {
                 holder.toUsername.setText(message.getFrom());
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+
             }
+
 
             return convertView;
         }
@@ -385,6 +392,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             TextView tv;
             TextView toUsername;
+            ImageView mImageView;
 
         }
     }

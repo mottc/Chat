@@ -214,7 +214,7 @@ public class ConversationFragment extends Fragment {
             @Override
             public void run() {
 //                myConversationRecyclerViewAdapter.notifyDataSetChanged();
-                myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
+                myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(getActivity(),conversationList, mConversationListener);
                 recyclerView.setAdapter(myConversationRecyclerViewAdapter);
             }
         });

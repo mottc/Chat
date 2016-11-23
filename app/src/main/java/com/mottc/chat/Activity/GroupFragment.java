@@ -88,7 +88,7 @@ public class GroupFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mMyGroupRecyclerViewAdapter = new MyGroupRecyclerViewAdapter(groupList, mListener);
+            mMyGroupRecyclerViewAdapter = new MyGroupRecyclerViewAdapter(getActivity(),groupList, mListener);
             recyclerView.setAdapter(mMyGroupRecyclerViewAdapter);
             
         }

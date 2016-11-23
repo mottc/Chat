@@ -1,5 +1,6 @@
 package com.mottc.chat.Activity.Adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.Activity.GroupFragment;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.GroupAvatarUtils;
 
 import java.util.List;
 
@@ -17,11 +19,13 @@ import java.util.List;
 public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecyclerViewAdapter.ViewHolder> {
 
     private final List<EMGroup> mValues;
+    private final Context mContext;
     private final GroupFragment.OnGroupFragmentInteractionListener mListener;
 
-    public MyGroupRecyclerViewAdapter(List<EMGroup> items, GroupFragment.OnGroupFragmentInteractionListener listener) {
+    public MyGroupRecyclerViewAdapter(Context context,List<EMGroup> items, GroupFragment.OnGroupFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -35,6 +39,7 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getGroupName());
+        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupName(), holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

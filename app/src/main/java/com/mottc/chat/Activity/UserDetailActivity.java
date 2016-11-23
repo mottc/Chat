@@ -13,6 +13,7 @@ import com.hyphenate.chat.EMClient;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.Map;
 
@@ -44,6 +45,7 @@ public class UserDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         userName = this.getIntent().getStringExtra("username");
         mDetailName.setText(userName);
+        PersonAvatarUtils.setAvatar(this,userName,mDetailAvatar);
         Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
         if ((!localUsers.containsKey(userName)) && (!userName.equals(EMClient.getInstance().getCurrentUser()))) {
             mAddF.setVisibility(View.VISIBLE);
@@ -68,9 +70,11 @@ public class UserDetailActivity extends AppCompatActivity {
                 break;
             case R.id.add_f:
                 startActivity(new Intent(UserDetailActivity.this, AddContactActivity.class).putExtra("username", userName));
+                finish();
                 break;
             case R.id.send_m:
                 startActivity(new Intent(UserDetailActivity.this, ChatActivity.class).putExtra("username", userName).putExtra("type", 1));
+                finish();
                 break;
 
         }
