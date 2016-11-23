@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,8 @@ public class GroupFragment extends Fragment {
     private int mColumnCount = 1;
     private OnGroupFragmentInteractionListener mListener;
     List<EMGroup> groupList;
+    RecyclerView recyclerView;
+    MyGroupRecyclerViewAdapter mMyGroupRecyclerViewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -58,6 +61,26 @@ public class GroupFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         getGroupList();
+//        mCreateGroupActivity = new CreateGroupActivity();
+//        mCreateGroupActivity.setOnGroupCreatedListener(new CreateGroupActivity.OnGroupCreatedListener() {
+//            @Override
+//            public void onGroupCreated() {
+//
+//            }
+//        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getGroupList();
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mMyGroupRecyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
+        Log.i("GroupFragment", "onResume: " + "!");
     }
 
     @Override
@@ -69,13 +92,15 @@ public class GroupFragment extends Fragment {
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+            recyclerView = (RecyclerView) view;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyGroupRecyclerViewAdapter(groupList, mListener));
+            mMyGroupRecyclerViewAdapter = new MyGroupRecyclerViewAdapter(groupList, mListener);
+            recyclerView.setAdapter(mMyGroupRecyclerViewAdapter);
+            
         }
         return view;
     }
@@ -112,16 +137,18 @@ public class GroupFragment extends Fragment {
             }
         }).start();
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(100);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 
         groupList = EMClient.getInstance().groupManager().getAllGroups();
 //        Log.i("GroupFragment", "getGroupList: " + groupList.size());
 
     }
+    
+    
 
     /**
      * This interface must be implemented by activities that contain this

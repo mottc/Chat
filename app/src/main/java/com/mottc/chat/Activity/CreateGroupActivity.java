@@ -38,6 +38,7 @@ public class CreateGroupActivity extends AppCompatActivity {
 
     private ProgressDialog progressDialog;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,7 +46,6 @@ public class CreateGroupActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mToolbar.setTitle("");
     }
-
 
     @OnClick({R.id.back, R.id.create})
     public void onClick(View view) {
@@ -84,7 +84,7 @@ public class CreateGroupActivity extends AppCompatActivity {
                     runOnUiThread(new Runnable() {
                         public void run() {
                             progressDialog.dismiss();
-                            Toast.makeText(CreateGroupActivity.this, "创建成功", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CreateGroupActivity.this, "创建成功", Toast.LENGTH_LONG).show();
                         }
                     });
                 } catch (final HyphenateException e) {
@@ -109,4 +109,5 @@ public class CreateGroupActivity extends AppCompatActivity {
     public void back(View v) {
         finish();
     }
+
 }
