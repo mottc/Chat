@@ -138,7 +138,7 @@ public class AddGroupActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             if (searchedGroup.isMembersOnly()) {
-                                EMClient.getInstance().groupManager().applyJoinToGroup(groupNum, "请求加入");
+                                EMClient.getInstance().groupManager().applyJoinToGroup(groupNum, "我是" + EMClient.getInstance().getCurrentUser());
                             } else {
                                 EMClient.getInstance().groupManager().joinGroup(groupNum);
                             }

@@ -56,18 +56,10 @@ public class GroupFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         getGroupList();
-//        mCreateGroupActivity = new CreateGroupActivity();
-//        mCreateGroupActivity.setOnGroupCreatedListener(new CreateGroupActivity.OnGroupCreatedListener() {
-//            @Override
-//            public void onGroupCreated() {
-//
-//            }
-//        });
     }
 
     @Override
@@ -87,8 +79,6 @@ public class GroupFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_group_list, container, false);
-
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -124,7 +114,7 @@ public class GroupFragment extends Fragment {
     }
 
 
-    // TODO: 2016/11/7 获取群组列表存在bug。
+    // TODO: 2016/11/7 获取群组列表存在bug:从服务器获取和从本地获取的顺序
     protected void getGroupList() {
 
         new Thread(new Runnable() {
@@ -147,8 +137,6 @@ public class GroupFragment extends Fragment {
 //        Log.i("GroupFragment", "getGroupList: " + groupList.size());
 
     }
-    
-    
 
     /**
      * This interface must be implemented by activities that contain this

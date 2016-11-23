@@ -6,7 +6,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,8 +24,7 @@ import butterknife.OnClick;
 public class GroupDetailActivity extends AppCompatActivity {
 
 
-    @BindView(R.id.back)
-    ImageButton mBack;
+
     @BindView(R.id.detail_group_avatar)
     ImageView mDetailGroupAvatar;
     @BindView(R.id.detail_group_name)
@@ -37,6 +35,8 @@ public class GroupDetailActivity extends AppCompatActivity {
     TextView mDetailGroupId;
     @BindView(R.id.members_list)
     RecyclerView mMembersList;
+    @BindView(R.id.back)
+    ImageView mBack;
 
     EMGroup group = null;
     List<String> members;
@@ -44,6 +44,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     String groupId;
     String groupName;
     GroupMembersAdapter groupMembersAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,18 +95,17 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.back, R.id.detail_group_avatar, R.id.detail_group_name, R.id.members})
+    @OnClick({R.id.detail_group_avatar, R.id.detail_group_name, R.id.back})
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.back:
-                finish();
-                break;
             case R.id.detail_group_avatar:
                 break;
             case R.id.detail_group_name:
                 break;
+            case R.id.back:
+                finish();
+                break;
         }
     }
-
 
 }

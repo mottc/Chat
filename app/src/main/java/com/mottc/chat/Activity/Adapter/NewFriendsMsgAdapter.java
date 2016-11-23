@@ -37,7 +37,7 @@ public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdap
     String str2 = "同意";
     String str3 = "请求加你为好友";
 
-    public NewFriendsMsgAdapter(Context context,List<InviteMessage> objects) {
+    public NewFriendsMsgAdapter(Context context, List<InviteMessage> objects) {
         this.context = context;
         messgeDao = new InviteMessageDao(context);
         this.objects = objects;
@@ -47,9 +47,8 @@ public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdap
 
     /**
      * 同意好友请求或者群申请
-     *
      */
-    private void acceptInvitation(final Button buttonAgree , final InviteMessage msg) {
+    private void acceptInvitation(final Button buttonAgree, final InviteMessage msg) {
         final ProgressDialog pd = new ProgressDialog(context);
         String str1 = context.getResources().getString(R.string.Are_agree_with);
         final String str2 = context.getResources().getString(R.string.Has_agreed_to);
@@ -83,8 +82,6 @@ public class NewFriendsMsgAdapter extends RecyclerView.Adapter<NewFriendsMsgAdap
                             buttonAgree.setText(str2);
                             buttonAgree.setBackgroundDrawable(null);
                             buttonAgree.setEnabled(false);
-
-
                         }
                     });
                 } catch (final Exception e) {

@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -32,6 +33,7 @@ import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
@@ -57,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MyViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
     NotificationManager manager;//通知栏控制类
+    View mLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         inviteMessgeDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
+        mLayout = findViewById(R.id.coordinator_layout);
 
 //      Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -85,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTabLayout.addTab(mTabLayout.newTab().setText("群组"));
         //给TabLayout设置关联ViewPager，如果设置了ViewPager，那么ViewPagerAdapter中的getPageTitle()方法返回的就是Tab上的标题
         mTabLayout.setupWithViewPager(viewpager);
-
 
 
         FloatingActionButtonPlus mActionButtonPlus = (FloatingActionButtonPlus) findViewById(R.id.FabPlus);
@@ -155,9 +158,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        return super.onOptionsItemSelected(item);
 //    }
 
-//  侧边栏中，点击自己的信息
-    public void detailInfo(View view){
-        startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
+    //  侧边栏中，点击自己的信息
+    public void detailInfo(View view) {
+        startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -323,29 +326,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-    * 群组状态监听
-    * */
-    public  class MyGroupChangeListener implements EMGroupChangeListener{
+     * 群组状态监听
+     */
+    public class MyGroupChangeListener implements EMGroupChangeListener {
 
         @Override
         public void onUserRemoved(String groupId, String groupName) {
             //当前用户被管理员移除出群组
+            Snackbar.make(mLayout, "您已被移除出群组" + groupName, Snackbar.LENGTH_LONG)
+                    .show();
         }
+
         @Override
         public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
             //收到加入群组的邀请
+            Snackbar.make(mLayout, inviter+"邀请您加入群组" + groupName, Snackbar.LENGTH_LONG)
+                    .show();
         }
+
         @Override
         public void onInvitationDeclined(String groupId, String invitee, String reason) {
             //群组邀请被拒绝
+            Snackbar.make(mLayout, invitee + "拒绝加入群组"+ EMClient.getInstance().groupManager().getGroup(groupId).getGroupName(), Snackbar.LENGTH_LONG)
+                    .show();
         }
+
         @Override
         public void onInvitationAccepted(String groupId, String inviter, String reason) {
             //群组邀请被接受
+            Snackbar.make(mLayout, inviter + "已接受加入群组" + EMClient.getInstance().groupManager().getGroup(groupId).getGroupName(), Snackbar.LENGTH_LONG)
+                    .show();
+            final String id = groupId;
+            final String name = inviter;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        EMClient.getInstance().groupManager().addUsersToGroup(id, new String[]{name});//需异步处理
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
         }
+
         @Override
         public void onGroupDestroyed(String groupId, String groupName) {
             //群组被创建者解散
+            Snackbar.make(mLayout, "群组" + groupName + "已被解散", Snackbar.LENGTH_LONG)
+                    .show();
         }
 
         @Override
@@ -356,16 +385,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
             //收到加群申请
+            Snackbar.make(mLayout,applyer+"申请加入"+groupName+"："+reason, Snackbar.LENGTH_LONG)
+                    .show();
+
+            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
+
+            for (InviteMessage inviteMessage : msgs) {
+                if (inviteMessage.getGroupId() == null && inviteMessage.getFrom().equals(applyer)) {
+                    inviteMessgeDao.deleteMessage(applyer);
+                }
+            }
+            // 自己封装的javabean
+            InviteMessage msg = new InviteMessage();
+            msg.setFrom(applyer);
+            msg.setTime(System.currentTimeMillis());
+            msg.setGroupId(groupId);
+            msg.setGroupName(groupName);
+            msg.setReason(reason);
+
+            // 设置相应status
+            msg.setStatus(InviteMessage.InviteMessageStatus.BEAPPLYED);
+            notifyNewIviteMessage(msg);
+            sendNewFriendsAddGroupNotification(applyer, reason,groupName);
+
         }
+
         @Override
         public void onApplicationAccept(String groupId, String groupName, String accepter) {
             //加群申请被同意
+            Snackbar.make(mLayout,"加入"+groupName+"群组的请求已被同意", Snackbar.LENGTH_LONG)
+                    .show();
         }
+
         @Override
         public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
             //加群申请被拒绝
+            Snackbar.make(mLayout,"加入"+groupName+"群组的请求已被拒绝", Snackbar.LENGTH_LONG)
+                    .show();
         }
     }
+
+    private void sendNewFriendsAddGroupNotification(String applyer, String reason, String groupName) {
+        Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        Notification.Builder builder = new Notification.Builder(this);
+        builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
+        builder.setWhen(System.currentTimeMillis());//设置时间
+        builder.setContentTitle(applyer + "请求加入"+ groupName);//设置标题
+        builder.setContentText(reason);//设置通知内容
+        builder.setContentIntent(pendingIntent);//点击后的意图
+        builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
+//        Notification notification = builder.build();//4.1以上
+        Notification notification = builder.getNotification();
+        notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
+        manager.notify((int) System.currentTimeMillis(), notification);
+    }
+
 
     /***
      * 好友变化listener
@@ -493,7 +568,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    //  添加通知栏通知
+    //  添加好友变化通知栏通知
     private void sendNewFriendsNotification(String username, String reason) {
 
         Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);

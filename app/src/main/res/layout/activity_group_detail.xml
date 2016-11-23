@@ -36,6 +36,7 @@
             />
     </RelativeLayout>
 
+
     <ImageView
         android:id="@+id/detail_group_avatar"
         android:layout_width="100dp"

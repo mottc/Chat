@@ -95,7 +95,8 @@
                   android:theme="@style/LoginTheme">
         </activity>
         <activity android:name=".Activity.GroupDetailActivity"
-                  android:theme="@style/LoginTheme">
+                  android:theme="@style/LoginTheme"
+                  android:parentActivityName="com.mottc.chat.Activity.ChatActivity" >>
         </activity>
     </application>
 
