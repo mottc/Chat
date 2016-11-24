@@ -26,7 +26,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
     private final ConversationFragment.OnConversationFragmentInteractionListener mListener;
     private final Context mContext;
 
-    public MyConversationRecyclerViewAdapter(Context context,List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
+    public MyConversationRecyclerViewAdapter(Context context, List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         mContext = context;
@@ -42,22 +42,24 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        if (mValues.get(position).isGroup()){
-            String groupName = EMClient.getInstance().groupManager().getGroup(mValues.get(position).getUserName()).getGroupName();
+        if (mValues.get(position).isGroup()) {
+            String groupId = mValues.get(position).getUserName();
+            String groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
             holder.mNameView.setText(groupName);
+            holder.mGroup.setVisibility(View.VISIBLE);
             holder.mIcon.setImageResource(R.drawable.group_icon);
-            GroupAvatarUtils.setAvatar(mContext,groupName , holder.mIcon);
+            GroupAvatarUtils.setAvatar(mContext, groupId, holder.mIcon);
 
-        }else{
+        } else {
             holder.mNameView.setText(mValues.get(position).getUserName());
             PersonAvatarUtils.setAvatar(mContext, mValues.get(position).getUserName(), holder.mIcon);
         }
 
         int unread = mValues.get(position).getUnreadMsgCount();
 
-        if (unread == 0){
+        if (unread == 0) {
             holder.mUnreadView.setVisibility(View.INVISIBLE);
-        }else {
+        } else {
             holder.mUnreadView.setVisibility(View.VISIBLE);
             holder.mUnreadView.setText(String.valueOf(unread));
         }
@@ -94,6 +96,7 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
         public final TextView mTime;
         public final TextView mContent;
         public final ImageView mIcon;
+        public final TextView mGroup;
         public EMConversation mItem;
 
         public ViewHolder(View view) {
@@ -104,8 +107,8 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
             mTime = (TextView) view.findViewById(R.id.time);
             mContent = (TextView) view.findViewById(R.id.message);
             mIcon = (ImageView) view.findViewById(R.id.avatar);
+            mGroup = (TextView) view.findViewById(R.id.group);
         }
-
 
     }
 }

@@ -20,7 +20,7 @@ public class PersonAvatarUtils {
         Glide
                 .with(context)
                 .load(Url)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .error(R.mipmap.avatar)
                 .into(imageView);
     }

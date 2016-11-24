@@ -120,6 +120,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         // ** 第一次登录或者之前logout后再登录，加载所有本地群和回话
                         // ** manually load all local groups and
+
+                        try {
+                            EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                        } catch (HyphenateException e) {
+                            e.printStackTrace();
+                        }
                         EMClient.getInstance().groupManager().loadAllGroups();
                         EMClient.getInstance().chatManager().loadAllConversations();
                         getFriends();

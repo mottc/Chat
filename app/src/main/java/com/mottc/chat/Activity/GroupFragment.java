@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
-import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.Activity.Adapter.MyGroupRecyclerViewAdapter;
 import com.mottc.chat.R;
 
@@ -117,15 +116,15 @@ public class GroupFragment extends Fragment {
     // TODO: 2016/11/7 获取群组列表存在bug:从服务器获取和从本地获取的顺序
     protected void getGroupList() {
 
-        new Thread(new Runnable() {
-            public void run() {
-                try {
-                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-                } catch (HyphenateException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+//        new Thread(new Runnable() {
+//            public void run() {
+//                try {
+//                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+//                } catch (HyphenateException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }).start();
 
 //        try {
 //            Thread.sleep(100);

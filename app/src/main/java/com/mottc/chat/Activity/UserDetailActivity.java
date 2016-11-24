@@ -1,6 +1,10 @@
 package com.mottc.chat.Activity;
 
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -8,13 +12,24 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.QiniuTokenUtils;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UploadManager;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -34,8 +49,11 @@ public class UserDetailActivity extends AppCompatActivity {
     Button mAddF;
     @BindView(R.id.send_m)
     Button mSendM;
-
     String userName;
+
+    Uri uri;
+    private UploadManager uploadManager;
+    final int SELECT_PICTURE = 1;
 
 
     @Override
@@ -45,18 +63,19 @@ public class UserDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         userName = this.getIntent().getStringExtra("username");
         mDetailName.setText(userName);
-        PersonAvatarUtils.setAvatar(this,userName,mDetailAvatar);
+        PersonAvatarUtils.setAvatar(this, userName, mDetailAvatar);
         Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
         if ((!localUsers.containsKey(userName)) && (!userName.equals(EMClient.getInstance().getCurrentUser()))) {
             mAddF.setVisibility(View.VISIBLE);
         }
-        if (localUsers.containsKey(userName)){
+        if (localUsers.containsKey(userName)) {
             mSendM.setVisibility(View.VISIBLE);
         }
+        uploadManager = new UploadManager();
     }
 
 
-    @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name, R.id.add_f,R.id.send_m})
+    @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name, R.id.add_f, R.id.send_m})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.back:
@@ -64,6 +83,9 @@ public class UserDetailActivity extends AppCompatActivity {
                 break;
             case R.id.detail_avatar:
                 //更换头像
+                if (EMClient.getInstance().getCurrentUser().equals(userName)) {
+                    pick();
+                }
                 break;
             case R.id.detail_name:
                 //修改用户名
@@ -77,6 +99,73 @@ public class UserDetailActivity extends AppCompatActivity {
                 finish();
                 break;
 
+        }
+    }
+
+    private void upload(Bitmap bitmap) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Glide
+                        .with(UserDetailActivity.this)
+                        .load(uri)
+                        .skipMemoryCache(true)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .into(mDetailAvatar);
+            }
+        });
+
+        String token = QiniuTokenUtils.creatToken(userName);
+//        mDetailAvatar.setImageBitmap(bitmap);
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        //设置上传后文件的key
+        String upkey = userName + ".png";
+        uploadManager.put(data, upkey, token, new UpCompletionHandler() {
+            public void complete(String key, ResponseInfo rinfo, JSONObject response) {
+
+            }
+        }, null);
+    }
+
+    private void pick() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "选择图片"), SELECT_PICTURE);
+    }
+
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Bitmap bitmap = null;
+        if (resultCode == RESULT_OK) {
+            //选择图片
+            uri = data.getData();
+            ContentResolver cr = this.getContentResolver();
+            try {
+                if (bitmap != null)//如果不释放的话，不断取图片，将会内存不够
+                    bitmap.recycle();
+                bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        } else {
+            Toast.makeText(this, "未选择图片", Toast.LENGTH_SHORT).show();
+        }
+
+        if (bitmap != null) {
+            final Bitmap finalBitmap = bitmap;
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    upload(finalBitmap);
+                }
+            }).start();
         }
     }
 

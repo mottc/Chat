@@ -44,6 +44,16 @@
         android:layout_toRightOf="@id/avatar_container"
         android:textColor="#111"
         android:textSize="16sp"/>
+    <TextView
+        android:id="@+id/group"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@id/name"
+        android:text="(群)"
+        android:textColor="#999"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/time"

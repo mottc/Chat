@@ -10,6 +10,7 @@ import android.widget.RelativeLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
+import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.R;
 
 public class SplashActivity extends Activity {
@@ -27,6 +28,7 @@ public class SplashActivity extends Activity {
         Glide
                 .with(this)
                 .load(Url)
+                .skipMemoryCache(true)
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .into(imageView);
 
@@ -51,6 +53,11 @@ public class SplashActivity extends Activity {
                     //不是必须的，不加sdk也会自动异步去加载(不会重复加载)；
                     //加上的话保证进了主页面会话和群组都已经load完毕
                     long start = System.currentTimeMillis();
+                    try {
+                        EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                    } catch (HyphenateException e) {
+                        e.printStackTrace();
+                    }
                     EMClient.getInstance().groupManager().loadAllGroups();
                     EMClient.getInstance().chatManager().loadAllConversations();
                     long costTime = System.currentTimeMillis() - start;
@@ -81,14 +88,14 @@ public class SplashActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Glide.get(this).clearMemory();//清理内存缓存 在UI主线程中进行
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Glide.get(SplashActivity.this).clearDiskCache();//清理磁盘缓存 不能在UI主线程中进行
-            }
-        }).start();
+//        Glide.get(this).clearMemory();//清理内存缓存 在UI主线程中进行
+//
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Glide.get(SplashActivity.this).clearDiskCache();//清理磁盘缓存 不能在UI主线程中进行
+//            }
+//        }).start();
 
     }
 }
