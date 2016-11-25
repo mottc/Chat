@@ -54,6 +54,8 @@ public class GroupDetailActivity extends AppCompatActivity {
     RecyclerView mMembersList;
     @BindView(R.id.back)
     ImageView mBack;
+    @BindView(R.id.invite)
+    ImageView mInvite;
 
 
     EMGroup group = null;
@@ -78,6 +80,9 @@ public class GroupDetailActivity extends AppCompatActivity {
         groupMembersAdapter = new GroupMembersAdapter(members, owner);
         mMembersList.setAdapter(groupMembersAdapter);
         mMembers.setText("群组成员列表(" + members.size() + ")");
+        if (EMClient.getInstance().getCurrentUser().equals(owner)){
+            mInvite.setVisibility(View.VISIBLE);
+        }
         groupMembersAdapter.setOnGroupMembersListClickListener(new GroupMembersAdapter.OnGroupMembersListClickListener() {
             @Override
             public void OnGroupMembersListClick(String item) {
@@ -117,7 +122,7 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({detail_group_avatar, R.id.detail_group_name, R.id.back})
+    @OnClick({detail_group_avatar, R.id.detail_group_name, R.id.back,R.id.invite})
     public void onClick(View view) {
         switch (view.getId()) {
             case detail_group_avatar:
@@ -125,6 +130,12 @@ public class GroupDetailActivity extends AppCompatActivity {
                     pick();
                 }
                 break;
+            case R.id.invite:
+                // TODO: 2016/11/25 加一个邀请页面
+                Toast.makeText(this, "加一个邀请页面", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, InviteMembersActivity.class).putExtra("groupId", groupId));
+                break;
+
             case R.id.detail_group_name:
                 break;
             case R.id.back:

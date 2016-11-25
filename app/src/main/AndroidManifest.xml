@@ -50,6 +50,7 @@
                 <action android:name="android.intent.action.USER_PRESENT"/>
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".Activity.SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
@@ -79,10 +80,9 @@
         </activity>
         <activity
             android:name=".Activity.ChatActivity"
-            android:theme="@style/LoginTheme"
-            android:launchMode="singleTop">
+            android:launchMode="singleTop"
+            android:theme="@style/LoginTheme">
         </activity>
-
         <activity
             android:name=".Activity.CreateGroupActivity"
             android:theme="@style/LoginTheme">
@@ -91,12 +91,18 @@
             android:name=".Activity.AddGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
-        <activity android:name=".Activity.UserDetailActivity"
-                  android:theme="@style/LoginTheme">
+        <activity
+            android:name=".Activity.UserDetailActivity"
+            android:theme="@style/LoginTheme">
         </activity>
-        <activity android:name=".Activity.GroupDetailActivity"
-                  android:theme="@style/LoginTheme"
-                  android:parentActivityName="com.mottc.chat.Activity.ChatActivity" >>
+        <activity
+            android:name=".Activity.GroupDetailActivity"
+            android:parentActivityName=".Activity.ChatActivity"
+            android:theme="@style/LoginTheme">
+            >
+        </activity>
+        <activity android:name=".Activity.InviteMembersActivity"
+                  android:theme="@style/LoginTheme">
         </activity>
     </application>
 
