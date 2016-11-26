@@ -338,6 +338,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onUserRemoved(String groupId, String groupName) {
             //当前用户被管理员移除出群组
+            try {
+                EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             Snackbar.make(mLayout, "您已被移除出群组" + groupName, Snackbar.LENGTH_LONG)
                     .show();
         }
@@ -347,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             //收到加入群组的邀请
             Snackbar.make(mLayout, inviter+"邀请您加入群组" + groupName, Snackbar.LENGTH_LONG)
                     .show();
+            Toast.makeText(MainActivity.this, "111111111", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -418,6 +424,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onApplicationAccept(String groupId, String groupName, String accepter) {
             //加群申请被同意
+            try {
+                EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+            } catch (HyphenateException e) {
+                e.printStackTrace();
+            }
             Snackbar.make(mLayout,"加入"+groupName+"群组的请求已被同意", Snackbar.LENGTH_LONG)
                     .show();
         }

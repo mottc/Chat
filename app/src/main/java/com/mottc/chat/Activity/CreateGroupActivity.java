@@ -99,6 +99,21 @@ public class CreateGroupActivity extends AppCompatActivity {
         }).start();
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         /*点击非键盘区，键盘落下*/

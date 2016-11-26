@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="邀请好友"
+            android:text="添加成员"
             android:textColor="#fff"
             android:textSize="18sp" />
         <ImageButton
@@ -48,7 +48,7 @@
         android:layout_height="54dp"
         android:layout_margin="20dp"
         android:background="@color/colorMain"
-        android:text="发出邀请"
+        android:text="添加"
         android:textColor="#fff"
         android:textSize="16sp" />
 

@@ -351,8 +351,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            EMMessage message = getItem(position);
-            int viewType = getItemViewType(position);
+            final EMMessage message = getItem(position);
+            final int viewType = getItemViewType(position);
             if (convertView == null) {
                 if (viewType == 0) {
                     convertView = inflater.inflate(R.layout.item_message_received, parent, false);
@@ -376,10 +376,32 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
             if (chatType == 1) {
                 holder.toUsername.setText(tousername);
                 PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (viewType == 0) {
+                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", tousername));
+                        } else {
+                            startActivity(new Intent(ChatActivity.this,UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
+                        }
+
+                    }
+                });
 
             } else {
                 holder.toUsername.setText(message.getFrom());
                 PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (viewType == 0) {
+                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                        } else {
+                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
+
+                        }
+                    }
+                });
 
             }
 
