@@ -14,7 +14,7 @@ import com.mottc.chat.R;
  * Time: 16:59
  */
 public class PersonAvatarUtils {
-    public static void setAvatar(Context context,String Url, ImageView imageView){
+    public static void setAvatar(Context context, String Url, ImageView imageView){
 
 //        String Url = AvatarURLDownloadUtils.downLoad(username);
         Glide

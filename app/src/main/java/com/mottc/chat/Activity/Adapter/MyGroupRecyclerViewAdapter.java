@@ -40,7 +40,7 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getGroupName());
 //        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupId(), holder.mImageView);
-//        AvatarURLDownloadUtils.downLoad(mValues.get(position).getGroupId(), mContext, holder.mImageView, true);
+        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getGroupId(), mContext, holder.mImageView, true);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

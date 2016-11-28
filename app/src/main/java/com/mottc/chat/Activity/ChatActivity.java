@@ -31,7 +31,7 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.AvatarURLDownloadUtils;
 import com.mottc.chat.utils.DisplayUtils;
 import com.mottc.chat.utils.EaseCommonUtils;
 
@@ -373,9 +373,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
             holder.tv.setText(txtBody.getMessage());
+            new AvatarURLDownloadUtils().downLoad(message.getFrom(), context, holder.mImageView, false);
             if (chatType == 1) {
                 holder.toUsername.setText(tousername);
-                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+//                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
                 holder.mImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -390,7 +391,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             } else {
                 holder.toUsername.setText(message.getFrom());
-                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+//                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
                 holder.mImageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
