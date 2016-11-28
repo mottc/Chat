@@ -21,6 +21,7 @@ import com.hyphenate.chat.EMClient;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
+import com.mottc.chat.utils.AvatarURLDownloadUtils;
 import com.mottc.chat.utils.PersonAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
 import com.mottc.chat.utils.TimeUtils;
@@ -65,7 +66,10 @@ public class UserDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         userName = this.getIntent().getStringExtra("username");
         mDetailName.setText(userName);
-        PersonAvatarUtils.setAvatar(this, userName, mDetailAvatar);
+
+        AvatarURLDownloadUtils.downLoad(userName, this, mDetailAvatar,false);
+        PersonAvatarUtils.setAvatar(this, AvatarURLDownloadUtils.avatarURL, mDetailAvatar);
+
         Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
         if ((!localUsers.containsKey(userName)) && (!userName.equals(EMClient.getInstance().getCurrentUser()))) {
             mAddF.setVisibility(View.VISIBLE);

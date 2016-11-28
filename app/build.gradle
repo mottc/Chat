@@ -40,4 +40,6 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     compile 'com.qiniu:qiniu-android-sdk:7.2.+'
     compile 'com.qiniu:qiniu-java-sdk:7.1.+'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }

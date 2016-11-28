@@ -46,7 +46,7 @@ import com.mottc.chat.db.InviteMessage;
 import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.db.InviteMessageDao;
 import com.mottc.chat.db.UserDao;
-import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.AvatarURLDownloadUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -128,8 +128,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView imageView = (ImageView) headerView.findViewById(R.id.imageView);
         String currentUserName = EMClient.getInstance().getCurrentUser();
         textView.setText(currentUserName);//  获取当前用户名
-        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
+//        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
 
+        AvatarURLDownloadUtils.downLoad(currentUserName, this, imageView,false);
 
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
