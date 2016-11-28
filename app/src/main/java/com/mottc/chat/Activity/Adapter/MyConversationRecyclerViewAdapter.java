@@ -13,7 +13,8 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.util.DateUtils;
 import com.mottc.chat.Activity.ConversationFragment;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.AvatarURLDownloadUtils;
+import com.mottc.chat.utils.GroupAvatarUtils;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -47,12 +48,12 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
             holder.mNameView.setText(groupName);
             holder.mGroup.setVisibility(View.VISIBLE);
             holder.mIcon.setImageResource(R.drawable.group_icon);
-//            GroupAvatarUtils.setAvatar(mContext, groupId, holder.mIcon);
-            new AvatarURLDownloadUtils().downLoad(groupId, mContext, holder.mIcon,true);
+            GroupAvatarUtils.setAvatar(mContext, groupId, holder.mIcon);
+//            new AvatarURLDownloadUtils().downLoad(groupId, mContext, holder.mIcon,true);
 
         } else {
             holder.mNameView.setText(mValues.get(position).getUserName());
-//            PersonAvatarUtils.setAvatar(mContext, mValues.get(position).getUserName(), holder.mIcon);
+            PersonAvatarUtils.setAvatar(mContext, mValues.get(position).getUserName(), holder.mIcon);
 //            AvatarURLDownloadUtils.downLoad(mValues.get(position).getUserName(), mContext, holder.mIcon,false);
 
         }

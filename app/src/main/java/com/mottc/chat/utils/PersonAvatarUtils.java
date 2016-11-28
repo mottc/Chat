@@ -14,9 +14,10 @@ import com.mottc.chat.R;
  * Time: 16:59
  */
 public class PersonAvatarUtils {
-    public static void setAvatar(Context context, String Url, ImageView imageView){
+    public static void setAvatar(Context context, String username, ImageView imageView){
 
 //        String Url = AvatarURLDownloadUtils.downLoad(username);
+        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/"+username+".png";
         Glide
                 .with(context)
                 .load(Url)

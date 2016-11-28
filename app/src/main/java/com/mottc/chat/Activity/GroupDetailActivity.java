@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,9 +20,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.AvatarURLDownloadUtils;
+import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
-import com.mottc.chat.utils.TimeUtils;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -81,7 +79,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         groupMembersAdapter = new GroupMembersAdapter(members, owner);
         mMembersList.setAdapter(groupMembersAdapter);
         mMembers.setText("群组成员列表(" + members.size() + ")");
-        if (EMClient.getInstance().getCurrentUser().equals(owner)){
+        if (EMClient.getInstance().getCurrentUser().equals(owner)) {
             mInvite.setVisibility(View.VISIBLE);
         }
         groupMembersAdapter.setOnGroupMembersListClickListener(new GroupMembersAdapter.OnGroupMembersListClickListener() {
@@ -98,8 +96,8 @@ public class GroupDetailActivity extends AppCompatActivity {
         groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
         mDetailGroupName.setText(groupName);
 
-        new AvatarURLDownloadUtils().downLoad(groupId, this, mDetailGroupAvatar,true);
-//        GroupAvatarUtils.setAvatar(this, AvatarURLDownloadUtils.avatarURL, mDetailGroupAvatar);
+//        new AvatarURLDownloadUtils().downLoad(groupId, this, mDetailGroupAvatar,true);
+        GroupAvatarUtils.setAvatar(this, groupId, mDetailGroupAvatar);
         //根据群组ID从服务器获取群组基本信息
 
 
@@ -128,11 +126,11 @@ public class GroupDetailActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({detail_group_avatar, R.id.detail_group_name, R.id.back,R.id.invite})
+    @OnClick({detail_group_avatar, R.id.detail_group_name, R.id.back, R.id.invite})
     public void onClick(View view) {
         switch (view.getId()) {
             case detail_group_avatar:
-                if (EMClient.getInstance().getCurrentUser().equals(owner)){
+                if (EMClient.getInstance().getCurrentUser().equals(owner)) {
                     pick();
                 }
                 break;
@@ -174,18 +172,18 @@ public class GroupDetailActivity extends AppCompatActivity {
         uploadManager.put(data, upkey, token, new UpCompletionHandler() {
             public void complete(String key, ResponseInfo rinfo, JSONObject response) {
 
-
-                Log.i("MainActivity", "complete: " + key);
-                String info = "{\"URL\":\"" + "http://7xktkd.com1.z0.glb.clouddn.com/"+key +"?v="+ TimeUtils.getCurrentTimeAsNumber()+"\"}";
-                byte[] filedata = info.getBytes();
-                String fileName = groupId + ".json";
-                String fileToken = QiniuTokenUtils.CreatJsonToken(groupId);
-                uploadManager.put(filedata, fileName, fileToken, new UpCompletionHandler() {
-                    @Override
-                    public void complete(String key, ResponseInfo info, JSONObject response) {
-
-                    }
-                },null );
+//
+//                Log.i("MainActivity", "complete: " + key);
+//                String info = "{\"URL\":\"" + "http://7xktkd.com1.z0.glb.clouddn.com/" + key + "?v=" + TimeUtils.getCurrentTimeAsNumber() + "\"}";
+//                byte[] filedata = info.getBytes();
+//                String fileName = groupId + ".json";
+//                String fileToken = QiniuTokenUtils.CreatJsonToken(groupId);
+//                uploadManager.put(filedata, fileName, fileToken, new UpCompletionHandler() {
+//                    @Override
+//                    public void complete(String key, ResponseInfo info, JSONObject response) {
+//
+//                    }
+//                }, null);
 
             }
         }, null);

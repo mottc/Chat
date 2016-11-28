@@ -31,9 +31,9 @@ import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.AvatarURLDownloadUtils;
 import com.mottc.chat.utils.DisplayUtils;
 import com.mottc.chat.utils.EaseCommonUtils;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -373,38 +373,46 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
             EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
             holder.tv.setText(txtBody.getMessage());
-            new AvatarURLDownloadUtils().downLoad(message.getFrom(), context, holder.mImageView, false);
-            if (chatType == 1) {
-                holder.toUsername.setText(tousername);
-//                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
-                holder.mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (viewType == 0) {
-                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", tousername));
-                        } else {
-                            startActivity(new Intent(ChatActivity.this,UserDetailActivity.class).putExtra("username",EMClient.getInstance().getCurrentUser()));
-                        }
+//            new AvatarURLDownloadUtils().downLoad(message.getFrom(), context, holder.mImageView, false);
+            PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
+            holder.toUsername.setText(message.getFrom());
+            holder.mImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                }
+            });
 
-                    }
-                });
 
-            } else {
-                holder.toUsername.setText(message.getFrom());
-//                PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
-                holder.mImageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (viewType == 0) {
-                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        } else {
-                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
-
-                        }
-                    }
-                });
-
-            }
+//            if (chatType == 1) {
+//                holder.toUsername.setText(tousername);
+//                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (viewType == 0) {
+//                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", tousername));
+//                        } else {
+//                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
+//                        }
+//
+//                    }
+//                });
+//
+//            } else {
+//                holder.toUsername.setText(message.getFrom());
+//                holder.mImageView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (viewType == 0) {
+//                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", message.getFrom()));
+//                        } else {
+//                            startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
+//
+//                        }
+//                    }
+//                });
+//
+//            }
 
 
             return convertView;

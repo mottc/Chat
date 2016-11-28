@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.Activity.GroupFragment;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.AvatarURLDownloadUtils;
+import com.mottc.chat.utils.GroupAvatarUtils;
 
 import java.util.List;
 
@@ -39,8 +39,8 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getGroupName());
-//        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupId(), holder.mImageView);
-        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getGroupId(), mContext, holder.mImageView, true);
+        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupId(), holder.mImageView);
+//        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getGroupId(), mContext, holder.mImageView, true);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
