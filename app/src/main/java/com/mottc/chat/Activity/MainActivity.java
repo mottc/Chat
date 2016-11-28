@@ -46,7 +46,6 @@ import com.mottc.chat.db.InviteMessage;
 import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.db.InviteMessageDao;
 import com.mottc.chat.db.UserDao;
-import com.mottc.chat.utils.AvatarURLDownloadUtils;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.HashMap;
@@ -228,11 +227,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        new AvatarURLDownloadUtils().downLoad(currentUserName, this, imageView, false);
-    }
+
 
     /**
      * 在主界面点击返回键时，弹出提示是否要推出程序
