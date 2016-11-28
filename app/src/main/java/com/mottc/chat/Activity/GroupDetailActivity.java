@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +23,7 @@ import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
 import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
+import com.mottc.chat.utils.TimeUtils;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -157,7 +159,7 @@ public class GroupDetailActivity extends AppCompatActivity {
             }
         });
 
-        String token = QiniuTokenUtils.creatToken(groupId);
+        String token = QiniuTokenUtils.creatImageToken(groupId);
 //        mDetailAvatar.setImageBitmap(bitmap);
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -168,6 +170,19 @@ public class GroupDetailActivity extends AppCompatActivity {
         String upkey = groupId + ".png";
         uploadManager.put(data, upkey, token, new UpCompletionHandler() {
             public void complete(String key, ResponseInfo rinfo, JSONObject response) {
+
+
+                Log.i("MainActivity", "complete: " + key);
+                String info = "{\"URL\":\"" + "http://7xktkd.com1.z0.glb.clouddn.com/"+key +"?v="+ TimeUtils.getCurrentTimeAsNumber()+"\"}";
+                byte[] filedata = info.getBytes();
+                String fileName = groupId + ".json";
+                String fileToken = QiniuTokenUtils.CreatJsonToken(groupId);
+                uploadManager.put(filedata, fileName, fileToken, new UpCompletionHandler() {
+                    @Override
+                    public void complete(String key, ResponseInfo info, JSONObject response) {
+
+                    }
+                },null );
 
             }
         }, null);

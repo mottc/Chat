@@ -1,5 +1,7 @@
 package com.mottc.chat.utils;
 
+import android.util.Log;
+
 import com.qiniu.util.Auth;
 
 /**
@@ -9,10 +11,17 @@ import com.qiniu.util.Auth;
  * Time: 10:51
  */
 public class QiniuTokenUtils {
-    public static String creatToken(String userName) {
+    public static String creatImageToken(String userName) {
         String bucketName = "jungle:" + userName + ".png";
         Auth auth = Auth.create("thx5mKjSsksUU1I24M8XTt5q0DSjgs9tXpMB54gr", "Xw2OGDoefwxGEAuJP_SWHnvm32PssnJgTJRGeHTB");
         String token = auth.uploadToken(bucketName);
+        return token;
+    }
+    public static String CreatJsonToken(String userName) {
+        String bucketName = "jungle:" + userName + ".json";
+        Auth auth = Auth.create("thx5mKjSsksUU1I24M8XTt5q0DSjgs9tXpMB54gr", "Xw2OGDoefwxGEAuJP_SWHnvm32PssnJgTJRGeHTB");
+        String token = auth.uploadToken(bucketName);
+        Log.i("Qiniu", "CreatJsonToken: " + token);
         return token;
     }
 }
