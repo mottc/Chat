@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         imageView = (ImageView) headerView.findViewById(R.id.imageView);
         currentUserName = EMClient.getInstance().getCurrentUser();
         textView.setText(currentUserName);//  获取当前用户名
-        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
 //        new AvatarURLDownloadUtils().downLoad(currentUserName, this, imageView, false);
 
         //注册联系人变动监听
@@ -142,8 +141,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // TODO: 2016/11/28 使用监听再写
+        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
+    }
 
-//    @Override
+    //    @Override
 //    public boolean onCreateOptionsMenu(Menu menu) {
 //        // Inflate the menu; this adds items to the action bar if it is present.
 //        getMenuInflater().inflate(R.menu.main, menu);

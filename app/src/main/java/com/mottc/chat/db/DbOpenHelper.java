@@ -15,7 +15,7 @@ import com.mottc.chat.MyApplication;
 
 
 /**
- *创建数据库和其中的表
+ * 创建数据库和其中的表
  */
 public class DbOpenHelper extends SQLiteOpenHelper {
 
@@ -52,6 +52,11 @@ public class DbOpenHelper extends SQLiteOpenHelper {
             + UserDao.COLUMN_NAME_DISABLED_GROUPS + " TEXT, "
             + UserDao.COLUMN_NAME_DISABLED_IDS + " TEXT);";
 
+    private static final String CREATE_AVATARINFO_TABLE = "CREATE TABLE "
+            + AvatarInfoDao.AVATARINFO_TABLE_NAME + " ("
+            + AvatarInfoDao.COLUMN_NAME_USERNAME + " TEXT PRIMARY KEY, "
+            + AvatarInfoDao.COLUMN_NAME_TIME + " TEXT);";
+
     private DbOpenHelper(Context context) {
         super(context, getUserDatabaseName(), null, DATABASE_VERSION);
     }
@@ -64,7 +69,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     private static String getUserDatabaseName() {
-        return  MyApplication.getInstance().getCurrentUserName() + "_demo.db";
+        return MyApplication.getInstance().getCurrentUserName() + "_demo.db";
     }
 
 
@@ -74,23 +79,23 @@ public class DbOpenHelper extends SQLiteOpenHelper {
         db.execSQL(INIVTE_MESSAGE_TABLE_CREATE);
         db.execSQL(CREATE_PREF_TABLE);
         db.execSQL(ROBOT_TABLE_CREATE);
-
+        db.execSQL(CREATE_AVATARINFO_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        if(oldVersion < 2){
-            db.execSQL("ALTER TABLE "+ UserDao.TABLE_NAME +" ADD COLUMN "+
+        if (oldVersion < 2) {
+            db.execSQL("ALTER TABLE " + UserDao.TABLE_NAME + " ADD COLUMN " +
                     UserDao.COLUMN_NAME_AVATAR + " TEXT ;");
         }
 
-        if(oldVersion < 3){
+        if (oldVersion < 3) {
             db.execSQL(CREATE_PREF_TABLE);
         }
-        if(oldVersion < 4){
+        if (oldVersion < 4) {
             db.execSQL(ROBOT_TABLE_CREATE);
         }
-        if(oldVersion < 5){
+        if (oldVersion < 5) {
             db.execSQL("ALTER TABLE " + InviteMessageDao.TABLE_NAME + " ADD COLUMN " +
                     InviteMessageDao.COLUMN_NAME_UNREAD_MSG_COUNT + " INTEGER ;");
         }

@@ -20,8 +20,10 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
+import com.mottc.chat.db.DBManager;
 import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
+import com.mottc.chat.utils.TimeUtils;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -132,6 +134,13 @@ public class GroupDetailActivity extends AppCompatActivity {
             case detail_group_avatar:
                 if (EMClient.getInstance().getCurrentUser().equals(owner)) {
                     pick();
+                } else {
+                    if (DBManager.getInstance().getAvatarInfo(groupId) != null) {
+                        DBManager.getInstance().updateAvatarInfo(groupId, TimeUtils.getCurrentTimeAsNumber());
+                    } else {
+                        DBManager.getInstance().saveAvatarInfo(groupId, TimeUtils.getCurrentTimeAsNumber());
+                    }
+                    GroupAvatarUtils.setAvatar(this, groupId, mDetailGroupAvatar);
                 }
                 break;
             case R.id.invite:
@@ -159,6 +168,11 @@ public class GroupDetailActivity extends AppCompatActivity {
                         .into(mDetailGroupAvatar);
             }
         });
+        if (DBManager.getInstance().getAvatarInfo(groupId) != null) {
+            DBManager.getInstance().updateAvatarInfo(groupId, TimeUtils.getCurrentTimeAsNumber());
+        } else {
+            DBManager.getInstance().saveAvatarInfo(groupId, TimeUtils.getCurrentTimeAsNumber());
+        }
 
         String token = QiniuTokenUtils.creatImageToken(groupId);
 //        mDetailAvatar.setImageBitmap(bitmap);

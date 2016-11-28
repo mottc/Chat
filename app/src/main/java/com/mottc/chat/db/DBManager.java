@@ -25,12 +25,12 @@ public class DBManager {
     static private DBManager dbMgr = new DBManager();
     private DbOpenHelper dbHelper;
 
-    private DBManager(){
+    private DBManager() {
         dbHelper = DbOpenHelper.getInstance(MyApplication.getInstance().getApplicationContext());
     }
 
-    public static synchronized DBManager getInstance(){
-        if(dbMgr == null){
+    public static synchronized DBManager getInstance() {
+        if (dbMgr == null) {
             dbMgr = new DBManager();
         }
         return dbMgr;
@@ -49,9 +49,9 @@ public class DBManager {
             for (EaseUser user : contactList) {
                 ContentValues values = new ContentValues();
                 values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
-                if(user.getNick() != null)
+                if (user.getNick() != null)
                     values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
-                if(user.getAvatar() != null)
+                if (user.getAvatar() != null)
                     values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
                 db.replace(UserDao.TABLE_NAME, null, values);
             }
@@ -76,7 +76,7 @@ public class DBManager {
                 user.setNick(nick);
                 user.setAvatar(avatar);
                 if (username.equals(Constant.NEW_FRIENDS_USERNAME) || username.equals(Constant.GROUP_USERNAME)
-                        || username.equals(Constant.CHAT_ROOM)|| username.equals(Constant.CHAT_ROBOT)) {
+                        || username.equals(Constant.CHAT_ROOM) || username.equals(Constant.CHAT_ROBOT)) {
                     user.setInitialLetter("");
                 } else {
                     EaseCommonUtils.setUserInitialLetter(user);
@@ -90,52 +90,54 @@ public class DBManager {
 
     /**
      * 删除一个联系人
+     *
      * @param username
      */
-    synchronized public void deleteContact(String username){
+    synchronized public void deleteContact(String username) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.delete(UserDao.TABLE_NAME, UserDao.COLUMN_NAME_ID + " = ?", new String[]{username});
         }
     }
 
     /**
      * 保存一个联系人
+     *
      * @param user
      */
-    synchronized public void saveContact(EaseUser user){
+    synchronized public void saveContact(EaseUser user) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(UserDao.COLUMN_NAME_ID, user.getUsername());
-        if(user.getNick() != null)
+        if (user.getNick() != null)
             values.put(UserDao.COLUMN_NAME_NICK, user.getNick());
-        if(user.getAvatar() != null)
+        if (user.getAvatar() != null)
             values.put(UserDao.COLUMN_NAME_AVATAR, user.getAvatar());
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.replace(UserDao.TABLE_NAME, null, values);
         }
     }
 
-    public void setDisabledGroups(List<String> groups){
+    public void setDisabledGroups(List<String> groups) {
         setList(UserDao.COLUMN_NAME_DISABLED_GROUPS, groups);
     }
 
-    public List<String>  getDisabledGroups(){
+    public List<String> getDisabledGroups() {
         return getList(UserDao.COLUMN_NAME_DISABLED_GROUPS);
     }
 
-    public void setDisabledIds(List<String> ids){
+    public void setDisabledIds(List<String> ids) {
         setList(UserDao.COLUMN_NAME_DISABLED_IDS, ids);
     }
 
-    public List<String> getDisabledIds(){
+    public List<String> getDisabledIds() {
         return getList(UserDao.COLUMN_NAME_DISABLED_IDS);
     }
 
-    synchronized private void setList(String column, List<String> strList){
+    synchronized private void setList(String column, List<String> strList) {
         StringBuilder strBuilder = new StringBuilder();
 
-        for(String hxid:strList){
+        for (String hxid : strList) {
             strBuilder.append(hxid).append("$");
         }
 
@@ -144,13 +146,13 @@ public class DBManager {
             ContentValues values = new ContentValues();
             values.put(column, strBuilder.toString());
 
-            db.update(UserDao.PREF_TABLE_NAME, values, null,null);
+            db.update(UserDao.PREF_TABLE_NAME, values, null, null);
         }
     }
 
-    synchronized private List<String> getList(String column){
+    synchronized private List<String> getList(String column) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select " + column + " from " + UserDao.PREF_TABLE_NAME,null);
+        Cursor cursor = db.rawQuery("select " + column + " from " + UserDao.PREF_TABLE_NAME, null);
         if (!cursor.moveToFirst()) {
             cursor.close();
             return null;
@@ -165,9 +167,9 @@ public class DBManager {
 
         String[] array = strVal.split("$");
 
-        if(array != null && array.length > 0){
+        if (array != null && array.length > 0) {
             List<String> list = new ArrayList<String>();
-            for(String str:array){
+            for (String str : array) {
                 list.add(str);
             }
 
@@ -179,13 +181,14 @@ public class DBManager {
 
     /**
      * 保存message
+     *
      * @param message
-     * @return  返回这条messaged在db中的id
+     * @return 返回这条messaged在db中的id
      */
-    public synchronized Integer saveMessage(InviteMessage message){
+    public synchronized Integer saveMessage(InviteMessage message) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         int id = -1;
-        if(db.isOpen()){
+        if (db.isOpen()) {
             ContentValues values = new ContentValues();
             values.put(InviteMessageDao.COLUMN_NAME_FROM, message.getFrom());
             values.put(InviteMessageDao.COLUMN_NAME_GROUP_ID, message.getGroupId());
@@ -196,8 +199,8 @@ public class DBManager {
             values.put(InviteMessageDao.COLUMN_NAME_GROUPINVITER, message.getGroupInviter());
             db.insert(InviteMessageDao.TABLE_NAME, null, values);
 
-            Cursor cursor = db.rawQuery("select last_insert_rowid() from " + InviteMessageDao.TABLE_NAME,null);
-            if(cursor.moveToFirst()){
+            Cursor cursor = db.rawQuery("select last_insert_rowid() from " + InviteMessageDao.TABLE_NAME, null);
+            if (cursor.moveToFirst()) {
                 id = cursor.getInt(0);
             }
 
@@ -208,26 +211,28 @@ public class DBManager {
 
     /**
      * 更新message
+     *
      * @param msgId
      * @param values
      */
-    synchronized public void updateMessage(int msgId,ContentValues values){
+    synchronized public void updateMessage(int msgId, ContentValues values) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.update(InviteMessageDao.TABLE_NAME, values, InviteMessageDao.COLUMN_NAME_ID + " = ?", new String[]{String.valueOf(msgId)});
         }
     }
 
     /**
      * 获取messges
+     *
      * @return
      */
-    synchronized public List<InviteMessage> getMessagesList(){
+    synchronized public List<InviteMessage> getMessagesList() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         List<InviteMessage> msgs = new ArrayList<InviteMessage>();
-        if(db.isOpen()){
-            Cursor cursor = db.rawQuery("select * from " + InviteMessageDao.TABLE_NAME ,null);
-            while(cursor.moveToNext()){
+        if (db.isOpen()) {
+            Cursor cursor = db.rawQuery("select * from " + InviteMessageDao.TABLE_NAME, null);
+            while (cursor.moveToNext()) {
                 InviteMessage msg = new InviteMessage();
                 int id = cursor.getInt(cursor.getColumnIndex(InviteMessageDao.COLUMN_NAME_ID));
                 String from = cursor.getString(cursor.getColumnIndex(InviteMessageDao.COLUMN_NAME_FROM));
@@ -246,23 +251,23 @@ public class DBManager {
                 msg.setTime(time);
                 msg.setGroupInviter(groupInviter);
 
-                if(status == InviteMessage.InviteMessageStatus.BEINVITEED.ordinal())
+                if (status == InviteMessage.InviteMessageStatus.BEINVITEED.ordinal())
                     msg.setStatus(InviteMessageStatus.BEINVITEED);
-                else if(status == InviteMessageStatus.BEAGREED.ordinal())
+                else if (status == InviteMessageStatus.BEAGREED.ordinal())
                     msg.setStatus(InviteMessageStatus.BEAGREED);
-                else if(status == InviteMessageStatus.BEREFUSED.ordinal())
+                else if (status == InviteMessageStatus.BEREFUSED.ordinal())
                     msg.setStatus(InviteMessageStatus.BEREFUSED);
-                else if(status == InviteMessageStatus.AGREED.ordinal())
+                else if (status == InviteMessageStatus.AGREED.ordinal())
                     msg.setStatus(InviteMessageStatus.AGREED);
-                else if(status == InviteMessageStatus.REFUSED.ordinal())
+                else if (status == InviteMessageStatus.REFUSED.ordinal())
                     msg.setStatus(InviteMessageStatus.REFUSED);
-                else if(status == InviteMessageStatus.BEAPPLYED.ordinal())
+                else if (status == InviteMessageStatus.BEAPPLYED.ordinal())
                     msg.setStatus(InviteMessageStatus.BEAPPLYED);
-                else if(status == InviteMessageStatus.GROUPINVITATION.ordinal())
+                else if (status == InviteMessageStatus.GROUPINVITATION.ordinal())
                     msg.setStatus(InviteMessageStatus.GROUPINVITATION);
-                else if(status == InviteMessageStatus.GROUPINVITATION_ACCEPTED.ordinal())
+                else if (status == InviteMessageStatus.GROUPINVITATION_ACCEPTED.ordinal())
                     msg.setStatus(InviteMessageStatus.GROUPINVITATION_ACCEPTED);
-                else if(status == InviteMessageStatus.GROUPINVITATION_DECLINED.ordinal())
+                else if (status == InviteMessageStatus.GROUPINVITATION_DECLINED.ordinal())
                     msg.setStatus(InviteMessageStatus.GROUPINVITATION_DECLINED);
 
                 msgs.add(msg);
@@ -274,21 +279,22 @@ public class DBManager {
 
     /**
      * 删除要求消息
+     *
      * @param from
      */
-    synchronized public void deleteMessage(String from){
+    synchronized public void deleteMessage(String from) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             db.delete(InviteMessageDao.TABLE_NAME, InviteMessageDao.COLUMN_NAME_FROM + " = ?", new String[]{from});
         }
     }
 
-    synchronized int getUnreadNotifyCount(){
+    synchronized int getUnreadNotifyCount() {
         int count = 0;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             Cursor cursor = db.rawQuery("select " + InviteMessageDao.COLUMN_NAME_UNREAD_MSG_COUNT + " from " + InviteMessageDao.TABLE_NAME, null);
-            if(cursor.moveToFirst()){
+            if (cursor.moveToFirst()) {
                 count = cursor.getInt(0);
             }
             cursor.close();
@@ -296,18 +302,67 @@ public class DBManager {
         return count;
     }
 
-    synchronized void setUnreadNotifyCount(int count){
+    synchronized void setUnreadNotifyCount(int count) {
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        if(db.isOpen()){
+        if (db.isOpen()) {
             ContentValues values = new ContentValues();
             values.put(InviteMessageDao.COLUMN_NAME_UNREAD_MSG_COUNT, count);
 
-            db.update(InviteMessageDao.TABLE_NAME, values, null,null);
+            db.update(InviteMessageDao.TABLE_NAME, values, null, null);
         }
     }
 
-    synchronized public void closeDB(){
-        if(dbHelper != null){
+
+    synchronized public void saveAvatarInfo(String username, String time) {
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (db.isOpen()) {
+            ContentValues values = new ContentValues();
+            values.put(AvatarInfoDao.COLUMN_NAME_USERNAME, username);
+            values.put(AvatarInfoDao.COLUMN_NAME_TIME, time);
+
+            db.insert(AvatarInfoDao.AVATARINFO_TABLE_NAME, null, values);
+        }
+    }
+
+    synchronized public void updateAvatarInfo(String username, String time) {
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        if (db.isOpen()) {
+            ContentValues values = new ContentValues();
+            values.put(AvatarInfoDao.COLUMN_NAME_USERNAME, username);
+            values.put(AvatarInfoDao.COLUMN_NAME_TIME, time);
+            db.update(AvatarInfoDao.AVATARINFO_TABLE_NAME, values, AvatarInfoDao.COLUMN_NAME_USERNAME + " = ?", new String[]{username});
+        }
+    }
+
+    synchronized public String getAvatarInfo(String username) {
+        String time = null;
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        if (db.isOpen()) {
+            Cursor cursor = db.rawQuery("select " + AvatarInfoDao.COLUMN_NAME_TIME + " from " + AvatarInfoDao.AVATARINFO_TABLE_NAME + " WHERE " +
+                    AvatarInfoDao.COLUMN_NAME_USERNAME + " = ?", new String[]{username});
+            while (cursor.moveToNext()) {
+                time = cursor.getString(cursor.getColumnIndex(AvatarInfoDao.COLUMN_NAME_TIME));
+            }
+            cursor.close();
+        }
+        return time;
+    }
+
+    synchronized public void deleteAvatarInfo(String username) {
+
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        if (db.isOpen()) {
+            db.delete(AvatarInfoDao.AVATARINFO_TABLE_NAME, AvatarInfoDao.COLUMN_NAME_USERNAME + " = ?", new String[]{username});
+        }
+
+    }
+
+
+
+    synchronized public void closeDB() {
+        if (dbHelper != null) {
             dbHelper.closeDB();
         }
         dbMgr = null;

@@ -19,9 +19,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.db.DBManager;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.PersonAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
+import com.mottc.chat.utils.TimeUtils;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UploadManager;
@@ -88,6 +90,13 @@ public class UserDetailActivity extends AppCompatActivity {
                 //更换头像
                 if (EMClient.getInstance().getCurrentUser().equals(userName)) {
                     pick();
+                } else {
+                    if (DBManager.getInstance().getAvatarInfo(userName) != null) {
+                        DBManager.getInstance().updateAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
+                    } else {
+                        DBManager.getInstance().saveAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
+                    }
+                    PersonAvatarUtils.setAvatar(this, userName, mDetailAvatar);
                 }
                 break;
             case R.id.detail_name:
@@ -117,6 +126,12 @@ public class UserDetailActivity extends AppCompatActivity {
                         .into(mDetailAvatar);
             }
         });
+
+        if (DBManager.getInstance().getAvatarInfo(userName) != null) {
+            DBManager.getInstance().updateAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
+        } else {
+            DBManager.getInstance().saveAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
+        }
 
         String token = QiniuTokenUtils.creatImageToken(userName);
 //        mDetailAvatar.setImageBitmap(bitmap);

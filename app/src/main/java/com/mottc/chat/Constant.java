@@ -15,6 +15,9 @@ public class Constant {
     public static final String MESSAGE_ATTR_EXPRESSION_ID = "em_expression_id";
 
 
+    public static final String AVATAR_URL = "http://7xktkd.com1.z0.glb.clouddn.com/";
+
+
 
     public static final int CHATTYPE_SINGLE = 1;
     public static final int CHATTYPE_GROUP = 2;
@@ -34,4 +37,5 @@ public class Constant {
 
     //Myinfo中保存环信账号
     public static final String KEY_USERNAME = "username";
+
 }
