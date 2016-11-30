@@ -8,5 +8,6 @@
     <color name="chat_back">#ffffff</color>
     <color name="touch">#EEEEEE</color>
     <color name="state_focused">#DDDDDD</color>
+    <color name="voice_cancel">#55ff0000</color>
 
 </resources>

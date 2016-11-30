@@ -28,7 +28,7 @@
 
 
     <!--<item android:title="好友管理">-->
-        <!--<menu>-->
+        <!--<menu2>-->
             <!--<item-->
                 <!--android:id="@+id/add_friends"-->
                 <!--android:icon="@drawable/ic_menu_send"-->
@@ -38,11 +38,11 @@
                 <!--android:id="@+id/notifition"-->
                 <!--android:icon="@drawable/ic_menu_share"-->
                 <!--android:title="好友申请" />-->
-        <!--</menu>-->
+        <!--</menu2>-->
     <!--</item>-->
 
     <!--<item android:title="群组管理">-->
-        <!--<menu>-->
+        <!--<menu2>-->
             <!--<item-->
                 <!--android:id="@+id/add_group"-->
                 <!--android:icon="@drawable/ic_menu_send"-->
@@ -51,10 +51,10 @@
                 <!--android:id="@+id/new_group"-->
                 <!--android:icon="@drawable/ic_menu_share"-->
                 <!--android:title="新建群组" />-->
-        <!--</menu>-->
+        <!--</menu2>-->
     <!--</item>-->
     <!--<item android:title="其它">-->
-       <!--<menu>-->
+       <!--<menu2>-->
             <!--<item-->
                 <!--android:id="@+id/change_user"-->
                 <!--android:icon="@drawable/ic_menu_send"-->
@@ -66,7 +66,7 @@
                 <!--android:title="版本" />-->
 
 
-        <!--</menu>-->
+        <!--</menu2>-->
     <!--</item>-->
 
 </menu>

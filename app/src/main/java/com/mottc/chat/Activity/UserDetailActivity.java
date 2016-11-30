@@ -53,6 +53,7 @@ public class UserDetailActivity extends AppCompatActivity {
     Button mSendM;
     String userName;
 
+//    OnAvatarChangeListener mOnAvatarChangeListener;
     Uri uri;
     private UploadManager uploadManager;
     final int SELECT_PICTURE = 1;
@@ -78,6 +79,10 @@ public class UserDetailActivity extends AppCompatActivity {
         }
         uploadManager = new UploadManager();
     }
+
+//    void setOnAvatarChangeListener(OnAvatarChangeListener onAvatarChangeListener){
+//        this.mOnAvatarChangeListener = onAvatarChangeListener;
+//    }
 
 
     @OnClick({R.id.back, R.id.detail_avatar, R.id.detail_name, R.id.add_f, R.id.send_m})
@@ -127,11 +132,14 @@ public class UserDetailActivity extends AppCompatActivity {
             }
         });
 
+
         if (DBManager.getInstance().getAvatarInfo(userName) != null) {
             DBManager.getInstance().updateAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
         } else {
             DBManager.getInstance().saveAvatarInfo(userName, TimeUtils.getCurrentTimeAsNumber());
         }
+
+//        mOnAvatarChangeListener.setAvatar();
 
         String token = QiniuTokenUtils.creatImageToken(userName);
 //        mDetailAvatar.setImageBitmap(bitmap);
@@ -144,7 +152,6 @@ public class UserDetailActivity extends AppCompatActivity {
         String upkey = userName + ".png";
         uploadManager.put(data, upkey, token, new UpCompletionHandler() {
             public void complete(String key, ResponseInfo rinfo, JSONObject response) {
-//
 //                Log.i("MainActivity", "complete: " + key);
 //                String info = "{\"URL\":\"" + "http://7xktkd.com1.z0.glb.clouddn.com/"+key +"?v="+ TimeUtils.getCurrentTimeAsNumber()+"\"}";
 //                byte[] filedata = info.getBytes();
@@ -197,5 +204,9 @@ public class UserDetailActivity extends AppCompatActivity {
             }).start();
         }
     }
+
+//    interface OnAvatarChangeListener{
+//        void setAvatar();
+//    }
 
 }

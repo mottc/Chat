@@ -139,19 +139,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //注册群组变动监听
         EMClient.getInstance().groupManager().addGroupChangeListener(new MyGroupChangeListener());
 
+//        UserDetailActivity userDetailActivity = new UserDetailActivity();
+//        userDetailActivity.setOnAvatarChangeListener(new UserDetailActivity.OnAvatarChangeListener() {
+//            @Override
+//            public void setAvatar() {
+//                PersonAvatarUtils.setAvatar(MainActivity.this, currentUserName, imageView);
+//            }
+//        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // TODO: 2016/11/28 使用监听再写
         PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
     }
 
     //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.main, menu);
+//    public boolean onCreateOptionsMenu(Menu menu2) {
+//        // Inflate the menu2; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu2.main, menu2);
 //        return true;
 //    }
 //
@@ -231,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
 
 
     /**

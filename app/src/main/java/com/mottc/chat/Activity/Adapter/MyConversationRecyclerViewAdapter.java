@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
+import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.DateUtils;
 import com.mottc.chat.Activity.ConversationFragment;
 import com.mottc.chat.R;
@@ -67,12 +68,22 @@ public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyCo
             holder.mUnreadView.setText(String.valueOf(unread));
         }
         holder.mTime.setText(DateUtils.getTimestampString(new Date(mValues.get(position).getLastMessage().getMsgTime())));
-        String mes = mValues.get(position).getLastMessage().getBody().toString();
-        int start = mes.indexOf("txt:\"");
-        int end = mes.lastIndexOf("\"");
-        mes = mes.substring((start + 5), end);
 
-        holder.mContent.setText(mes);
+        if (mValues.get(position).getLastMessage().getType().equals(EMMessage.Type.TXT)) {
+            String mes = mValues.get(position).getLastMessage().getBody().toString();
+            int start = mes.indexOf("txt:\"");
+            int end = mes.lastIndexOf("\"");
+            mes = mes.substring((start + 5), end);
+            holder.mContent.setText(mes);
+        } else if (mValues.get(position).getLastMessage().getType().equals(EMMessage.Type.IMAGE)) {
+            holder.mContent.setText("[图片]");
+        } else if (mValues.get(position).getLastMessage().getType().equals(EMMessage.Type.VOICE)) {
+            holder.mContent.setText("[语音]");
+        } else {
+            holder.mContent.setText("···");
+        }
+
+
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
