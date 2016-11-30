@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
@@ -65,7 +66,7 @@ public class MessageAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return 2;
+        return 6;
     }
 
     @SuppressLint("InflateParams")
@@ -76,9 +77,22 @@ public class MessageAdapter extends BaseAdapter {
         final int viewType = getItemViewType(position);
         if (convertView == null) {
             if (viewType == 0) {
-                convertView = inflater.inflate(R.layout.item_message_received, parent, false);
+                if (message.getType().equals(EMMessage.Type.TXT)) {
+                    convertView = inflater.inflate(R.layout.item_message_received, parent, false);
+                } else if (message.getType().equals(EMMessage.Type.IMAGE)) {
+                    convertView = inflater.inflate(R.layout.received_picture, parent, false);
+                } else {
+                    convertView = inflater.inflate(R.layout.received_voice, parent, false);
+                }
+
             } else {
-                convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
+                if (message.getType().equals(EMMessage.Type.TXT)) {
+                    convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
+                } else if (message.getType().equals(EMMessage.Type.IMAGE)) {
+                    convertView = inflater.inflate(R.layout.sent_picture, parent, false);
+                } else {
+                    convertView = inflater.inflate(R.layout.sent_voice, parent, false);
+                }
             }
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
@@ -92,8 +106,7 @@ public class MessageAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-        holder.tv.setText(txtBody.getMessage());
+
 //            new AvatarURLDownloadUtils().downLoad(message.getFrom(), context, holder.mImageView, false);
         PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
         holder.toUsername.setText(message.getFrom());
@@ -104,6 +117,11 @@ public class MessageAdapter extends BaseAdapter {
             }
         });
 
+
+
+        EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+        holder.tv.setText(txtBody.getMessage());
+
         return convertView;
     }
 
@@ -112,6 +130,12 @@ public class MessageAdapter extends BaseAdapter {
         TextView tv;
         TextView toUsername;
         ImageView mImageView;
-
+        ImageView mPic;
+        ProgressBar mPicProgressBar;
+        TextView mPicPercenttage;
+        ImageView mVoiceImage;
+        TextView mVoiceLength;
+        ImageView mUnread_voice;
+        ProgressBar mVoiceprogressbar;
     }
 }
