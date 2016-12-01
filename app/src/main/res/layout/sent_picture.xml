@@ -38,7 +38,7 @@
             android:background="@drawable/chatto_bg">
 
             <ImageView
-                android:id="@+id/image"
+                android:id="@+id/imagePic"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:scaleType="fitCenter"
