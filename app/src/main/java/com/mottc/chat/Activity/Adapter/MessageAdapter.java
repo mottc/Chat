@@ -217,7 +217,6 @@ public class MessageAdapter extends BaseAdapter {
                 viewHolderVoiceReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
                 viewHolderVoiceReceive.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
                 viewHolderVoiceReceive.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
-                viewHolderVoiceReceive.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
 
                 PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderVoiceReceive.mImageView);
                 viewHolderVoiceReceive.toUsername.setText(message.getFrom());
@@ -230,12 +229,10 @@ public class MessageAdapter extends BaseAdapter {
                     }
                 });
 
-                final ViewHolderVoiceReceive finalViewHolderVoiceReceive = viewHolderVoiceReceive;
                 viewHolderVoiceReceive.mVoiceImage.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
-                        finalViewHolderVoiceReceive.mUnread_voice.setVisibility(View.GONE);
                         EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
 
                         if (message.status() == EMMessage.Status.SUCCESS) {
