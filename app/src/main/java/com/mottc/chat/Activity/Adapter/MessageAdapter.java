@@ -235,6 +235,7 @@ public class MessageAdapter extends BaseAdapter {
                 viewHolderVoiceReceive.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
                 viewHolderVoiceReceive.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
                 viewHolderVoiceReceive.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
+
                 convertView.setTag(viewHolderVoiceReceive);
                 break;
             case 4:
@@ -340,11 +341,10 @@ public class MessageAdapter extends BaseAdapter {
 //
 //                    }
 //                });
-
-
                 convertView.setTag(viewHolderImageSent);
 
                 break;
+
             case 6:
 
                 viewHolderVoiceSent = new ViewHolderVoiceSent();
@@ -356,8 +356,6 @@ public class MessageAdapter extends BaseAdapter {
                 viewHolderVoiceSent.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
                 viewHolderVoiceSent.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
                 convertView.setTag(viewHolderVoiceSent);
-
-
                 break;
             default:
                 break;
