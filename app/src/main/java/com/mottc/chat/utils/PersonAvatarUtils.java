@@ -1,7 +1,6 @@
 package com.mottc.chat.utils;
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -22,7 +21,7 @@ public class PersonAvatarUtils {
         String time = DBManager.getInstance().getAvatarInfo(username);
 //        String Url = AvatarURLDownloadUtils.downLoad(username);
         String Url = Constant.AVATAR_URL + username + ".png?v=" + time;
-        Log.i("PersonAvatarUtils", "setAvatar: " + Url);
+//        Log.i("PersonAvatarUtils", "setAvatar: " + Url);
 
         Glide
                 .with(context)

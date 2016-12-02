@@ -198,7 +198,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 
         getAllMessage();
         msgList = conversation.getAllMessages();
-        adapter = new MessageAdapter(msgList, toChatUsername, ChatActivity.this);
+        adapter = new MessageAdapter(msgList, toChatUsername, this);
         listView.setAdapter(adapter);
         listView.setSelection(listView.getCount() - 1);
 

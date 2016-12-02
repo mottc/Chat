@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingTop="13dp" >
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/timestamp"
         style="@style/chat_text_date_style"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginLeft="@dimen/margin_chat_activity"
             android:src="@drawable/default_avatar"
-            android:scaleType="fitXY" />
+            android:scaleType="centerInside" />
 
         <RelativeLayout
             android:id="@+id/bubble"
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:text="0%"
                     android:textColor="@android:color/white"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:ignore="HardcodedText" />
             </LinearLayout>
         </RelativeLayout>

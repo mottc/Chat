@@ -1,6 +1,7 @@
 package com.mottc.chat.Activity.Adapter;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -43,6 +44,7 @@ public class MessageAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     private String tousername;
     protected EMCallBack messageReceiveCallback;
+    protected EMCallBack messageSendCallback;
 
     public MessageAdapter(List<EMMessage> msgs, String toUserName, Context context_) {
         this.msgs = msgs;
@@ -114,233 +116,340 @@ public class MessageAdapter extends BaseAdapter {
 
         final EMMessage message = getItem(position);
         final int viewType = getItemViewType(position);
-        if (convertView == null) {
-            switch (viewType) {
-                case 1:
-                    viewHolderTxtReceive = new ViewHolderTxtReceive();
-                    convertView = inflater.inflate(R.layout.item_message_received, parent, false);
-                    viewHolderTxtReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
-                    viewHolderTxtReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderTxtReceive.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
+//        if (convertView == null) {
+        switch (viewType) {
+            case 1:
 
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
-                    viewHolderTxtReceive.toUsername.setText(message.getFrom());
-                    viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
+                viewHolderTxtReceive = new ViewHolderTxtReceive();
+                convertView = inflater.inflate(R.layout.item_message_received, parent, false);
+                viewHolderTxtReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
+                viewHolderTxtReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderTxtReceive.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
 
-                    EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                    viewHolderTxtReceive.tv.setText(txtBody.getMessage());
-
-                    convertView.setTag(viewHolderTxtReceive);
-                    break;
-                case 2:
-                    viewHolderImageReceive = new ViewHolderImageReceive();
-                    convertView = inflater.inflate(R.layout.received_picture, parent, false);
-                    viewHolderImageReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
-                    viewHolderImageReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderImageReceive.mPic = (ImageView) convertView.findViewById(R.id.imagePic);
-                    viewHolderImageReceive.mPicPercenttage = (TextView) convertView.findViewById(R.id.percentage);
-                    viewHolderImageReceive.mPicProgressBar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
-
-
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageReceive.mImageView);
-                    viewHolderImageReceive.toUsername.setText(message.getFrom());
-                    viewHolderImageReceive.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-                    EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
-                    // received messages
-                    if (message.direct() == EMMessage.Direct.RECEIVE) {
-                        if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
-                                imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                            setMessageReceiveCallback(message);
-                        } else {
-                            viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
-                            viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
-                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                            String thumbPath = imgBody.thumbnailLocalPath();
-                            if (!new File(thumbPath).exists()) {
-                                // to make it compatible with thumbnail received in previous version
-                                thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
-                            }
-                            showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
-                        }
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
+                viewHolderTxtReceive.toUsername.setText(message.getFrom());
+                viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
                     }
+                });
+
+                EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+                viewHolderTxtReceive.tv.setText(txtBody.getMessage());
+                convertView.setTag(viewHolderTxtReceive);
+                break;
+            case 2:
+
+                viewHolderImageReceive = new ViewHolderImageReceive();
+                convertView = inflater.inflate(R.layout.received_picture, parent, false);
+                viewHolderImageReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
+                viewHolderImageReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderImageReceive.mPic = (ImageView) convertView.findViewById(R.id.imagePic);
+                viewHolderImageReceive.mPicPercenttage = (TextView) convertView.findViewById(R.id.percentage);
+                viewHolderImageReceive.mPicProgressBar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
+
+
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageReceive.mImageView);
+                viewHolderImageReceive.toUsername.setText(message.getFrom());
+                viewHolderImageReceive.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                    }
+                });
+
+                EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
+                // received messages
+                if (message.direct() == EMMessage.Direct.RECEIVE) {
+                    if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
+                            imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
+                        viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
+                        viewHolderImageReceive.mPicProgressBar.setVisibility(View.VISIBLE);
+
+//                        setMessageReceiveCallback(message, viewHolderImageReceive.mPicProgressBar, viewHolderImageReceive.mPicPercenttage);
+
+                        while (true) {
+                            if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.SUCCESSED) {
+                                viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
+                                viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
+                                viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
+                                String thumbPath = imgBody.thumbnailLocalPath();
+                                if (!new File(thumbPath).exists()) {
+                                    // to make it compatible with thumbnail received in previous version
+                                    thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
+                                }
+                                showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
+                                break;
+                            }
+
+                        }
+//                        message.setMessageStatusCallback(new EMCallBack() {
+//                            @Override
+//                            public void onSuccess() {
+//                                Log.i("MessageAdapter", "onSuccess: " + "图片接收成功！");
+//
+//                            }
+//
+//                            @Override
+//                            public void onError(int i, String s) {
+//
+//                            }
+//
+//                            @Override
+//                            public void onProgress(int i, String s) {
+//
+//                                Log.i("MessageAdapter", "onSuccess: " + "图片接收中。。。");
+//
+//                            }
+//                        });
+                    } else {
+//                        Log.i("MessageAdapter", "getView: " + "已接受");
+                        viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
+                        viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
+                        viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
+                        String thumbPath = imgBody.thumbnailLocalPath();
+                        if (!new File(thumbPath).exists()) {
+                            // to make it compatible with thumbnail received in previous version
+                            thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
+                        }
+                        showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
+                    }
+                }
 
 //                    String filePath = imgBody.getLocalUrl();
 //                    String thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
 //                    showImageView(thumbPath, viewHolderImageReceive.mPic, filePath, message);
 
-                    convertView.setTag(viewHolderImageReceive);
-                    break;
-                case 3:
-                    viewHolderVoiceReceive = new ViewHolderVoiceReceive();
-                    convertView = inflater.inflate(R.layout.received_voice, parent, false);
-                    viewHolderVoiceReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
-                    viewHolderVoiceReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderVoiceReceive.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
-                    viewHolderVoiceReceive.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
-                    viewHolderVoiceReceive.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
-                    viewHolderVoiceReceive.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
-                    convertView.setTag(viewHolderVoiceReceive);
-                    break;
-                case 4:
-                    viewHolderTxtSent = new ViewHolderTxtSent();
-                    convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
+                convertView.setTag(viewHolderImageReceive);
+
+                break;
+            case 3:
+
+                viewHolderVoiceReceive = new ViewHolderVoiceReceive();
+                convertView = inflater.inflate(R.layout.received_voice, parent, false);
+                viewHolderVoiceReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
+                viewHolderVoiceReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderVoiceReceive.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
+                viewHolderVoiceReceive.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
+                viewHolderVoiceReceive.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
+                viewHolderVoiceReceive.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
+                convertView.setTag(viewHolderVoiceReceive);
+                break;
+            case 4:
+
+                viewHolderTxtSent = new ViewHolderTxtSent();
+                convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
 //                    viewHolderTxtSent.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
-                    viewHolderTxtSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderTxtSent.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
+                viewHolderTxtSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderTxtSent.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
+
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
 //                    viewHolderTxtSent.toUsername.setText(message.getFrom());
-                    viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-
-                    EMTextMessageBody txtBodySent = (EMTextMessageBody) message.getBody();
-                    viewHolderTxtSent.tv.setText(txtBodySent.getMessage());
-
-
-                    convertView.setTag(viewHolderTxtSent);
-                    break;
-                case 5:
-                    viewHolderImageSent = new ViewHolderImageSent();
-                    convertView = inflater.inflate(R.layout.sent_picture, parent, false);
-                    viewHolderImageSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderImageSent.mPic = (ImageView) convertView.findViewById(R.id.imagePic);
-                    viewHolderImageSent.mPicPercenttage = (TextView) convertView.findViewById(R.id.percentage);
-                    viewHolderImageSent.mPicProgressBar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
-
-
-                    EMImageMessageBody imgBodySent = (EMImageMessageBody) message.getBody();
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageSent.mImageView);
-                    viewHolderImageSent.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-                    String filePath = imgBodySent.getLocalUrl();
-                    String thumbPath = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
-                    showImageView(thumbPath, viewHolderImageSent.mPic, filePath, message);
-
-                    convertView.setTag(viewHolderImageSent);
-                    break;
-                case 6:
-                    viewHolderVoiceSent = new ViewHolderVoiceSent();
-                    convertView = inflater.inflate(R.layout.sent_voice, parent, false);
-//                    viewHolderVoiceSent.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
-                    viewHolderVoiceSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
-                    viewHolderVoiceSent.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
-                    viewHolderVoiceSent.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
-                    viewHolderVoiceSent.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
-                    viewHolderVoiceSent.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
-                    convertView.setTag(viewHolderVoiceSent);
-                    break;
-            }
-        } else {
-
-            switch (viewType) {
-                case 1:
-                    viewHolderTxtReceive = (ViewHolderTxtReceive) convertView.getTag();
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
-                    viewHolderTxtReceive.toUsername.setText(message.getFrom());
-                    viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-                    EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
-                    viewHolderTxtReceive.tv.setText(txtBody.getMessage());
-                    break;
-                case 2:
-                    viewHolderImageReceive = (ViewHolderImageReceive) convertView.getTag();
-
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageReceive.mImageView);
-                    viewHolderImageReceive.toUsername.setText(message.getFrom());
-                    viewHolderImageReceive.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-                    EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
-                    // received messages
-                    if (message.direct() == EMMessage.Direct.RECEIVE) {
-                        if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
-                                imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
-                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                            setMessageReceiveCallback(message);
-                        } else {
-                            viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
-                            viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
-                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                            String thumbPath = imgBody.thumbnailLocalPath();
-                            if (!new File(thumbPath).exists()) {
-                                // to make it compatible with thumbnail received in previous version
-                                thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
-                            }
-                            showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
-                        }
+                viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
                     }
-                    break;
-                case 3:
-                    break;
-                case 4:
-
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
-//                    viewHolderTxtSent.toUsername.setText(message.getFrom());
-                    viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-                    EMTextMessageBody txtBodySent = (EMTextMessageBody) message.getBody();
-                    viewHolderTxtSent.tv.setText(txtBodySent.getMessage());
-                    break;
-                case 5:
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageSent.mImageView);
-                    viewHolderImageSent.mImageView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
-                        }
-                    });
-
-                    EMImageMessageBody imgBodySent = (EMImageMessageBody) message.getBody();
-                    String filePath = imgBodySent.getLocalUrl();
-                    String thumbPath = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
-                    showImageView(thumbPath, viewHolderImageSent.mPic, filePath, message);
-                    break;
-                case 6:
+                });
 
 
-                    break;
+                EMTextMessageBody txtBodySent = (EMTextMessageBody) message.getBody();
+                viewHolderTxtSent.tv.setText(txtBodySent.getMessage());
 
-            }
+                convertView.setTag(viewHolderTxtSent);
+                break;
+            case 5:
+
+                viewHolderImageSent = new ViewHolderImageSent();
+                convertView = inflater.inflate(R.layout.sent_picture, parent, false);
+                viewHolderImageSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderImageSent.mPic = (ImageView) convertView.findViewById(R.id.imagePic);
+                viewHolderImageSent.mPicPercenttage = (TextView) convertView.findViewById(R.id.percentage);
+                viewHolderImageSent.mPicProgressBar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
+
+                EMImageMessageBody imgBodySent = (EMImageMessageBody) message.getBody();
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageSent.mImageView);
+                viewHolderImageSent.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                    }
+                });
+
+                String filePath = imgBodySent.getLocalUrl();
+                String thumbPath = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
+                showImageView(thumbPath, viewHolderImageSent.mPic, filePath, message);
+//
+//                final ViewHolderImageSent finalViewHolderImageSent = viewHolderImageSent;
+//                handler = new Handler(new Handler.Callback() {
+//                    @Override
+//                    public boolean handleMessage(Message message) {
+//                        finalViewHolderImageSent.mPicPercenttage.setText(message.arg1);
+//                        return true;
+//                    }
+//                }) ;
+
+//                final ViewHolderImageSent finalViewHolderImageSent = viewHolderImageSent;
+//                final Handler handler = new Handler(new Handler.Callback() {
+//                    @Override
+//                    public boolean handleMessage(Message msg) {
+//                        Log.i("MessageAdapter", "handleMessage: " + msg.arg1);
+//
+//                        finalViewHolderImageSent.mPicPercenttage.setText(msg.arg1);
+//                        return false;
+//                    }
+//                });
+
+//                message.setMessageStatusCallback(new EMCallBack() {
+//                    @Override
+//                    public void onSuccess() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onError(int i, String s) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onProgress(final int i, String s) {
+//
+//                        Message message1 = new Message();
+//                        message1.arg1 = i;
+//                        handler.sendMessage(message1);
+//                        finalViewHolderImageSent.mPicProgressBar.setVisibility(View.VISIBLE);
+//                        finalViewHolderImageSent.mPicPercenttage.setVisibility(View.VISIBLE);
+//                        finalViewHolderImageSent.mPicPercenttage.setText(i);
+
+//                        ((Activity) (context)).runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                finalViewHolderImageSent.mPicProgressBar.setVisibility(View.VISIBLE);
+//
+//                                if (finalViewHolderImageSent.mPicPercenttage != null) {
+//                                    finalViewHolderImageSent.mPicPercenttage.setVisibility(View.VISIBLE);
+//                                    finalViewHolderImageSent.mPicPercenttage.setText(i);
+//                                }
+//                            }
+//                        });
+
+//                        Log.i("MessageAdapter", "onProgress: " + i);
+//
+//                    }
+//                });
+
+
+                convertView.setTag(viewHolderImageSent);
+
+                break;
+            case 6:
+
+                viewHolderVoiceSent = new ViewHolderVoiceSent();
+                convertView = inflater.inflate(R.layout.sent_voice, parent, false);
+//                    viewHolderVoiceSent.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
+                viewHolderVoiceSent.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
+                viewHolderVoiceSent.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
+                viewHolderVoiceSent.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
+                viewHolderVoiceSent.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
+                viewHolderVoiceSent.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
+                convertView.setTag(viewHolderVoiceSent);
+
+
+                break;
+            default:
+                break;
+//
+//            }
+//        } else {
+//
+//            switch (viewType) {
+//                case 1:
+//                    viewHolderTxtReceive = (ViewHolderTxtReceive) convertView.getTag();
+//                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
+//                    viewHolderTxtReceive.toUsername.setText(message.getFrom());
+//                    viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+//                        }
+//                    });
+//                    EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
+//                    viewHolderTxtReceive.tv.setText(txtBody.getMessage());
+//                    break;
+//                case 2:
+//                    viewHolderImageReceive = (ViewHolderImageReceive) convertView.getTag();
+//
+//                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageReceive.mImageView);
+//                    viewHolderImageReceive.toUsername.setText(message.getFrom());
+//                    viewHolderImageReceive.mImageView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+//                        }
+//                    });
+//
+//                    EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
+//                    // received messages
+//                    if (message.direct() == EMMessage.Direct.RECEIVE) {
+//                        if (imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.DOWNLOADING ||
+//                                imgBody.thumbnailDownloadStatus() == EMFileMessageBody.EMDownloadStatus.PENDING) {
+//                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
+//                            setMessageReceiveCallback(message);
+//                        } else {
+//                            viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
+//                            viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
+//                            viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
+//                            String thumbPath = imgBody.thumbnailLocalPath();
+//                            if (!new File(thumbPath).exists()) {
+//                                // to make it compatible with thumbnail received in previous version
+//                                thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
+//                            }
+//                            showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
+//                        }
+//                    }
+//                    break;
+//                case 3:
+//                    break;
+//                case 4:
+//
+//                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
+////                    viewHolderTxtSent.toUsername.setText(message.getFrom());
+//                    viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+//                        }
+//                    });
+//
+//                    EMTextMessageBody txtBodySent = (EMTextMessageBody) message.getBody();
+//                    viewHolderTxtSent.tv.setText(txtBodySent.getMessage());
+//                    break;
+//                case 5:
+//                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderImageSent.mImageView);
+//                    viewHolderImageSent.mImageView.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+//                        }
+//                    });
+//
+//                    EMImageMessageBody imgBodySent = (EMImageMessageBody) message.getBody();
+//                    String filePath = imgBodySent.getLocalUrl();
+//                    String thumbPath = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
+//                    showImageView(thumbPath, viewHolderImageSent.mPic, filePath, message);
+//                    break;
+//                case 6:
+//
+//                    break;
+//                default:
+//
+//                    break;
+//
+//            }
         }
-
-
-
 //        ViewHolder holder = (ViewHolder) convertView.getTag();
 //        if (holder == null) {
 //            holder = new ViewHolder();
@@ -464,12 +573,56 @@ public class MessageAdapter extends BaseAdapter {
 //
 //        }
 //
-
         return convertView;
     }
 
 
-    protected void setMessageReceiveCallback(EMMessage message) {
+    protected void setMessageSendCallback(EMMessage message, final ProgressBar progressBar, final TextView tv_progress) {
+        if (messageSendCallback == null) {
+            messageSendCallback = new EMCallBack() {
+
+                @Override
+                public void onSuccess() {
+                    ((Activity) (context)).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            if (tv_progress != null)
+                                tv_progress.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    Log.i("MessageAdapter", "onSuccess: " + "");
+                }
+
+                @Override
+                public void onProgress(final int progress, String status) {
+
+                    ((Activity) (context)).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressBar.setVisibility(View.VISIBLE);
+                            if (tv_progress != null)
+                                tv_progress.setText(progress);
+                        }
+                    });
+                    Log.i("MessageAdapter", "onProgress: " + progress + "");
+                }
+
+                @Override
+                public void onError(int code, String error) {
+
+                    progressBar.setVisibility(View.INVISIBLE);
+                    if (tv_progress != null)
+                        tv_progress.setVisibility(View.INVISIBLE);
+                    Log.i("MessageAdapter", "onError: " + "");
+                }
+            };
+        }
+        message.setMessageStatusCallback(messageSendCallback);
+    }
+
+
+    protected void setMessageReceiveCallback(EMMessage message, ProgressBar progressBar, final TextView percentageView) {
         if (messageReceiveCallback == null) {
             messageReceiveCallback = new EMCallBack() {
 
@@ -481,13 +634,10 @@ public class MessageAdapter extends BaseAdapter {
 
                 @Override
                 public void onProgress(final int progress, String status) {
-//                    context.runOnUiThread(new Runnable() {
-//                        public void run() {
-//                            if(percentageView != null){
-//                                percentageView.setText(progress + "%");
-//                            }
-//                        }
-//                    });
+
+                    if (percentageView != null) {
+                        percentageView.setText(progress + "%");
+                    }
                     Log.i("MessageAdapter", "onProgress: " + "");
                 }
 
@@ -517,8 +667,8 @@ public class MessageAdapter extends BaseAdapter {
                     File file = new File(thumbernailPath);
                     if (file.exists()) {
                         return ImageUtils.decodeScaleImage(thumbernailPath, 160, 160);
-                    } else if (new File(imgBody.thumbnailLocalPath()).exists()) {
-                        return ImageUtils.decodeScaleImage(imgBody.thumbnailLocalPath(), 160, 160);
+                    } else if (new File(((EMImageMessageBody) (message.getBody())).thumbnailLocalPath()).exists()) {
+                        return ImageUtils.decodeScaleImage(((EMImageMessageBody) (message.getBody())).thumbnailLocalPath(), 160, 160);
                     } else {
                         if (message.direct() == EMMessage.Direct.SEND) {
                             if (localFullSizePath != null && new File(localFullSizePath).exists()) {
@@ -561,37 +711,38 @@ public class MessageAdapter extends BaseAdapter {
     /**
      * handle sending message
      */
-    protected void handleSendMessage(EMMessage message, ProgressBar progressBar, TextView percentageView) {
-
-        switch (message.status()) {
-            case SUCCESS:
-                progressBar.setVisibility(View.INVISIBLE);
-                if (percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
-
-                break;
-            case FAIL:
-                progressBar.setVisibility(View.INVISIBLE);
-                if (percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
-
-                break;
-            case INPROGRESS:
-                progressBar.setVisibility(View.VISIBLE);
-                if (percentageView != null) {
-                    percentageView.setVisibility(View.VISIBLE);
-                    percentageView.setText(message.progress() + "%");
-                }
-
-                break;
-            default:
-                progressBar.setVisibility(View.INVISIBLE);
-                if (percentageView != null)
-                    percentageView.setVisibility(View.INVISIBLE);
-
-                break;
-        }
-    }
+//    protected void handleSendMessage(EMMessage message, ProgressBar progressBar, TextView percentageView) {
+//
+//        setMessageSendCallback(message, progressBar, percentageView);
+//        switch (message.status()) {
+//            case SUCCESS:
+//                progressBar.setVisibility(View.INVISIBLE);
+//                if (percentageView != null)
+//                    percentageView.setVisibility(View.INVISIBLE);
+//
+//                break;
+//            case FAIL:
+//                progressBar.setVisibility(View.INVISIBLE);
+//                if (percentageView != null)
+//                    percentageView.setVisibility(View.INVISIBLE);
+//
+//                break;
+//            case INPROGRESS:
+//                progressBar.setVisibility(View.VISIBLE);
+//                if (percentageView != null) {
+//                    percentageView.setVisibility(View.VISIBLE);
+//                    percentageView.setText(message.progress() + "%");
+//                }
+//
+//                break;
+//            default:
+//                progressBar.setVisibility(View.INVISIBLE);
+//                if (percentageView != null)
+//                    percentageView.setVisibility(View.INVISIBLE);
+//
+//                break;
+//        }
+//    }
 
     public class ViewHolderTxtReceive {
         TextView tv;
@@ -601,7 +752,7 @@ public class MessageAdapter extends BaseAdapter {
 
     public class ViewHolderTxtSent {
         TextView tv;
-//        TextView toUsername;
+        //        TextView toUsername;
         ImageView mImageView;
     }
 
@@ -614,7 +765,7 @@ public class MessageAdapter extends BaseAdapter {
     }
 
     public class ViewHolderImageSent {
-//        TextView toUsername;
+        //        TextView toUsername;
         ImageView mImageView;
         ImageView mPic;
         ProgressBar mPicProgressBar;
