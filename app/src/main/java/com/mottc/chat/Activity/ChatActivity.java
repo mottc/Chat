@@ -80,14 +80,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
     protected EaseVoiceRecorder voiceRecorder;
     protected Drawable[] micImages;
     protected ImageView micImage;
-
-
-
-
     List<View> hideInputexcludeViews = new ArrayList<View>();
-
-
-
 
     protected Handler micImageHandler = new Handler() {
         @Override

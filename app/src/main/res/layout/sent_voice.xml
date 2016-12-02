@@ -56,14 +56,6 @@
             android:gravity="center"
             android:text="3&apos;&apos;"/>
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@id/tv_length"
-            android:visibility="visible"
-            />
     </RelativeLayout>
 
 </LinearLayout>

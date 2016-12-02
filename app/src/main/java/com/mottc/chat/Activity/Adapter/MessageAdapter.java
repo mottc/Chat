@@ -1,12 +1,12 @@
 package com.mottc.chat.Activity.Adapter;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.os.AsyncTask;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +15,12 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMFileMessageBody;
 import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.chat.EMVoiceMessageBody;
 import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.Model.ImageCache;
 import com.mottc.chat.R;
@@ -30,6 +30,7 @@ import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.io.File;
 import java.util.List;
+
 
 /**
  * Created with Android Studio
@@ -43,8 +44,7 @@ public class MessageAdapter extends BaseAdapter {
     private Context context;
     private LayoutInflater inflater;
     private String tousername;
-    protected EMCallBack messageReceiveCallback;
-    protected EMCallBack messageSendCallback;
+
 
     public MessageAdapter(List<EMMessage> msgs, String toUserName, Context context_) {
         this.msgs = msgs;
@@ -79,20 +79,20 @@ public class MessageAdapter extends BaseAdapter {
 
         if (message.direct() == EMMessage.Direct.RECEIVE) {
             if (message.getType().equals(EMMessage.Type.TXT)) {
-                return 1;
+                return 0;
             } else if (message.getType().equals(EMMessage.Type.IMAGE)) {
-                return 2;
+                return 1;
             } else {
-                return 3;
+                return 2;
             }
 
         } else {
             if (message.getType().equals(EMMessage.Type.TXT)) {
-                return 4;
+                return 3;
             } else if (message.getType().equals(EMMessage.Type.IMAGE)) {
-                return 5;
+                return 4;
             } else {
-                return 6;
+                return 5;
             }
         }
     }
@@ -118,7 +118,7 @@ public class MessageAdapter extends BaseAdapter {
         final int viewType = getItemViewType(position);
 //        if (convertView == null) {
         switch (viewType) {
-            case 1:
+            case 0:
 
                 viewHolderTxtReceive = new ViewHolderTxtReceive();
                 convertView = inflater.inflate(R.layout.item_message_received, parent, false);
@@ -140,7 +140,7 @@ public class MessageAdapter extends BaseAdapter {
                 viewHolderTxtReceive.tv.setText(txtBody.getMessage());
                 convertView.setTag(viewHolderTxtReceive);
                 break;
-            case 2:
+            case 1:
 
                 viewHolderImageReceive = new ViewHolderImageReceive();
                 convertView = inflater.inflate(R.layout.received_picture, parent, false);
@@ -217,7 +217,6 @@ public class MessageAdapter extends BaseAdapter {
                         showImageView(thumbPath, viewHolderImageReceive.mPic, imgBody.getLocalUrl(), message);
                     }
                 }
-
 //                    String filePath = imgBody.getLocalUrl();
 //                    String thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
 //                    showImageView(thumbPath, viewHolderImageReceive.mPic, filePath, message);
@@ -225,20 +224,73 @@ public class MessageAdapter extends BaseAdapter {
                 convertView.setTag(viewHolderImageReceive);
 
                 break;
-            case 3:
+            case 2:
 
                 viewHolderVoiceReceive = new ViewHolderVoiceReceive();
                 convertView = inflater.inflate(R.layout.received_voice, parent, false);
                 viewHolderVoiceReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
                 viewHolderVoiceReceive.mImageView = (ImageView) convertView.findViewById(R.id.iv_userhead);
                 viewHolderVoiceReceive.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
-                viewHolderVoiceReceive.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
                 viewHolderVoiceReceive.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
                 viewHolderVoiceReceive.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
 
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderVoiceReceive.mImageView);
+                viewHolderVoiceReceive.toUsername.setText(message.getFrom());
+                EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
+                viewHolderVoiceReceive.mVoiceLength.setText(voiceBody.getLength()+"\"");
+                viewHolderVoiceReceive.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                    }
+                });
+
+                final ViewHolderVoiceReceive finalViewHolderVoiceReceive = viewHolderVoiceReceive;
+                viewHolderVoiceReceive.mVoiceImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        finalViewHolderVoiceReceive.mUnread_voice.setVisibility(View.GONE);
+                        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
+
+                        if (message.status() == EMMessage.Status.SUCCESS) {
+                            File file = new File(voiceBody.getLocalUrl());
+                            if (file.exists() && file.isFile())
+                                playVoice(message);
+                            else {
+                            }
+
+                        } else if (message.status() == EMMessage.Status.INPROGRESS) {
+                            //Toast.makeText(activity, st, Toast.LENGTH_SHORT).show();
+                        } else if (message.status() == EMMessage.Status.FAIL) {
+                            // Toast.makeText(activity, st, Toast.LENGTH_SHORT).show();
+                            new AsyncTask<Void, Void, Void>() {
+
+                                @Override
+                                protected Void doInBackground(Void... params) {
+                                    EMClient.getInstance().chatManager().downloadAttachment(message);
+                                    return null;
+                                }
+
+                                @Override
+                                protected void onPostExecute(Void result) {
+                                    super.onPostExecute(result);
+
+                                }
+
+                            }.execute();
+
+                        }
+
+
+                        playVoice(message);
+
+                    }
+                });
+
                 convertView.setTag(viewHolderVoiceReceive);
                 break;
-            case 4:
+            case 3:
 
                 viewHolderTxtSent = new ViewHolderTxtSent();
                 convertView = inflater.inflate(R.layout.item_message_sent, parent, false);
@@ -262,7 +314,7 @@ public class MessageAdapter extends BaseAdapter {
 
                 convertView.setTag(viewHolderTxtSent);
                 break;
-            case 5:
+            case 4:
 
                 viewHolderImageSent = new ViewHolderImageSent();
                 convertView = inflater.inflate(R.layout.sent_picture, parent, false);
@@ -342,10 +394,9 @@ public class MessageAdapter extends BaseAdapter {
 //                    }
 //                });
                 convertView.setTag(viewHolderImageSent);
-
                 break;
 
-            case 6:
+            case 5:
 
                 viewHolderVoiceSent = new ViewHolderVoiceSent();
                 convertView = inflater.inflate(R.layout.sent_voice, parent, false);
@@ -354,9 +405,28 @@ public class MessageAdapter extends BaseAdapter {
                 viewHolderVoiceSent.mVoiceImage = (ImageView) convertView.findViewById(R.id.iv_voice);
                 viewHolderVoiceSent.mVoiceprogressbar = (ProgressBar) convertView.findViewById(R.id.progress_bar);
                 viewHolderVoiceSent.mVoiceLength = (TextView) convertView.findViewById(R.id.tv_length);
-                viewHolderVoiceSent.mUnread_voice = (ImageView) convertView.findViewById(R.id.iv_unread_voice);
+
+                PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderVoiceSent.mImageView);
+                EMVoiceMessageBody voiceBodySent = (EMVoiceMessageBody) message.getBody();
+                viewHolderVoiceSent.mVoiceLength.setText(voiceBodySent.getLength()+"\"");
+                viewHolderVoiceSent.mImageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                    }
+                });
+
+                viewHolderVoiceSent.mVoiceImage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        playVoice(message);
+
+                    }
+                });
                 convertView.setTag(viewHolderVoiceSent);
                 break;
+
             default:
                 break;
 //
@@ -574,80 +644,121 @@ public class MessageAdapter extends BaseAdapter {
         return convertView;
     }
 
+    public void playVoice(EMMessage message) {
 
-    protected void setMessageSendCallback(EMMessage message, final ProgressBar progressBar, final TextView tv_progress) {
-        if (messageSendCallback == null) {
-            messageSendCallback = new EMCallBack() {
-
-                @Override
-                public void onSuccess() {
-                    ((Activity) (context)).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.INVISIBLE);
-                            if (tv_progress != null)
-                                tv_progress.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                    Log.i("MessageAdapter", "onSuccess: " + "");
-                }
-
-                @Override
-                public void onProgress(final int progress, String status) {
-
-                    ((Activity) (context)).runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            progressBar.setVisibility(View.VISIBLE);
-                            if (tv_progress != null)
-                                tv_progress.setText(progress);
-                        }
-                    });
-                    Log.i("MessageAdapter", "onProgress: " + progress + "");
-                }
-
-                @Override
-                public void onError(int code, String error) {
-
-                    progressBar.setVisibility(View.INVISIBLE);
-                    if (tv_progress != null)
-                        tv_progress.setVisibility(View.INVISIBLE);
-                    Log.i("MessageAdapter", "onError: " + "");
-                }
-            };
+        EMVoiceMessageBody voiceBody = (EMVoiceMessageBody) message.getBody();
+        String filePath = voiceBody.getLocalUrl();
+        if (!(new File(filePath).exists())) {
+            return;
         }
-        message.setMessageStatusCallback(messageSendCallback);
+        AudioManager audioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+
+        final MediaPlayer[] mediaPlayer = {new MediaPlayer()};
+        audioManager.setMode(AudioManager.MODE_NORMAL);
+        audioManager.setSpeakerphoneOn(true);
+        mediaPlayer[0].setAudioStreamType(AudioManager.STREAM_RING);
+//
+        try {
+            mediaPlayer[0].setDataSource(filePath);
+            mediaPlayer[0].prepare();
+            mediaPlayer[0].setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    // TODO Auto-generated method stub
+                    mediaPlayer[0].release();
+                    mediaPlayer[0] = null;
+
+//                    if (mediaPlayer != null) {
+//                        mediaPlayer[0].stop();
+//                        mediaPlayer[0].release();
+//                    }
+                }
+
+            });
+
+
+            mediaPlayer[0].start();
+
+        } catch (Exception e) {
+            System.out.println();
+        }
     }
 
 
-    protected void setMessageReceiveCallback(EMMessage message, ProgressBar progressBar, final TextView percentageView) {
-        if (messageReceiveCallback == null) {
-            messageReceiveCallback = new EMCallBack() {
-
-                @Override
-                public void onSuccess() {
-//                    updateView();
-                    Log.i("MessageAdapter", "onSuccess: " + "");
-                }
-
-                @Override
-                public void onProgress(final int progress, String status) {
-
-                    if (percentageView != null) {
-                        percentageView.setText(progress + "%");
-                    }
-                    Log.i("MessageAdapter", "onProgress: " + "");
-                }
-
-                @Override
-                public void onError(int code, String error) {
-//                    updateView();
-                    Log.i("MessageAdapter", "onError: " + "");
-                }
-            };
-        }
-        message.setMessageStatusCallback(messageReceiveCallback);
-    }
+//    protected void setMessageSendCallback(EMMessage message, final ProgressBar progressBar, final TextView tv_progress) {
+//        if (messageSendCallback == null) {
+//            messageSendCallback = new EMCallBack() {
+//
+//                @Override
+//                public void onSuccess() {
+//                    ((Activity) (context)).runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            progressBar.setVisibility(View.INVISIBLE);
+//                            if (tv_progress != null)
+//                                tv_progress.setVisibility(View.INVISIBLE);
+//                        }
+//                    });
+//                    Log.i("MessageAdapter", "onSuccess: " + "");
+//                }
+//
+//                @Override
+//                public void onProgress(final int progress, String status) {
+//
+//                    ((Activity) (context)).runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            progressBar.setVisibility(View.VISIBLE);
+//                            if (tv_progress != null)
+//                                tv_progress.setText(progress);
+//                        }
+//                    });
+//                    Log.i("MessageAdapter", "onProgress: " + progress + "");
+//                }
+//
+//                @Override
+//                public void onError(int code, String error) {
+//
+//                    progressBar.setVisibility(View.INVISIBLE);
+//                    if (tv_progress != null)
+//                        tv_progress.setVisibility(View.INVISIBLE);
+//                    Log.i("MessageAdapter", "onError: " + "");
+//                }
+//            };
+//        }
+//        message.setMessageStatusCallback(messageSendCallback);
+//    }
+//
+//
+//    protected void setMessageReceiveCallback(EMMessage message, ProgressBar progressBar, final TextView percentageView) {
+//        if (messageReceiveCallback == null) {
+//            messageReceiveCallback = new EMCallBack() {
+//
+//                @Override
+//                public void onSuccess() {
+////                    updateView();
+//                    Log.i("MessageAdapter", "onSuccess: " + "");
+//                }
+//
+//                @Override
+//                public void onProgress(final int progress, String status) {
+//
+//                    if (percentageView != null) {
+//                        percentageView.setText(progress + "%");
+//                    }
+//                    Log.i("MessageAdapter", "onProgress: " + "");
+//                }
+//
+//                @Override
+//                public void onError(int code, String error) {
+////                    updateView();
+//                    Log.i("MessageAdapter", "onError: " + "");
+//                }
+//            };
+//        }
+//        message.setMessageStatusCallback(messageReceiveCallback);
+//    }
 
 
     private boolean showImageView(final String thumbernailPath, final ImageView iv, final String localFullSizePath, final EMMessage message) {
@@ -783,7 +894,6 @@ public class MessageAdapter extends BaseAdapter {
         TextView toUsername;
         ImageView mImageView;
         TextView mVoiceLength;
-        ImageView mUnread_voice;
         ProgressBar mVoiceprogressbar;
         ImageView mVoiceImage;
     }

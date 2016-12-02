@@ -7,7 +7,6 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.view.View;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -36,17 +35,15 @@ public class ChatRowVoicePlayClickListener implements View.OnClickListener {
     ImageView iv_read_status;
     Activity activity;
     private EMMessage.ChatType chatType;
-    private BaseAdapter adapter;
 
     public static boolean isPlaying = false;
     public static ChatRowVoicePlayClickListener currentPlayListener = null;
     public static String playMsgId;
 
-    public ChatRowVoicePlayClickListener(EMMessage message, ImageView v, ImageView iv_read_status, BaseAdapter adapter, Activity context) {
+    public ChatRowVoicePlayClickListener(EMMessage message, ImageView v, ImageView iv_read_status,  Activity context) {
         this.message = message;
         voiceBody = (EMVoiceMessageBody) message.getBody();
         this.iv_read_status = iv_read_status;
-        this.adapter = adapter;
         voiceIconView = v;
         this.activity = context;
         this.chatType = message.getChatType();
@@ -66,7 +63,7 @@ public class ChatRowVoicePlayClickListener implements View.OnClickListener {
         }
         isPlaying = false;
         playMsgId = null;
-        adapter.notifyDataSetChanged();
+
     }
 
     public void playVoice(String filePath) {
@@ -175,7 +172,7 @@ public class ChatRowVoicePlayClickListener implements View.OnClickListener {
                     @Override
                     protected void onPostExecute(Void result) {
                         super.onPostExecute(result);
-                        adapter.notifyDataSetChanged();
+
                     }
 
                 }.execute();
