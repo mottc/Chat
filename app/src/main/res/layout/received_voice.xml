@@ -59,14 +59,6 @@
             android:text="3&apos;&apos;"
             tools:ignore="HardcodedText" />
 
-        <ImageView
-            android:id="@+id/iv_unread_voice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/bubble"
-            android:layout_toRightOf="@id/tv_length"
-            android:src="@drawable/voice_unread" />
-
         <TextView
             android:id="@+id/tv_userid"
             style="@style/chat_text_name_style"
