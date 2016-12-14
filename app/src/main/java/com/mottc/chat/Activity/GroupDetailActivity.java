@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
 import com.mottc.chat.db.DBManager;
@@ -78,6 +79,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         init();
         uploadManager = new UploadManager();
         mMembersList.setLayoutManager(new LinearLayoutManager(this));
+
         groupMembersAdapter = new GroupMembersAdapter(members, owner);
         mMembersList.setAdapter(groupMembersAdapter);
         mMembers.setText("群组成员列表(" + members.size() + ")");
@@ -103,28 +105,31 @@ public class GroupDetailActivity extends AppCompatActivity {
         //根据群组ID从服务器获取群组基本信息
 
 
-//        new Thread(new Runnable() {
-//            public void run() {
-//                try {
-//                    group = EMClient.getInstance().groupManager().getGroupFromServer(groupId);
-//                } catch (HyphenateException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }).start();
-//
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//           e.printStackTrace();
-//        }
-//      本地获取群组信息
+        new Thread(new Runnable() {
+            public void run() {
+                try {
+                    EMClient.getInstance().groupManager().getGroupFromServer(groupId);
+                } catch (HyphenateException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }).start();
+
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+           e.printStackTrace();
+        }
+////      本地获取群组信息
         group = EMClient.getInstance().groupManager().getGroup(groupId);
+
 
         if (group != null) {
             members = group.getMembers();//获取群成员
             owner = group.getOwner();//获取群主
         }
+
     }
 
 
