@@ -105,7 +105,8 @@
             android:name=".Activity.InviteMembersActivity"
             android:theme="@style/LoginTheme">
         </activity>
-        <activity android:name=".Activity.ShowImageActivity">
+        <activity android:name=".Activity.ShowImageActivity"
+                  android:theme="@style/LoginTheme">
         </activity>
     </application>
 
