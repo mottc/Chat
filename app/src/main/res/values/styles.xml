@@ -25,7 +25,6 @@
         <!--<item name="android:windowIsTranslucent">true</item>-->
     </style>
 
-
     <!-- 消除ToolBar阴影 -->
     <style name="AppTheme.AppBarOverlayNoShadow" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="elevation">0dp</item>
