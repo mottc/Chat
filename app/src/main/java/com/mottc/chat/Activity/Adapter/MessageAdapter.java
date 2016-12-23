@@ -21,6 +21,7 @@ import com.hyphenate.chat.EMImageMessageBody;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.chat.EMVoiceMessageBody;
+import com.mottc.chat.Activity.ShowImageActivity;
 import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.Model.ImageCache;
 import com.mottc.chat.R;
@@ -160,6 +161,7 @@ public class MessageAdapter extends BaseAdapter {
                     }
                 });
 
+                String thumbPath = null;
                 EMImageMessageBody imgBody = (EMImageMessageBody) message.getBody();
                 // received messages
                 if (message.direct() == EMMessage.Direct.RECEIVE) {
@@ -175,7 +177,7 @@ public class MessageAdapter extends BaseAdapter {
                                 viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
                                 viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
                                 viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                                String thumbPath = imgBody.thumbnailLocalPath();
+                                thumbPath = imgBody.thumbnailLocalPath();
                                 if (!new File(thumbPath).exists()) {
                                     // to make it compatible with thumbnail received in previous version
                                     thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
@@ -190,7 +192,7 @@ public class MessageAdapter extends BaseAdapter {
                         viewHolderImageReceive.mPicProgressBar.setVisibility(View.GONE);
                         viewHolderImageReceive.mPicPercenttage.setVisibility(View.GONE);
                         viewHolderImageReceive.mPic.setImageResource(R.drawable.default_image);
-                        String thumbPath = imgBody.thumbnailLocalPath();
+                        thumbPath = imgBody.thumbnailLocalPath();
                         if (!new File(thumbPath).exists()) {
                             // to make it compatible with thumbnail received in previous version
                             thumbPath = ImageUtils.getThumbnailImagePath(imgBody.getLocalUrl());
@@ -199,9 +201,12 @@ public class MessageAdapter extends BaseAdapter {
                     }
                 }
 
+                final String finalThumbPath = thumbPath;
                 viewHolderImageReceive.mPic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        context.startActivity(new Intent(context, ShowImageActivity.class).putExtra("thumbPath", finalThumbPath));
 
                     }
                 });
@@ -315,11 +320,13 @@ public class MessageAdapter extends BaseAdapter {
                 });
 
                 String filePath = imgBodySent.getLocalUrl();
-                String thumbPath = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
-                showImageView(thumbPath, viewHolderImageSent.mPic, filePath, message);
+                final String thumbPathSent = ImageUtils.getThumbnailImagePath(imgBodySent.getLocalUrl());
+                showImageView(thumbPathSent, viewHolderImageSent.mPic, filePath, message);
+
                 viewHolderImageSent.mPic.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        context.startActivity(new Intent(context, ShowImageActivity.class).putExtra("thumbPath", thumbPathSent));
 
                     }
                 });

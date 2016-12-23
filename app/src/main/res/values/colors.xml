@@ -10,4 +10,6 @@
     <color name="state_focused">#DDDDDD</color>
     <color name="voice_cancel">#55ff0000</color>
 
+    <color name="black_overlay">#66000000</color>
+
 </resources>
