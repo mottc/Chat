@@ -26,6 +26,7 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
         mValues = items;
         mListener = listener;
         mContext = context;
+
     }
 
     @Override
