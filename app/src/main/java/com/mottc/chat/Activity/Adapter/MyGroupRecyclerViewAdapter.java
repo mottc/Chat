@@ -24,6 +24,7 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
 
     public MyGroupRecyclerViewAdapter(Context context,List<EMGroup> items, GroupFragment.OnGroupFragmentInteractionListener listener) {
         mValues = items;
+
         mListener = listener;
         mContext = context;
     }

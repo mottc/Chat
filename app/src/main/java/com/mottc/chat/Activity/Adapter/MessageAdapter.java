@@ -97,7 +97,6 @@ public class MessageAdapter extends BaseAdapter {
         if (convertView == null) {
             switch (viewType) {
                 case 0:
-
                     viewHolderTxtReceive = new ViewHolderTxtReceive();
                     convertView = inflater.inflate(R.layout.item_message_received, parent, false);
                     viewHolderTxtReceive.toUsername = (TextView) convertView.findViewById(R.id.tv_userid);
