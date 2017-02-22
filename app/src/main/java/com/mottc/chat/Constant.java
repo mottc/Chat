@@ -35,7 +35,7 @@ public class Constant {
     public static final String ACTION_GROUP_CHANAGED = "action_group_changed";
     public static final String ACTION_CONTACT_CHANAGED = "action_contact_changed";
 
-    //Myinfo中保存环信账号
+    //MyInfo中保存环信账号
     public static final String KEY_USERNAME = "username";
 
 }

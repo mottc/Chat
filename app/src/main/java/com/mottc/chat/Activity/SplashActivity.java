@@ -24,7 +24,7 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         imageView = (ImageView) findViewById(R.id.splash_image);
-        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/splash.png";
+        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/93.png";
         Glide
                 .with(this)
                 .load(Url)
@@ -84,18 +84,4 @@ public class SplashActivity extends Activity {
         }).start();
 
     }
-
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Glide.get(this).clearMemory();//清理内存缓存 在UI主线程中进行
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Glide.get(SplashActivity.this).clearDiskCache();//清理磁盘缓存 不能在UI主线程中进行
-//            }
-//        }).start();
-//
-//    }
 }
