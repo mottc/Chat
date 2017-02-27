@@ -3,7 +3,7 @@ package com.mottc.chat.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.AlphaAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -24,6 +24,8 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         imageView = (ImageView) findViewById(R.id.splash_image);
+
+        ImageView chatLogo = (ImageView) findViewById(R.id.chat_logo);
         String Url = "http://7xktkd.com1.z0.glb.clouddn.com/93.png";
         Glide
                 .with(this)
@@ -33,10 +35,16 @@ public class SplashActivity extends Activity {
                 .into(imageView);
 
 //      渐深动画
-        rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
-        animation.setDuration(sleepTime);
-        rootLayout.startAnimation(animation);
+//        rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
+//        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
+//        animation.setDuration(sleepTime);
+//        rootLayout.startAnimation(animation);
+
+        TranslateAnimation translateAnimation = new TranslateAnimation(0,-250,0,650);
+        translateAnimation.setFillAfter(true);
+        translateAnimation.setDuration(2000);
+        chatLogo.startAnimation(translateAnimation);
+
     }
 
 
@@ -83,5 +91,11 @@ public class SplashActivity extends Activity {
             }
         }).start();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getWindow().setBackgroundDrawable(null);
     }
 }

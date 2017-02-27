@@ -108,10 +108,12 @@ public class LoginActivity extends AppCompatActivity{
                 });
                 pd.setMessage(getString(R.string.Is_landing));
                 pd.show();
-                // close it before login to make sure DemoDB not overlap
-                DBManager.getInstance().closeDB();
+
                 // reset current loginUserName name before login
                 MyApplication.getInstance().setCurrentUserName(loginUserName);
+                // close it before login to make sure DemoDB not overlap
+                DBManager.getInstance().closeDB();
+
                 // 调用sdk登陆方法登陆聊天服务器
                 Log.d(TAG, "EMClient.getInstance().login");
                 EMClient.getInstance().login(loginUserName, loginPassword, new EMCallBack() {
