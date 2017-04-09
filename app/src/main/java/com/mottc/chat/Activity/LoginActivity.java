@@ -31,11 +31,9 @@ import shem.com.materiallogin.DefaultLoginView;
 import shem.com.materiallogin.DefaultRegisterView;
 import shem.com.materiallogin.MaterialLoginView;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity{
 
     private static final String TAG = "LoginActivity";
-    public static final int REQUEST_CODE_SETNICK = 1;
-
     private boolean progressShow;
     private boolean autoLogin = false;
 
@@ -60,8 +58,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         setContentView(R.layout.activity_login);
 
-//        使界面可以接受点击事件，以便相应软键盘消失。
-        findViewById(R.id.login_layout).setOnClickListener(this);
+//      使界面可以接受点击事件，以便相应软键盘消失。点击非编辑框区域，软键盘消失
+
+        findViewById(R.id.login_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)
+                        getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+            }
+        });
 
         //登陆
 
@@ -102,10 +108,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
                 pd.setMessage(getString(R.string.Is_landing));
                 pd.show();
-                // close it before login to make sure DemoDB not overlap
-                DBManager.getInstance().closeDB();
+
                 // reset current loginUserName name before login
                 MyApplication.getInstance().setCurrentUserName(loginUserName);
+                // close it before login to make sure DemoDB not overlap
+                DBManager.getInstance().closeDB();
+
                 // 调用sdk登陆方法登陆聊天服务器
                 Log.d(TAG, "EMClient.getInstance().login");
                 EMClient.getInstance().login(loginUserName, loginPassword, new EMCallBack() {
@@ -266,17 +274,4 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
-
-    //点击非编辑框区域，软键盘消失
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.login_layout:
-                InputMethodManager imm = (InputMethodManager)
-                        getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                break;
-        }
-
-    }
 }

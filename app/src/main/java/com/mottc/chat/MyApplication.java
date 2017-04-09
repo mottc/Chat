@@ -24,11 +24,13 @@ import java.util.Map;
  * Time: 14:11
  */
 
-public class MyApplication extends Application{
+public class MyApplication extends Application {
+
     public static Context applicationContext;
     private static MyApplication instance;
     private String username = "";
     private Map<String, EaseUser> contactList;
+    private UserDao userDao;
 
     @Override
     public void onCreate() {
@@ -44,7 +46,8 @@ public class MyApplication extends Application{
     }
 
 	/*
-	 * 第一步：sdk的一些参数配置 EMOptions 第二步：将配置参数封装类 传入SDK初始化
+     * 第一步：sdk的一些参数配置 EMOptions
+	 * 第二步：将配置参数封装类 传入SDK初始化
 	 */
 
     public void init(Context context) {
@@ -79,7 +82,6 @@ public class MyApplication extends Application{
 
     }
 
-    private UserDao userDao;
 
     private EMOptions initChatOptions() {
 
@@ -97,6 +99,7 @@ public class MyApplication extends Application{
     private boolean sdkInited = false;
 
     public synchronized boolean initSDK(Context context, EMOptions options) {
+
         if (sdkInited) {
             return true;
         }
@@ -109,10 +112,10 @@ public class MyApplication extends Application{
         // 默认的app会在以包名为默认的process name下运行，如果查到的process name不是app的process
         // name就立即返回
         if (processAppName == null || !processAppName.equalsIgnoreCase(applicationContext.getPackageName())) {
-
             // 则此application::onCreate 是被service 调用的，直接返回
             return false;
         }
+
         if (options == null) {
             EMClient.getInstance().init(context, initChatOptions());
         } else {
@@ -176,10 +179,8 @@ public class MyApplication extends Application{
     /**
      * 退出登录
      *
-     * @param unbindDeviceToken
-     *            是否解绑设备token(使用GCM才有)
-     * @param callback
-     *            callback
+     * @param unbindDeviceToken 是否解绑设备token(使用GCM才有)
+     * @param callback          callback
      */
     public void logout(boolean unbindDeviceToken, final EMCallBack callback) {
 

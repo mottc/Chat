@@ -3,9 +3,8 @@ package com.mottc.chat.Activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.animation.AlphaAnimation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,7 +14,6 @@ import com.mottc.chat.R;
 
 public class SplashActivity extends Activity {
 
-    private RelativeLayout rootLayout;
     private ImageView imageView;
     private static final int sleepTime = 2500;
 
@@ -24,7 +22,9 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         imageView = (ImageView) findViewById(R.id.splash_image);
-        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/splash.png";
+
+        ImageView chatLogo = (ImageView) findViewById(R.id.chat_logo);
+        String Url = "http://7xktkd.com1.z0.glb.clouddn.com/93.png";
         Glide
                 .with(this)
                 .load(Url)
@@ -33,10 +33,16 @@ public class SplashActivity extends Activity {
                 .into(imageView);
 
 //      渐深动画
-        rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
-        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
-        animation.setDuration(sleepTime);
-        rootLayout.startAnimation(animation);
+//        rootLayout = (RelativeLayout) findViewById(R.id.splash_root);
+//        AlphaAnimation animation = new AlphaAnimation(0.5f, 1.0f);
+//        animation.setDuration(sleepTime);
+//        rootLayout.startAnimation(animation);
+
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, -250, 0, 650);
+        translateAnimation.setFillAfter(true);
+        translateAnimation.setDuration(2000);
+        chatLogo.startAnimation(translateAnimation);
+
     }
 
 
@@ -85,17 +91,10 @@ public class SplashActivity extends Activity {
 
     }
 
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        Glide.get(this).clearMemory();//清理内存缓存 在UI主线程中进行
-//
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                Glide.get(SplashActivity.this).clearDiskCache();//清理磁盘缓存 不能在UI主线程中进行
-//            }
-//        }).start();
-//
-//    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        getWindow().setBackgroundDrawable(null);
+    }
+
 }

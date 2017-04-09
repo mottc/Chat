@@ -52,8 +52,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        ContactFragment.OnListFragmentInteractionListener, ConversationFragment.OnConversationFragmentInteractionListener, GroupFragment.OnGroupFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener,
+                   ContactFragment.OnListFragmentInteractionListener,
+                   ConversationFragment.OnConversationFragmentInteractionListener,
+                   GroupFragment.OnGroupFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
@@ -270,11 +273,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 .setMessage("是否退出程序")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_MAIN);
-                        intent.addCategory(Intent.CATEGORY_HOME);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                        android.os.Process.killProcess(android.os.Process.myPid());
+
+                        finish();
                     }
                 })
                 .setNegativeButton("取消",

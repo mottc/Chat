@@ -61,13 +61,7 @@
             android:layout_height="match_parent" />
     </LinearLayout>
 
-    <!--<android.support.design.widget.FloatingActionButton-->
-    <!--android:id="@+id/fab"-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_gravity="bottom|right"-->
-    <!--android:layout_margin="16dp"-->
-    <!--app:srcCompat="@mipmap/add" />-->
+
     <include layout="@layout/btns" />
 
 </android.support.design.widget.CoordinatorLayout>
