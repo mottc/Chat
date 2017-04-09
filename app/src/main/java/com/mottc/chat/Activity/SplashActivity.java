@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -15,7 +14,6 @@ import com.mottc.chat.R;
 
 public class SplashActivity extends Activity {
 
-    private RelativeLayout rootLayout;
     private ImageView imageView;
     private static final int sleepTime = 2500;
 
@@ -40,7 +38,7 @@ public class SplashActivity extends Activity {
 //        animation.setDuration(sleepTime);
 //        rootLayout.startAnimation(animation);
 
-        TranslateAnimation translateAnimation = new TranslateAnimation(0,-250,0,650);
+        TranslateAnimation translateAnimation = new TranslateAnimation(0, -250, 0, 650);
         translateAnimation.setFillAfter(true);
         translateAnimation.setDuration(2000);
         chatLogo.startAnimation(translateAnimation);
@@ -98,4 +96,5 @@ public class SplashActivity extends Activity {
         super.onDestroy();
         getWindow().setBackgroundDrawable(null);
     }
+
 }
