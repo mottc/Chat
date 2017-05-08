@@ -39,6 +39,7 @@ import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
+import com.mottc.chat.Login.LoginActivity;
 import com.mottc.chat.MyApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;

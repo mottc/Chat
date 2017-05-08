@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+import com.mottc.chat.Login.LoginActivity;
 import com.mottc.chat.R;
 
 public class SplashActivity extends Activity {
