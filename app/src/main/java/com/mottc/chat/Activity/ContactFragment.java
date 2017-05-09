@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.Activity.Adapter.MyItemRecyclerViewAdapter;
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.EaseCommonUtils;
@@ -119,7 +119,7 @@ public class ContactFragment extends Fragment {
     protected void getContactList() {
         contactList.clear();
         // 获取联系人列表
-        contactsMap = MyApplication.getInstance().getContactList();
+        contactsMap = ChatApplication.getInstance().getContactList();
         if (contactsMap == null) {
             return;
         }

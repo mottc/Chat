@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 
 /**
  * Created with Android Studio
@@ -69,7 +69,7 @@ public class DbOpenHelper extends SQLiteOpenHelper {
     }
 
     private static String getUserDatabaseName() {
-        return MyApplication.getInstance().getCurrentUserName() + "_demo.db";
+        return ChatApplication.getInstance().getCurrentUserName() + "_demo.db";
     }
 
 

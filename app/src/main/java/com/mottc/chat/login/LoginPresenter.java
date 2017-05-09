@@ -3,7 +3,7 @@ package com.mottc.chat.login;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 import com.mottc.chat.db.DBManager;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.EaseCommonUtils;
@@ -45,7 +45,7 @@ public class LoginPresenter implements LoginContract.Presenter {
         }
 
         // reset current loginUserName name before login
-        MyApplication.getInstance().setCurrentUserName(loginUserName);
+        ChatApplication.getInstance().setCurrentUserName(loginUserName);
         // close it before login to make sure DemoDB not overlap
         DBManager.getInstance().closeDB();
 
@@ -108,7 +108,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 try {
                     // 调用sdk注册方法
                     EMClient.getInstance().createAccount(RegisterUserName, RegisterPassword);
-                    MyApplication.getInstance().setCurrentUserName(RegisterUserName);
+                    ChatApplication.getInstance().setCurrentUserName(RegisterUserName);
 
                     ((LoginActivity) mView).runOnUiThread(new Runnable() {
                         @Override
@@ -141,7 +141,7 @@ public class LoginPresenter implements LoginContract.Presenter {
                 users.put(username, user);
             }
 
-            MyApplication.getInstance().setContactList(users);
+            ChatApplication.getInstance().setContactList(users);
 
         } catch (HyphenateException e) {
             e.printStackTrace();

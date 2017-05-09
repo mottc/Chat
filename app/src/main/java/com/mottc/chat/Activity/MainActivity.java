@@ -40,7 +40,7 @@ import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
 import com.mottc.chat.login.LoginActivity;
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.db.InviteMessage;
@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity
             pd.setMessage(st);
             pd.setCanceledOnTouchOutside(false);
             pd.show();
-            MyApplication.getInstance().logout(false, new EMCallBack() {
+            ChatApplication.getInstance().logout(false, new EMCallBack() {
                 @Override
                 public void onSuccess() {
                     runOnUiThread(new Runnable() {
@@ -480,7 +480,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onContactAdded(final String username) {
             // 保存增加的联系人
-            Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+            Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();
             Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
             EaseUser user = new EaseUser(username);
             // 添加好友时可能会回调added方法两次
@@ -502,7 +502,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onContactDeleted(final String username) {
             // 被删除
-            Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+            Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();
             localUsers.remove(username);
             userDao.deleteContact(username);
             inviteMessgeDao.deleteMessage(username);

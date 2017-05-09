@@ -5,7 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.mottc.chat.Constant;
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.utils.EaseCommonUtils;
 
@@ -26,7 +26,7 @@ public class DBManager {
     private DbOpenHelper dbHelper;
 
     private DBManager() {
-        dbHelper = DbOpenHelper.getInstance(MyApplication.getInstance().getApplicationContext());
+        dbHelper = DbOpenHelper.getInstance(ChatApplication.getInstance().getApplicationContext());
     }
 
     public static synchronized DBManager getInstance() {

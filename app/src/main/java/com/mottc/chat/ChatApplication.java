@@ -24,10 +24,10 @@ import java.util.Map;
  * Time: 14:11
  */
 
-public class MyApplication extends Application {
+public class ChatApplication extends Application {
 
     public static Context applicationContext;
-    private static MyApplication instance;
+    private static ChatApplication instance;
     private String username = "";
     private Map<String, EaseUser> contactList;
     private UserDao userDao;
@@ -41,7 +41,7 @@ public class MyApplication extends Application {
         init(applicationContext);
     }
 
-    public static MyApplication getInstance() {
+    public static ChatApplication getInstance() {
         return instance;
     }
 

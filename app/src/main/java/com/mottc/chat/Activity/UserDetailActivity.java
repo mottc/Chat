@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
-import com.mottc.chat.MyApplication;
+import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.DBManager;
 import com.mottc.chat.db.EaseUser;
@@ -70,7 +70,7 @@ public class UserDetailActivity extends AppCompatActivity {
 //        new AvatarURLDownloadUtils().downLoad(userName, this, mDetailAvatar,false);
         PersonAvatarUtils.setAvatar(this, userName, mDetailAvatar);
 
-        Map<String, EaseUser> localUsers = MyApplication.getInstance().getContactList();
+        Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();
         if ((!localUsers.containsKey(userName)) && (!userName.equals(EMClient.getInstance().getCurrentUser()))) {
             mAddF.setVisibility(View.VISIBLE);
         }
