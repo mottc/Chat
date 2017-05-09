@@ -1,4 +1,4 @@
-package com.mottc.chat.Login;
+package com.mottc.chat.login;
 
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.BasePresenter;

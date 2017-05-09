@@ -1,4 +1,4 @@
-package com.mottc.chat.Login;
+package com.mottc.chat.login;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -32,7 +32,13 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     }
 
+    @Override
+    public void onDestroy() {
+        mView = null;
+    }
+
     public void login(String loginUserName, String loginPassword) {
+
         if (!EaseCommonUtils.isNetWorkConnected((LoginActivity)mView)) {
             mView.showNoNet();
             return;
@@ -128,9 +134,9 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     private void getFriends() {
         try {
-            List<String> usernames = EMClient.getInstance().contactManager().getAllContactsFromServer();
+            List<String> userNames = EMClient.getInstance().contactManager().getAllContactsFromServer();
             Map<String, EaseUser> users = new HashMap<String, EaseUser>();
-            for (String username : usernames) {
+            for (String username : userNames) {
                 EaseUser user = new EaseUser(username);
                 users.put(username, user);
             }

@@ -7,5 +7,8 @@ package com.mottc.chat;
  * Time: 19:46
  */
 public interface BasePresenter {
+
     void start();
+
+    void onDestroy();
 }

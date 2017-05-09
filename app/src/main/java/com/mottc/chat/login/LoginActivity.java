@@ -1,4 +1,4 @@
-package com.mottc.chat.Login;
+package com.mottc.chat.login;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -116,6 +116,13 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
 
     }
 
+
+    @Override
+    protected void onDestroy() {
+        mLoginPresenter.onDestroy();
+        super.onDestroy();
+    }
+
     public void back(View view) {
         finish();
     }
@@ -159,13 +166,7 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
         mProgressDialog.dismiss();
     }
 
-    @Override
-    public void go2MainActivity() {
-        // 进入主页面
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
+
 
     @Override
     public void showCanNotLogin(String message) {
@@ -202,6 +203,14 @@ public class LoginActivity extends AppCompatActivity implements LoginContract.Vi
     public void go2LoginActivity() {
 
         startActivity(new Intent(LoginActivity.this, LoginActivity.class));
+        finish();
+    }
+
+    @Override
+    public void go2MainActivity() {
+        // 进入主页面
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
         finish();
     }
 }
