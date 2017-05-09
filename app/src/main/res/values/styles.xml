@@ -17,6 +17,8 @@
     <style name="SplashTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
         <item name="android:windowBackground">@drawable/nav</item>
+        <!--状态栏透明-->
+
     </style>
 
     <!-- 登陆界面和添加好友界面使用 -->
