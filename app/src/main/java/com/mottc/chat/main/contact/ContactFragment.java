@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.main.contact;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.hyphenate.EMContactListener;
 import com.hyphenate.chat.EMClient;
-import com.mottc.chat.Activity.Adapter.MyItemRecyclerViewAdapter;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.db.EaseUser;
@@ -40,7 +39,7 @@ public class ContactFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    MyItemRecyclerViewAdapter myItemRecyclerViewAdapter;
+    ContactRecyclerViewAdapter mContactRecyclerViewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -88,8 +87,8 @@ public class ContactFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            myItemRecyclerViewAdapter = new MyItemRecyclerViewAdapter(getActivity(),contactList, mListener);
-            recyclerView.setAdapter(myItemRecyclerViewAdapter);
+            mContactRecyclerViewAdapter = new ContactRecyclerViewAdapter(getActivity(),contactList, mListener);
+            recyclerView.setAdapter(mContactRecyclerViewAdapter);
         }
 
         return view;
@@ -173,7 +172,7 @@ public class ContactFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                myItemRecyclerViewAdapter.notifyDataSetChanged();
+                mContactRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
 

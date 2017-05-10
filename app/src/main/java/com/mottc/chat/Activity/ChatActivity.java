@@ -40,6 +40,7 @@ import com.mottc.chat.Activity.Adapter.MessageAdapter;
 import com.mottc.chat.Constant;
 import com.mottc.chat.Model.EaseVoiceRecorder;
 import com.mottc.chat.R;
+import com.mottc.chat.main.MainActivity;
 import com.mottc.chat.utils.DisplayUtils;
 import com.mottc.chat.utils.EaseCommonUtils;
 

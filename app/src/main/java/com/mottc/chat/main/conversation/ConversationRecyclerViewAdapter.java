@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity.Adapter;
+package com.mottc.chat.main.conversation;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,6 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.util.DateUtils;
-import com.mottc.chat.Activity.ConversationFragment;
 import com.mottc.chat.R;
 import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.PersonAvatarUtils;
@@ -21,13 +20,13 @@ import java.util.Date;
 import java.util.List;
 
 
-public class MyConversationRecyclerViewAdapter extends RecyclerView.Adapter<MyConversationRecyclerViewAdapter.ViewHolder> {
+public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder> {
 
     private final List<EMConversation> mValues;
     private final ConversationFragment.OnConversationFragmentInteractionListener mListener;
     private final Context mContext;
 
-    public MyConversationRecyclerViewAdapter(Context context, List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
+    public ConversationRecyclerViewAdapter(Context context, List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         mContext = context;

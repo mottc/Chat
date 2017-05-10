@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 import com.hyphenate.EMError;
 import com.hyphenate.exceptions.HyphenateException;
-import com.mottc.chat.Activity.MainActivity;
+import com.mottc.chat.main.MainActivity;
 import com.mottc.chat.R;
 
 import shem.com.materiallogin.DefaultLoginView;

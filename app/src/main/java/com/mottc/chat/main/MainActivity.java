@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.main;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -38,7 +38,15 @@ import com.hyphenate.exceptions.HyphenateException;
 import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
-import com.mottc.chat.Activity.Adapter.MyViewPagerAdapter;
+import com.mottc.chat.Activity.AddContactActivity;
+import com.mottc.chat.Activity.AddGroupActivity;
+import com.mottc.chat.Activity.ChatActivity;
+import com.mottc.chat.main.contact.ContactFragment;
+import com.mottc.chat.main.conversation.ConversationFragment;
+import com.mottc.chat.Activity.CreateGroupActivity;
+import com.mottc.chat.main.group.GroupFragment;
+import com.mottc.chat.Activity.NewFriendsMsgActivity;
+import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.login.LoginActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
@@ -55,14 +63,14 @@ import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-                   ContactFragment.OnListFragmentInteractionListener,
-                   ConversationFragment.OnConversationFragmentInteractionListener,
-                   GroupFragment.OnGroupFragmentInteractionListener {
+        ContactFragment.OnListFragmentInteractionListener,
+        ConversationFragment.OnConversationFragmentInteractionListener,
+        GroupFragment.OnGroupFragmentInteractionListener {
 
     private InviteMessageDao inviteMessgeDao;
     private UserDao userDao;
     private DrawerLayout drawer;
-    MyViewPagerAdapter viewPagerAdapter;
+    ViewPagerAdapter viewPagerAdapter;
     ViewPager viewpager;
     NotificationManager manager;//通知栏控制类
     View mLayout;
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         viewpager = (ViewPager) findViewById(R.id.viewpager);
-        viewPagerAdapter = new MyViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
         viewPagerAdapter.addFragment(GroupFragment.newInstance(1), "群组");

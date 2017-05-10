@@ -11,5 +11,5 @@
     android:layout_marginRight="16dp"
     android:background="#eee"
     app:layoutManager="LinearLayoutManager"
-    tools:context="com.mottc.chat.Activity.ContactFragment"
+    tools:context="com.mottc.chat.main.contact.ContactFragment"
     tools:listitem="@layout/fragment_item"/>

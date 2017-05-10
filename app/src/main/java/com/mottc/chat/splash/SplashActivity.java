@@ -8,7 +8,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.mottc.chat.Activity.MainActivity;
+import com.mottc.chat.main.MainActivity;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
 import com.mottc.chat.login.LoginActivity;

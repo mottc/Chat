@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.main.conversation;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -15,7 +15,6 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.mottc.chat.Activity.Adapter.MyConversationRecyclerViewAdapter;
 import com.mottc.chat.R;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class ConversationFragment extends Fragment {
     private int mColumnCount = 1;
     private OnConversationFragmentInteractionListener mConversationListener;
     List<EMConversation> conversationList;
-    MyConversationRecyclerViewAdapter myConversationRecyclerViewAdapter;
+    ConversationRecyclerViewAdapter mConversationRecyclerViewAdapter;
     RecyclerView recyclerView;
 
     /**
@@ -79,8 +78,8 @@ public class ConversationFragment extends Fragment {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 //
-//            myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(conversationList, mConversationListener);
-//            recyclerView.setAdapter(myConversationRecyclerViewAdapter);
+//            mConversationRecyclerViewAdapter = new ConversationRecyclerViewAdapter(conversationList, mConversationListener);
+//            recyclerView.setAdapter(mConversationRecyclerViewAdapter);
         }
         return view;
     }
@@ -213,9 +212,9 @@ public class ConversationFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                myConversationRecyclerViewAdapter.notifyDataSetChanged();
-                myConversationRecyclerViewAdapter = new MyConversationRecyclerViewAdapter(getActivity(),conversationList, mConversationListener);
-                recyclerView.setAdapter(myConversationRecyclerViewAdapter);
+//                mConversationRecyclerViewAdapter.notifyDataSetChanged();
+                mConversationRecyclerViewAdapter = new ConversationRecyclerViewAdapter(getActivity(),conversationList, mConversationListener);
+                recyclerView.setAdapter(mConversationRecyclerViewAdapter);
             }
         });
     }

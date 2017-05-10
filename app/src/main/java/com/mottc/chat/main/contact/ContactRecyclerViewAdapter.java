@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity.Adapter;
+package com.mottc.chat.main.contact;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,46 +8,46 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hyphenate.chat.EMGroup;
-import com.mottc.chat.Activity.GroupFragment;
+import com.mottc.chat.main.contact.ContactFragment.OnListFragmentInteractionListener;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.GroupAvatarUtils;
+import com.mottc.chat.db.EaseUser;
+import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.List;
 
+public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder> {
 
-public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecyclerViewAdapter.ViewHolder> {
+    private final List<EaseUser> mValues;
+    private final OnListFragmentInteractionListener mListener;
+    private final Context context;
 
-    private final List<EMGroup> mValues;
-    private final Context mContext;
-    private final GroupFragment.OnGroupFragmentInteractionListener mListener;
-
-    public MyGroupRecyclerViewAdapter(Context context,List<EMGroup> items, GroupFragment.OnGroupFragmentInteractionListener listener) {
+    public ContactRecyclerViewAdapter(Context context, List<EaseUser> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
-        mContext = context;
+        this.context = context;
     }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_group, parent, false);
+                .inflate(R.layout.fragment_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mName.setText(mValues.get(position).getGroupName());
-        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupId(), holder.mImageView);
-//        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getGroupId(), mContext, holder.mImageView, true);
+        holder.mName.setText(mValues.get(position).getUsername());
+        PersonAvatarUtils.setAvatar(context,mValues.get(position).getUsername(),holder.mAvatar);
+//        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getUsername(), context, holder.mAvatar, false);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mListener != null) {
+                if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onGroupFragmentInteraction(holder.mItem);
+                    mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
         });
@@ -61,15 +61,14 @@ public class MyGroupRecyclerViewAdapter extends RecyclerView.Adapter<MyGroupRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mName;
-        public final ImageView mImageView;
-        public EMGroup mItem;
+        public final ImageView mAvatar;
+        public EaseUser mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mName = (TextView) view.findViewById(R.id.tv_name);
-            mImageView = (ImageView) view.findViewById(R.id.iv_avatar);
-
+            mAvatar = (ImageView) view.findViewById(R.id.iv_avatar);
 
         }
 

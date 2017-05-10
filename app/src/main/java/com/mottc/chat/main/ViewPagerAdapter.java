@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity.Adapter;
+package com.mottc.chat.main;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,10 +13,10 @@ import java.util.List;
  * Date: 2016/10/9
  * Time: 14:05
  */
-public class MyViewPagerAdapter extends FragmentPagerAdapter {
+public class ViewPagerAdapter extends FragmentPagerAdapter {
     private final List<Fragment> mFragments = new ArrayList<>();//添加的Fragment的集合
     private final List<String> mFragmentsTitles = new ArrayList<>();//每个Fragment对应的title的集合
-    public MyViewPagerAdapter(FragmentManager fm) {
+    public ViewPagerAdapter(FragmentManager fm) {
         super(fm);
     }
     /**

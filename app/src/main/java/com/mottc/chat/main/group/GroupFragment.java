@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.main.group;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
-import com.mottc.chat.Activity.Adapter.MyGroupRecyclerViewAdapter;
 import com.mottc.chat.R;
 
 import java.util.List;
@@ -32,7 +31,7 @@ public class GroupFragment extends Fragment {
     private OnGroupFragmentInteractionListener mListener;
     List<EMGroup> groupList;
     RecyclerView recyclerView;
-    MyGroupRecyclerViewAdapter mMyGroupRecyclerViewAdapter;
+    GroupRecyclerViewAdapter mGroupRecyclerViewAdapter;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -67,7 +66,7 @@ public class GroupFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                mMyGroupRecyclerViewAdapter.notifyDataSetChanged();
+                mGroupRecyclerViewAdapter.notifyDataSetChanged();
             }
         });
     }
@@ -85,8 +84,8 @@ public class GroupFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mMyGroupRecyclerViewAdapter = new MyGroupRecyclerViewAdapter(getActivity(),groupList, mListener);
-            recyclerView.setAdapter(mMyGroupRecyclerViewAdapter);
+            mGroupRecyclerViewAdapter = new GroupRecyclerViewAdapter(getActivity(),groupList, mListener);
+            recyclerView.setAdapter(mGroupRecyclerViewAdapter);
             
         }
         return view;

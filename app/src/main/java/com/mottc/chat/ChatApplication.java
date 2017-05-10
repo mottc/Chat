@@ -56,8 +56,8 @@ public class ChatApplication extends Application {
         // 第二步
         boolean success = initSDK(context, options);
         if (success) {
-            // 设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
-//          TODO:
+
+//          TODO:设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
             EMClient.getInstance().setDebugMode(true);
             // 初始化数据库
             initDbDao(context);
@@ -76,7 +76,6 @@ public class ChatApplication extends Application {
     public String getCurrentUserName() {
         if (TextUtils.isEmpty(username)) {
             username = Myinfo.getInstance(instance).getUserInfo(Constant.KEY_USERNAME);
-
         }
         return username;
 
