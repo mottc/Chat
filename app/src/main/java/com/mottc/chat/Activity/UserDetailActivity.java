@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.chat.ChatActivity;
 import com.mottc.chat.db.DBManager;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.PersonAvatarUtils;

@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity;
+package com.mottc.chat.chat;
 
 import android.app.Activity;
 import android.app.Notification;
@@ -36,7 +36,8 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
-import com.mottc.chat.Activity.Adapter.MessageAdapter;
+import com.mottc.chat.Activity.GroupDetailActivity;
+import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.Constant;
 import com.mottc.chat.Model.EaseVoiceRecorder;
 import com.mottc.chat.R;

@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity.Adapter;
+package com.mottc.chat.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

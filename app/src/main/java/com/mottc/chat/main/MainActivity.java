@@ -40,7 +40,7 @@ import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.AddContactActivity;
 import com.mottc.chat.Activity.AddGroupActivity;
-import com.mottc.chat.Activity.ChatActivity;
+import com.mottc.chat.chat.ChatActivity;
 import com.mottc.chat.main.contact.ContactFragment;
 import com.mottc.chat.main.conversation.ConversationFragment;
 import com.mottc.chat.Activity.CreateGroupActivity;
