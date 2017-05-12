@@ -192,14 +192,15 @@ public class ConversationFragment extends Fragment {
         }
 
         @Override
-        public void onMessageReadAckReceived(List<EMMessage> list) {
-            update();
+        public void onMessageRead(List<EMMessage> messages) {
+
         }
 
         @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> list) {
-            update();
+        public void onMessageDelivered(List<EMMessage> messages) {
+
         }
+
 
         @Override
         public void onMessageChanged(EMMessage emMessage, Object o) {

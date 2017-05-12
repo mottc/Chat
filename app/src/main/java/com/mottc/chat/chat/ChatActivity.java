@@ -533,14 +533,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         }
 
         @Override
-        public void onMessageReadAckReceived(List<EMMessage> messages) {
-            // 收到已读回执
+        public void onMessageRead(List<EMMessage> messages) {
+
         }
 
         @Override
-        public void onMessageDeliveryAckReceived(List<EMMessage> message) {
-            // 收到已送达回执
+        public void onMessageDelivered(List<EMMessage> messages) {
+
         }
+
 
         @Override
         public void onMessageChanged(EMMessage message, Object change) {

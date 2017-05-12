@@ -9,7 +9,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -18,7 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,39 +25,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
-import com.hyphenate.EMConnectionListener;
-import com.hyphenate.EMContactListener;
-import com.hyphenate.EMError;
-import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
-import com.hyphenate.exceptions.HyphenateException;
-import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.AddContactActivity;
 import com.mottc.chat.Activity.AddGroupActivity;
-import com.mottc.chat.chat.ChatActivity;
-import com.mottc.chat.main.contact.ContactFragment;
-import com.mottc.chat.main.conversation.ConversationFragment;
 import com.mottc.chat.Activity.CreateGroupActivity;
-import com.mottc.chat.main.group.GroupFragment;
 import com.mottc.chat.Activity.NewFriendsMsgActivity;
 import com.mottc.chat.Activity.UserDetailActivity;
-import com.mottc.chat.login.LoginActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.chat.ChatActivity;
 import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.db.InviteMessage;
-import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
 import com.mottc.chat.db.InviteMessageDao;
 import com.mottc.chat.db.UserDao;
+import com.mottc.chat.login.LoginActivity;
+import com.mottc.chat.main.contact.ContactFragment;
+import com.mottc.chat.main.conversation.ConversationFragment;
+import com.mottc.chat.main.group.GroupFragment;
 import com.mottc.chat.utils.PersonAvatarUtils;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
@@ -67,23 +54,21 @@ public class MainActivity extends AppCompatActivity
         ConversationFragment.OnConversationFragmentInteractionListener,
         GroupFragment.OnGroupFragmentInteractionListener {
 
-    private InviteMessageDao inviteMessgeDao;
+    private InviteMessageDao inviteMessageDao;
     private UserDao userDao;
     private DrawerLayout drawer;
-    ViewPagerAdapter viewPagerAdapter;
-    ViewPager viewpager;
-    NotificationManager manager;//通知栏控制类
-    View mLayout;
-    String currentUserName;
-    ImageView imageView;
+    private NotificationManager mNotificationManager;//通知栏控制类
+    private View mLayout;
+    private String currentUserName;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        inviteMessgeDao = new InviteMessageDao(MainActivity.this);
+        mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        inviteMessageDao = new InviteMessageDao(MainActivity.this);
         userDao = new UserDao(MainActivity.this);
         mLayout = findViewById(R.id.coordinator_layout);
 
@@ -92,8 +77,8 @@ public class MainActivity extends AppCompatActivity
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        viewpager = (ViewPager) findViewById(R.id.viewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
         viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
         viewPagerAdapter.addFragment(GroupFragment.newInstance(1), "群组");
@@ -145,19 +130,13 @@ public class MainActivity extends AppCompatActivity
 //        new AvatarURLDownloadUtils().downLoad(currentUserName, this, imageView, false);
 
         //注册联系人变动监听
-        EMClient.getInstance().contactManager().setContactListener(new MyContactListener());
-        //注册一个监听连接状态的listener
-        EMClient.getInstance().addConnectionListener(new MyConnectionListener());
-        //注册群组变动监听
-        EMClient.getInstance().groupManager().addGroupChangeListener(new MyGroupChangeListener());
+        EMClient.getInstance().contactManager().setContactListener(new ChatContactListener(this));
 
-//        UserDetailActivity userDetailActivity = new UserDetailActivity();
-//        userDetailActivity.setOnAvatarChangeListener(new UserDetailActivity.OnAvatarChangeListener() {
-//            @Override
-//            public void setAvatar() {
-//                PersonAvatarUtils.setAvatar(MainActivity.this, currentUserName, imageView);
-//            }
-//        });
+        //注册一个监听连接状态的listener
+        EMClient.getInstance().addConnectionListener(new ChatConnectionListener(this));
+        //注册群组变动监听
+        EMClient.getInstance().groupManager().addGroupChangeListener(new ChatGroupChangeListener(mLayout));
+
     }
 
     @Override
@@ -166,27 +145,7 @@ public class MainActivity extends AppCompatActivity
         PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
     }
 
-    //    @Override
-//    public boolean onCreateOptionsMenu(Menu menu2) {
-//        // Inflate the menu2; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu2.main, menu2);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
+
 
     //  侧边栏中，点击自己的信息
     public void detailInfo(View view) {
@@ -289,7 +248,6 @@ public class MainActivity extends AppCompatActivity
                 .setNegativeButton("取消",
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
-                                return;
                             }
                         })
                 .create(); // 创建对话框
@@ -301,167 +259,34 @@ public class MainActivity extends AppCompatActivity
     //对话类型：1为单聊，2为群聊。
     @Override
     public void onListFragmentInteraction(EaseUser item) {
-        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUsername()).putExtra("type", 1));
+        startActivity(new Intent(MainActivity.this, ChatActivity.class)
+                .putExtra("username", item.getUsername())
+                .putExtra("type", 1));
     }
 
     //对话类型：1为单聊，2为群聊。
     @Override
     public void onConversationFragmentInteraction(EMConversation item) {
         if (item.isGroup()) {
-            startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getLastMessage().getTo()).putExtra("type", 2));
+            startActivity(new Intent(MainActivity.this, ChatActivity.class)
+                    .putExtra("username", item.getLastMessage().getTo())
+                    .putExtra("type", 2));
         } else {
-            startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getUserName()).putExtra("type", 1));
+            startActivity(new Intent(MainActivity.this, ChatActivity.class)
+                    .putExtra("username", item.conversationId())
+                    .putExtra("type", 1));
         }
     }
 
     //对话类型：1为单聊，2为群聊。
     @Override
     public void onGroupFragmentInteraction(EMGroup item) {
-        startActivity(new Intent(MainActivity.this, ChatActivity.class).putExtra("username", item.getGroupId()).putExtra("type", 2));
+        startActivity(new Intent(MainActivity.this, ChatActivity.class)
+                .putExtra("username", item.getGroupId())
+                .putExtra("type", 2));
     }
 
 
-    //实现ConnectionListener接口
-    private class MyConnectionListener implements EMConnectionListener {
-        @Override
-        public void onConnected() {
-        }
-
-        @Override
-        public void onDisconnected(final int error) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (error == EMError.USER_REMOVED) {
-                        // 显示帐号已经被移除
-                        Toast.makeText(MainActivity.this, "帐号已经被移除", Toast.LENGTH_SHORT).show();
-                    } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
-                        // 显示帐号在其他设备登录
-                        Toast.makeText(MainActivity.this, "帐号在其他设备登录", Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (NetUtils.hasNetwork(MainActivity.this)) {
-                            //连接不到聊天服务器
-                            Toast.makeText(MainActivity.this, "连接不到聊天服务器", Toast.LENGTH_SHORT).show();
-                        } else {
-                            //当前网络不可用，请检查网络设置
-                            Toast.makeText(MainActivity.this, "当前网络不可用，请检查网络设置", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    /**
-     * 群组状态监听
-     */
-    public class MyGroupChangeListener implements EMGroupChangeListener {
-
-        @Override
-        public void onUserRemoved(String groupId, String groupName) {
-            //当前用户被管理员移除出群组
-            try {
-                EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-            Snackbar.make(mLayout, "您已被移除出群组" + groupName, Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
-        @Override
-        public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
-            //收到加入群组的邀请
-            Snackbar.make(mLayout, inviter + "邀请您加入群组" + groupName, Snackbar.LENGTH_LONG)
-                    .show();
-            Toast.makeText(MainActivity.this, "111111111", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onInvitationDeclined(String groupId, String invitee, String reason) {
-            //群组邀请被拒绝
-            Snackbar.make(mLayout, invitee + "拒绝加入群组" + EMClient.getInstance().groupManager().getGroup(groupId).getGroupName(), Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
-        @Override
-        public void onInvitationAccepted(String groupId, String inviter, String reason) {
-            //群组邀请被接受
-            Snackbar.make(mLayout, inviter + "已接受加入群组" + EMClient.getInstance().groupManager().getGroup(groupId).getGroupName(), Snackbar.LENGTH_LONG)
-                    .show();
-            final String id = groupId;
-            final String name = inviter;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        EMClient.getInstance().groupManager().addUsersToGroup(id, new String[]{name});//需异步处理
-                    } catch (HyphenateException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-
-        @Override
-        public void onGroupDestroyed(String groupId, String groupName) {
-            //群组被创建者解散
-            Snackbar.make(mLayout, "群组" + groupName + "已被解散", Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
-        @Override
-        public void onAutoAcceptInvitationFromGroup(String s, String s1, String s2) {
-
-        }
-
-        @Override
-        public void onApplicationReceived(String groupId, String groupName, String applyer, String reason) {
-            //收到加群申请
-            Snackbar.make(mLayout, applyer + "申请加入" + groupName + "：" + reason, Snackbar.LENGTH_LONG)
-                    .show();
-
-            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
-
-            for (InviteMessage inviteMessage : msgs) {
-                if (inviteMessage.getGroupId() == null && inviteMessage.getFrom().equals(applyer)) {
-                    inviteMessgeDao.deleteMessage(applyer);
-                }
-            }
-            // 自己封装的javabean
-            InviteMessage msg = new InviteMessage();
-            msg.setFrom(applyer);
-            msg.setTime(System.currentTimeMillis());
-            msg.setGroupId(groupId);
-            msg.setGroupName(groupName);
-            msg.setReason(reason);
-
-            // 设置相应status
-            msg.setStatus(InviteMessage.InviteMessageStatus.BEAPPLYED);
-            notifyNewIviteMessage(msg);
-            sendNewFriendsAddGroupNotification(applyer, reason, groupName);
-
-        }
-
-        @Override
-        public void onApplicationAccept(String groupId, String groupName, String accepter) {
-            //加群申请被同意
-            try {
-                EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
-            } catch (HyphenateException e) {
-                e.printStackTrace();
-            }
-            Snackbar.make(mLayout, "加入" + groupName + "群组的请求已被同意", Snackbar.LENGTH_LONG)
-                    .show();
-        }
-
-        @Override
-        public void onApplicationDeclined(String groupId, String groupName, String decliner, String reason) {
-            //加群申请被拒绝
-            Snackbar.make(mLayout, "加入" + groupName + "群组的请求已被拒绝", Snackbar.LENGTH_LONG)
-                    .show();
-        }
-    }
 
     private void sendNewFriendsAddGroupNotification(String applyer, String reason, String groupName) {
         Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
@@ -476,118 +301,9 @@ public class MainActivity extends AppCompatActivity
 //        Notification notification = builder.build();//4.1以上
         Notification notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
-        manager.notify((int) System.currentTimeMillis(), notification);
+        mNotificationManager.notify((int) System.currentTimeMillis(), notification);
     }
 
-
-    /***
-     * 好友变化listener
-     */
-    public class MyContactListener implements EMContactListener {
-
-        @Override
-        public void onContactAdded(final String username) {
-            // 保存增加的联系人
-            Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();
-            Map<String, EaseUser> toAddUsers = new HashMap<String, EaseUser>();
-            EaseUser user = new EaseUser(username);
-            // 添加好友时可能会回调added方法两次
-            if (!localUsers.containsKey(username)) {
-                userDao.saveContact(user);
-            }
-            toAddUsers.put(username, user);
-            localUsers.putAll(toAddUsers);
-
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-
-        @Override
-        public void onContactDeleted(final String username) {
-            // 被删除
-            Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();
-            localUsers.remove(username);
-            userDao.deleteContact(username);
-            inviteMessgeDao.deleteMessage(username);
-
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-
-                    Toast.makeText(getApplicationContext(), "删除联系人：+" + username, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
-        @Override
-        public void onContactInvited(final String username, String reason) {
-            // 接到邀请的消息，如果不处理(同意或拒绝)，掉线后，服务器会自动再发过来，所以客户端不需要重复提醒
-            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
-
-            for (InviteMessage inviteMessage : msgs) {
-                if (inviteMessage.getGroupId() == null && inviteMessage.getFrom().equals(username)) {
-                    inviteMessgeDao.deleteMessage(username);
-                }
-            }
-            // 自己封装的javabean
-            InviteMessage msg = new InviteMessage();
-            msg.setFrom(username);
-            msg.setTime(System.currentTimeMillis());
-            msg.setReason(reason);
-
-            // 设置相应status
-            msg.setStatus(InviteMessage.InviteMessageStatus.BEINVITEED);
-            notifyNewIviteMessage(msg);
-            sendNewFriendsNotification(username, reason);
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "收到好友申请：+" + username, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-
-        @Override
-        public void onContactAgreed(final String username) {
-            List<InviteMessage> msgs = inviteMessgeDao.getMessagesList();
-            for (InviteMessage inviteMessage : msgs) {
-                if (inviteMessage.getFrom().equals(username)) {
-                    return;
-                }
-            }
-            // 自己封装的javabean
-            InviteMessage msg = new InviteMessage();
-            msg.setFrom(username);
-            msg.setTime(System.currentTimeMillis());
-
-            msg.setStatus(InviteMessageStatus.BEAGREED);
-            notifyNewIviteMessage(msg);
-            runOnUiThread(new Runnable() {
-
-                @Override
-                public void run() {
-                    Toast.makeText(getApplicationContext(), "好友申请同意：+" + username, Toast.LENGTH_SHORT).show();
-
-                }
-            });
-
-        }
-
-        @Override
-        public void onContactRefused(String username) {
-            // 参考同意，被邀请实现此功能,demo未实现
-            Log.d(username, username + "拒绝了你的好友请求");
-        }
-    }
 
     /**
      * 保存并提示消息的邀请消息
@@ -595,12 +311,12 @@ public class MainActivity extends AppCompatActivity
      * @param msg
      */
     private void notifyNewIviteMessage(InviteMessage msg) {
-        if (inviteMessgeDao == null) {
-            inviteMessgeDao = new InviteMessageDao(MainActivity.this);
+        if (inviteMessageDao == null) {
+            inviteMessageDao = new InviteMessageDao(MainActivity.this);
         }
-        inviteMessgeDao.saveMessage(msg);
+        inviteMessageDao.saveMessage(msg);
         //保存未读数，这里没有精确计算
-        inviteMessgeDao.saveUnreadMessageCount(1);
+        inviteMessageDao.saveUnreadMessageCount(1);
         // 提示有新消息
         //响铃或其他操作
 
@@ -621,6 +337,6 @@ public class MainActivity extends AppCompatActivity
 //        Notification notification = builder.build();//4.1以上
         Notification notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
-        manager.notify((int) System.currentTimeMillis(), notification);
+        mNotificationManager.notify((int) System.currentTimeMillis(), notification);
     }
 }

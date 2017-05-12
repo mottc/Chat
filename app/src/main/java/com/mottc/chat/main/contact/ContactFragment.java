@@ -198,15 +198,15 @@ public class ContactFragment extends Fragment {
         }
 
         @Override
-        public void onContactAgreed(String s) {
-            updateAdapter();
+        public void onFriendRequestAccepted(String username) {
 
         }
 
         @Override
-        public void onContactRefused(String s) {
+        public void onFriendRequestDeclined(String username) {
 
         }
+
     }
 
 

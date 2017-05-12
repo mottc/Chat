@@ -43,7 +43,7 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         if (mValues.get(position).isGroup()) {
-            String groupId = mValues.get(position).getUserName();
+            String groupId = mValues.get(position).conversationId();
             String groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
             holder.mNameView.setText(groupName);
             holder.mGroup.setVisibility(View.VISIBLE);
@@ -52,8 +52,8 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
 //            new AvatarURLDownloadUtils().downLoad(groupId, mContext, holder.mIcon,true);
 
         } else {
-            holder.mNameView.setText(mValues.get(position).getUserName());
-            PersonAvatarUtils.setAvatar(mContext, mValues.get(position).getUserName(), holder.mIcon);
+            holder.mNameView.setText(mValues.get(position).conversationId());
+            PersonAvatarUtils.setAvatar(mContext, mValues.get(position).conversationId(), holder.mIcon);
 //            AvatarURLDownloadUtils.downLoad(mValues.get(position).getUserName(), mContext, holder.mIcon,false);
 
         }
