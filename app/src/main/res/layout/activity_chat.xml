@@ -42,22 +42,12 @@
             android:background="#00000000"/>
 
     </RelativeLayout>
-    <ImageButton
-        android:id="@+id/menu"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#eeeeee"
-        android:src="@drawable/menub"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"/>
 
     <RelativeLayout
         android:id="@+id/re_bottom"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/menu"
         android:background="#eeeeee">
 
         <Button
@@ -86,43 +76,7 @@
             android:textSize="14sp" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/menu_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_toRightOf="@id/menu"
-        android:background="#eeeeee"
-        android:orientation="horizontal"
-        android:visibility="gone">
 
-        <Button
-            android:id="@+id/btn_send_image"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_centerVertical="true"
-            android:background="@color/colorMain"
-            android:text="点击发图"
-            android:textColor="#fff"/>
-
-        <Button
-            android:id="@+id/btn_send_voice"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/colorMain"
-            android:layout_marginLeft="1dp"
-            android:text="长按语音"
-            android:textColor="#fff"/>
-    </LinearLayout>
 
 
     <ListView
@@ -134,36 +88,9 @@
         android:divider="@null"
         android:dividerHeight="5dp"
         android:layout_below="@id/title"
-        android:layout_above="@id/menu"/>
+        android:layout_above="@id/re_bottom"/>
 
-    <RelativeLayout
-        android:id="@+id/voice_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="#55000000"
-        android:layout_centerInParent="true"
-        android:padding="10dp"
-        android:visibility="gone">
 
-        <ImageView
-            android:id="@+id/mic_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/ease_record_animate_01"/>
-
-        <TextView
-            android:id="@+id/recording_hint"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/mic_image"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:padding="2dp"
-            android:text="@string/move_up_to_cancel"
-            android:textSize="10sp"/>
-
-    </RelativeLayout>
 
 </RelativeLayout>
 

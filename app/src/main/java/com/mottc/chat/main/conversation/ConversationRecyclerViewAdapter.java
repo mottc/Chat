@@ -16,26 +16,26 @@ import com.mottc.chat.R;
 import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<ConversationRecyclerViewAdapter.ViewHolder> {
 
-    private final List<EMConversation> mValues;
-    private final ConversationFragment.OnConversationFragmentInteractionListener mListener;
-    private final Context mContext;
+    private List<EMConversation> mValues;
+    private ConversationFragment.OnConversationFragmentInteractionListener mListener;
+    private Context mContext;
 
-    public ConversationRecyclerViewAdapter(Context context, List<EMConversation> items, ConversationFragment.OnConversationFragmentInteractionListener listener) {
-        mValues = items;
+    public ConversationRecyclerViewAdapter(Context context, ConversationFragment.OnConversationFragmentInteractionListener listener) {
+        mValues = new ArrayList<>();
         mListener = listener;
         mContext = context;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.conversation_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.conversation_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -86,8 +86,6 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
             public void onClick(View v) {
 
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     mListener.onConversationFragmentInteraction(holder.mItem);
                 }
             }
@@ -98,6 +96,11 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public void loadAllConversation(List<EMConversation> conversationList) {
+        mValues.addAll(conversationList);
+        notifyDataSetChanged();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

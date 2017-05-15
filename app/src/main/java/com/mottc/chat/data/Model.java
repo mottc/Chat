@@ -37,6 +37,11 @@ public class Model implements IModel {
     }
 
     @Override
+    public List<ChatUser> getAllContact() {
+        return mChatUserDao.loadAll();
+    }
+
+    @Override
     public void addContact(String userName) {
         ChatUser addedChatUser = mChatUserDao
                 .queryBuilder()

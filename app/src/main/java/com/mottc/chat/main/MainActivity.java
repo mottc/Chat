@@ -41,6 +41,7 @@ import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.chat.ChatActivity;
+import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.login.LoginActivity;
 import com.mottc.chat.main.contact.ContactFragment;
 import com.mottc.chat.main.conversation.ConversationFragment;
@@ -79,9 +80,9 @@ public class MainActivity extends AppCompatActivity
 
         ViewPager viewpager = (ViewPager) findViewById(R.id.viewpager);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(ConversationFragment.newInstance(1), "消息");//添加Fragment
-        viewPagerAdapter.addFragment(ContactFragment.newInstance(1), "通讯录");
-        viewPagerAdapter.addFragment(GroupFragment.newInstance(1), "群组");
+        viewPagerAdapter.addFragment(ConversationFragment.newInstance(), "消息");//添加Fragment
+        viewPagerAdapter.addFragment(ContactFragment.newInstance(), "通讯录");
+        viewPagerAdapter.addFragment(GroupFragment.newInstance(), "群组");
         viewpager.setAdapter(viewPagerAdapter);//设置适配器
 
         TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabLayout);
@@ -263,9 +264,9 @@ public class MainActivity extends AppCompatActivity
 
     //对话类型：1为单聊，2为群聊。
     @Override
-    public void onListFragmentInteraction(EaseUser item) {
+    public void onListFragmentInteraction(ChatUser item) {
         startActivity(new Intent(MainActivity.this, ChatActivity.class)
-                .putExtra("username", item.getUsername())
+                .putExtra("username", item.getUserName())
                 .putExtra("type", 1));
     }
 

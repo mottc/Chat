@@ -1,7 +1,5 @@
 package com.mottc.chat.utils;
 
-import android.annotation.SuppressLint;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,12 +9,8 @@ import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.hyphenate.util.EMLog;
-import com.hyphenate.util.HanziToPinyin;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created with Android Studio
@@ -127,68 +121,7 @@ public class EaseCommonUtils {
         return context.getResources().getString(resId);
     }
 
-    /**
-     * 获取栈顶的activity
-     *
-     * @param context
-     * @return
-     */
-    public static String getTopActivity(Context context) {
-        ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningTaskInfo> runningTaskInfos = manager.getRunningTasks(1);
 
-        if (runningTaskInfos != null)
-            return runningTaskInfos.get(0).topActivity.getClassName();
-        else
-            return "";
-    }
-
-    /**
-     * 设置user昵称(没有昵称取username)的首字母属性，方便通讯中对联系人按header分类显示，以及通过右侧ABCD...
-     * 字母栏快速定位联系人
-     *
-     * @param username
-     * @param user
-     */
-    public static void setUserInitialLetter(EaseUser user) {
-        final String DefaultLetter = "#";
-        String letter = DefaultLetter;
-
-        @SuppressLint("DefaultLocale")
-        final class GetInitialLetter {
-            @SuppressLint("DefaultLocale")
-            String getLetter(String name) {
-                if (TextUtils.isEmpty(name)) {
-                    return DefaultLetter;
-                }
-                char char0 = name.toLowerCase().charAt(0);
-                if (Character.isDigit(char0)) {
-                    return DefaultLetter;
-                }
-                ArrayList<HanziToPinyin.Token> l = HanziToPinyin.getInstance().get(name.substring(0, 1));
-                if (l != null && l.size() > 0 && l.get(0).target.length() > 0) {
-                    HanziToPinyin.Token token = l.get(0);
-                    String letter = token.target.substring(0, 1).toUpperCase();
-                    char c = letter.charAt(0);
-                    if (c < 'A' || c > 'Z') {
-                        return DefaultLetter;
-                    }
-                    return letter;
-                }
-                return DefaultLetter;
-            }
-        }
-
-        if (!TextUtils.isEmpty(user.getNick())) {
-            letter = new GetInitialLetter().getLetter(user.getNick());
-            user.setInitialLetter(letter);
-            return;
-        }
-        if (letter == DefaultLetter && !TextUtils.isEmpty(user.getUsername())) {
-            letter = new GetInitialLetter().getLetter(user.getUsername());
-        }
-        user.setInitialLetter(letter);
-    }
 
     /**
      * 将应用的会话类型转化为SDK的会话类型

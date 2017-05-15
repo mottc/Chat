@@ -1,6 +1,7 @@
 package com.mottc.chat.data;
 
 import com.mottc.chat.data.bean.ChatInviteMessage;
+import com.mottc.chat.data.bean.ChatUser;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ import java.util.List;
  */
 public interface IModel {
     void refreshAllContact(List<String> userNames);
+
+    List<ChatUser> getAllContact();
 
     void addContact(String userName);
 

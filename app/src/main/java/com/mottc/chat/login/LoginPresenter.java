@@ -1,6 +1,7 @@
 package com.mottc.chat.login;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.ChatApplication;
@@ -38,15 +39,13 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     public void login(String loginUserName, String loginPassword) {
 
-        if (!EaseCommonUtils.isNetWorkConnected((LoginActivity)mView)) {
+        if (!EaseCommonUtils.isNetWorkConnected((LoginActivity) mView)) {
             mView.showNoNet();
             return;
         }
 
         // reset current loginUserName name before login
         ChatApplication.getInstance().setCurrentUserName(loginUserName);
-        // close it before login to make sure DemoDB not overlap
-        DBManager.getInstance().closeDB();
 
         mView.showLoginProgressDialog();
 
@@ -73,13 +72,6 @@ public class LoginPresenter implements LoginContract.Presenter {
                 EMClient.getInstance().groupManager().loadAllGroups();
                 EMClient.getInstance().chatManager().loadAllConversations();
                 getFriends();
-
-                ((LoginActivity) mView).runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mView.go2MainActivity();
-                    }
-                });
             }
 
             @Override
@@ -132,12 +124,19 @@ public class LoginPresenter implements LoginContract.Presenter {
 
 
     private void getFriends() {
-        try {
-            List<String> userNames = EMClient.getInstance().contactManager().getAllContactsFromServer();
-            mModel.refreshAllContact(userNames);
-        } catch (HyphenateException e) {
-            e.printStackTrace();
-        }
+
+        EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
+            @Override
+            public void onSuccess(List<String> value) {
+                mModel.refreshAllContact(value);
+                mView.go2MainActivity();
+            }
+
+            @Override
+            public void onError(int error, String errorMsg) {
+                mView.go2MainActivity();
+            }
+        });
 
     }
 

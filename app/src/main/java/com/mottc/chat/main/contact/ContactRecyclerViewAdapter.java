@@ -13,16 +13,17 @@ import com.mottc.chat.main.contact.ContactFragment.OnListFragmentInteractionList
 import com.mottc.chat.R;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder> {
+class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder> {
 
-    private final List<ChatUser> mValues;
-    private final OnListFragmentInteractionListener mListener;
-    private final Context context;
+    private  List<ChatUser> mValues;
+    private  OnListFragmentInteractionListener mListener;
+    private  Context context;
 
-    public ContactRecyclerViewAdapter(Context context, List<ChatUser> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    ContactRecyclerViewAdapter(Context context, OnListFragmentInteractionListener listener) {
+        mValues = new ArrayList<>();
         mListener = listener;
         this.context = context;
     }
@@ -30,8 +31,7 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -44,8 +44,6 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     mListener.onListFragmentInteraction(holder.mItem);
                 }
             }
@@ -57,18 +55,22 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         return mValues.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mName;
-        public final ImageView mAvatar;
-        public ChatUser mItem;
+    public void loadAllContract(List<ChatUser> chatUsers) {
+        mValues.addAll(chatUsers);
+        notifyDataSetChanged();
+    }
 
-        public ViewHolder(View view) {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        public View mView;
+        TextView mName;
+        ImageView mAvatar;
+        ChatUser mItem;
+
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mName = (TextView) view.findViewById(R.id.tv_name);
             mAvatar = (ImageView) view.findViewById(R.id.iv_avatar);
-
         }
 
     }

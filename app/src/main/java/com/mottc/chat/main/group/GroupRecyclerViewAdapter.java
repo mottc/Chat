@@ -12,19 +12,20 @@ import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.R;
 import com.mottc.chat.utils.GroupAvatarUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecyclerViewAdapter.ViewHolder> {
 
-    private final List<EMGroup> mValues;
-    private final Context mContext;
-    private final GroupFragment.OnGroupFragmentInteractionListener mListener;
+    private  List<EMGroup> mGroups;
+    private  Context mContext;
+    private  GroupFragment.OnGroupFragmentInteractionListener mListener;
 
-    public GroupRecyclerViewAdapter(Context context, List<EMGroup> items, GroupFragment.OnGroupFragmentInteractionListener listener) {
-        mValues = items;
+    public GroupRecyclerViewAdapter(Context context, GroupFragment.OnGroupFragmentInteractionListener listener) {
         mListener = listener;
         mContext = context;
+        mGroups = new ArrayList<>();
     }
 
     @Override
@@ -36,24 +37,27 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mName.setText(mValues.get(position).getGroupName());
-        GroupAvatarUtils.setAvatar(mContext, mValues.get(position).getGroupId(), holder.mImageView);
+        holder.mItem = mGroups.get(position);
+        holder.mName.setText(mGroups.get(position).getGroupName());
+        GroupAvatarUtils.setAvatar(mContext, mGroups.get(position).getGroupId(), holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
                     mListener.onGroupFragmentInteraction(holder.mItem);
                 }
             }
         });
     }
 
+    public void loadAllGroups(List<EMGroup> groupList) {
+        mGroups.addAll(groupList);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return mGroups.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
