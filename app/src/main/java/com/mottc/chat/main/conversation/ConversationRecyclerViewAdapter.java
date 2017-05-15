@@ -49,12 +49,10 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
             holder.mGroup.setVisibility(View.VISIBLE);
             holder.mIcon.setImageResource(R.drawable.group_icon);
             GroupAvatarUtils.setAvatar(mContext, groupId, holder.mIcon);
-//            new AvatarURLDownloadUtils().downLoad(groupId, mContext, holder.mIcon,true);
 
         } else {
             holder.mNameView.setText(mValues.get(position).conversationId());
             PersonAvatarUtils.setAvatar(mContext, mValues.get(position).conversationId(), holder.mIcon);
-//            AvatarURLDownloadUtils.downLoad(mValues.get(position).getUserName(), mContext, holder.mIcon,false);
 
         }
 

@@ -666,7 +666,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
 //
 //            EMTextMessageBody txtBody = (EMTextMessageBody) message.getBody();
 //            holder.tv.setText(txtBody.getMessage());
-////            new AvatarURLDownloadUtils().downLoad(message.getFrom(), context, holder.mImageView, false);
 //            PersonAvatarUtils.setAvatar(context, message.getFrom(), holder.mImageView);
 //            holder.toUsername.setText(message.getFrom());
 //            holder.mImageView.setOnClickListener(new View.OnClickListener() {

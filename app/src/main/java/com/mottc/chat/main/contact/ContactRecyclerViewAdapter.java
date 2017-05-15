@@ -8,20 +8,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.main.contact.ContactFragment.OnListFragmentInteractionListener;
 import com.mottc.chat.R;
-import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
 import java.util.List;
 
 public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder> {
 
-    private final List<EaseUser> mValues;
+    private final List<ChatUser> mValues;
     private final OnListFragmentInteractionListener mListener;
     private final Context context;
 
-    public ContactRecyclerViewAdapter(Context context, List<EaseUser> items, OnListFragmentInteractionListener listener) {
+    public ContactRecyclerViewAdapter(Context context, List<ChatUser> items, OnListFragmentInteractionListener listener) {
         mValues = items;
         mListener = listener;
         this.context = context;
@@ -38,9 +38,8 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mName.setText(mValues.get(position).getUsername());
-        PersonAvatarUtils.setAvatar(context,mValues.get(position).getUsername(),holder.mAvatar);
-//        new AvatarURLDownloadUtils().downLoad(mValues.get(position).getUsername(), context, holder.mAvatar, false);
+        holder.mName.setText(mValues.get(position).getUserName());
+        PersonAvatarUtils.setAvatar(context,mValues.get(position).getUserName(),holder.mAvatar);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +61,7 @@ public class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecy
         public final View mView;
         public final TextView mName;
         public final ImageView mAvatar;
-        public EaseUser mItem;
+        public ChatUser mItem;
 
         public ViewHolder(View view) {
             super(view);

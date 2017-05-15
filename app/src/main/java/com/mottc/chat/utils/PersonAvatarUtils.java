@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-import com.mottc.chat.db.DBManager;
 
 /**
  * Created with Android Studio
@@ -19,7 +18,6 @@ public class PersonAvatarUtils {
     public static void setAvatar(Context context, String username, ImageView imageView) {
 
         String time = DBManager.getInstance().getAvatarInfo(username);
-//        String Url = AvatarURLDownloadUtils.downLoad(username);
         String Url = Constant.AVATAR_URL + username + ".png?v=" + time;
 //        Log.i("PersonAvatarUtils", "setAvatar: " + Url);
 

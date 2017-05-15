@@ -20,8 +20,6 @@ import com.hyphenate.chat.EMClient;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.chat.ChatActivity;
-import com.mottc.chat.db.DBManager;
-import com.mottc.chat.db.EaseUser;
 import com.mottc.chat.utils.PersonAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
 import com.mottc.chat.utils.TimeUtils;
@@ -68,7 +66,6 @@ public class UserDetailActivity extends AppCompatActivity {
         userName = this.getIntent().getStringExtra("username");
         mDetailName.setText(userName);
 
-//        new AvatarURLDownloadUtils().downLoad(userName, this, mDetailAvatar,false);
         PersonAvatarUtils.setAvatar(this, userName, mDetailAvatar);
 
         Map<String, EaseUser> localUsers = ChatApplication.getInstance().getContactList();

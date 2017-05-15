@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'android-apt'
+apply plugin: 'org.greenrobot.greendao' // apply plugin
 
 android {
     compileSdkVersion 24
@@ -20,6 +21,12 @@ android {
     }
 
     useLibrary 'org.apache.http.legacy'
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.mottc.chat.data.local'
+    targetGenDir 'src/main/java'
 }
 
 dependencies {
@@ -43,4 +50,5 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
 
     compile 'com.hyphenate:hyphenate-sdk-lite:3.2.3'
+    compile 'org.greenrobot:greendao:3.2.2'
 }

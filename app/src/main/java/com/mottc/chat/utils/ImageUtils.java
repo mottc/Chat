@@ -11,8 +11,7 @@ import com.hyphenate.util.PathUtil;
  */
 public class ImageUtils extends com.hyphenate.util.ImageUtils{
 
-    public static String getImagePath(String remoteUrl)
-    {
+    public static String getImagePath(String remoteUrl){
         String imageName= remoteUrl.substring(remoteUrl.lastIndexOf("/") + 1, remoteUrl.length());
         String path = PathUtil.getInstance().getImagePath()+"/"+ imageName;
         EMLog.d("msg", "image path:" + path);

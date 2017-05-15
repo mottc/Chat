@@ -14,7 +14,6 @@ import com.hyphenate.util.EMLog;
 import com.hyphenate.util.HanziToPinyin;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-import com.mottc.chat.db.EaseUser;
 
 import java.util.ArrayList;
 import java.util.List;

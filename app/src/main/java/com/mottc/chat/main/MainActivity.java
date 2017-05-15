@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -25,9 +26,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hyphenate.EMCallBack;
+import com.hyphenate.EMError;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
+import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.Activity.AddContactActivity;
@@ -38,10 +41,6 @@ import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.chat.ChatActivity;
-import com.mottc.chat.db.EaseUser;
-import com.mottc.chat.db.InviteMessage;
-import com.mottc.chat.db.InviteMessageDao;
-import com.mottc.chat.db.UserDao;
 import com.mottc.chat.login.LoginActivity;
 import com.mottc.chat.main.contact.ContactFragment;
 import com.mottc.chat.main.conversation.ConversationFragment;
@@ -49,28 +48,29 @@ import com.mottc.chat.main.group.GroupFragment;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener,
+        implements MainContract.View,
+        NavigationView.OnNavigationItemSelectedListener,
         ContactFragment.OnListFragmentInteractionListener,
         ConversationFragment.OnConversationFragmentInteractionListener,
         GroupFragment.OnGroupFragmentInteractionListener {
 
-    private InviteMessageDao inviteMessageDao;
-    private UserDao userDao;
     private DrawerLayout drawer;
     private NotificationManager mNotificationManager;//通知栏控制类
-    private View mLayout;
     private String currentUserName;
     private ImageView imageView;
+    private View layout;
+    private MainContract.Presenter mPresenter;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        currentUserName = ChatApplication.getInstance().getCurrentUserName();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        inviteMessageDao = new InviteMessageDao(MainActivity.this);
-        userDao = new UserDao(MainActivity.this);
-        mLayout = findViewById(R.id.coordinator_layout);
+        layout = findViewById(R.id.coordinator_layout);
+        mPresenter = new MainPresenter(this);
 
 //      Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity
         });
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
+                (this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -125,17 +125,14 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         TextView textView = (TextView) headerView.findViewById(R.id.tvusername);
         imageView = (ImageView) headerView.findViewById(R.id.imageView);
-        currentUserName = EMClient.getInstance().getCurrentUser();
-        textView.setText(currentUserName);//  获取当前用户名
-//        new AvatarURLDownloadUtils().downLoad(currentUserName, this, imageView, false);
+        textView.setText(currentUserName);
 
         //注册联系人变动监听
         EMClient.getInstance().contactManager().setContactListener(new ChatContactListener(this));
-
         //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(new ChatConnectionListener(this));
         //注册群组变动监听
-        EMClient.getInstance().groupManager().addGroupChangeListener(new ChatGroupChangeListener(mLayout));
+        EMClient.getInstance().groupManager().addGroupChangeListener(new ChatGroupChangeListener(this));
 
     }
 
@@ -146,10 +143,16 @@ public class MainActivity extends AppCompatActivity
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPresenter.onDestroy();
+    }
 
     //  侧边栏中，点击自己的信息
     public void detailInfo(View view) {
-        startActivity(new Intent(MainActivity.this, UserDetailActivity.class).putExtra("username", EMClient.getInstance().getCurrentUser()));
+        startActivity(new Intent(MainActivity.this, UserDetailActivity.class)
+                .putExtra("username", currentUserName));
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -168,45 +171,48 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.new_group) {
             startActivity(new Intent(MainActivity.this, CreateGroupActivity.class));
         } else if (id == R.id.change_user) {
-            final ProgressDialog pd = new ProgressDialog(MainActivity.this);
-            String st = getResources().getString(R.string.Are_logged_out);
-            pd.setMessage(st);
-            pd.setCanceledOnTouchOutside(false);
-            pd.show();
-            ChatApplication.getInstance().logout(false, new EMCallBack() {
-                @Override
-                public void onSuccess() {
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            pd.dismiss();
-                            // 重新显示登陆页面
-                            finish();
-                            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                        }
-                    });
-                }
-
-                @Override
-                public void onProgress(int progress, String status) {
-                }
-
-                @Override
-                public void onError(int code, String message) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            // TODO Auto-generated method stub
-                            pd.dismiss();
-                            Toast.makeText(MainActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
-
+            logout();
         }
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void logout() {
+        final ProgressDialog pd = new ProgressDialog(MainActivity.this);
+        String st = getResources().getString(R.string.Are_logged_out);
+        pd.setMessage(st);
+        pd.setCanceledOnTouchOutside(false);
+        pd.show();
+        ChatApplication.getInstance().logout(false, new EMCallBack() {
+            @Override
+            public void onSuccess() {
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        pd.dismiss();
+                        // 重新显示登陆页面
+                        finish();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    }
+                });
+            }
+
+            @Override
+            public void onProgress(int progress, String status) {
+            }
+
+            @Override
+            public void onError(int code, String message) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        pd.dismiss();
+                        Toast.makeText(MainActivity.this, "unbind devicetokens failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
 
@@ -241,7 +247,6 @@ public class MainActivity extends AppCompatActivity
                 .setMessage("是否退出程序")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-
                         finish();
                     }
                 })
@@ -287,8 +292,8 @@ public class MainActivity extends AppCompatActivity
     }
 
 
-
-    private void sendNewFriendsAddGroupNotification(String applyer, String reason, String groupName) {
+    @Override
+    public void sendNewFriendsAddGroupNotification(String applyer, String reason, String groupName) {
         Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
@@ -304,33 +309,16 @@ public class MainActivity extends AppCompatActivity
         mNotificationManager.notify((int) System.currentTimeMillis(), notification);
     }
 
-
-    /**
-     * 保存并提示消息的邀请消息
-     *
-     * @param msg
-     */
-    private void notifyNewIviteMessage(InviteMessage msg) {
-        if (inviteMessageDao == null) {
-            inviteMessageDao = new InviteMessageDao(MainActivity.this);
-        }
-        inviteMessageDao.saveMessage(msg);
-        //保存未读数，这里没有精确计算
-        inviteMessageDao.saveUnreadMessageCount(1);
-        // 提示有新消息
-        //响铃或其他操作
-
-    }
-
     //  添加好友变化通知栏通知
-    private void sendNewFriendsNotification(String username, String reason) {
+    @Override
+    public void sendNewFriendsNotification(String username, String reason) {
 
         Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
         builder.setWhen(System.currentTimeMillis());//设置时间
-        builder.setContentTitle(username + ",请求加你为好友：");//设置标题
+        builder.setContentTitle(username + "请求加你为好友");//设置标题
         builder.setContentText(reason);//设置通知内容
         builder.setContentIntent(pendingIntent);//点击后的意图
         builder.setDefaults(Notification.DEFAULT_ALL);//设置震动、响铃、呼吸灯。
@@ -338,5 +326,102 @@ public class MainActivity extends AppCompatActivity
         Notification notification = builder.getNotification();
         notification.flags = Notification.FLAG_AUTO_CANCEL;//通知栏消息，点击后消失。
         mNotificationManager.notify((int) System.currentTimeMillis(), notification);
+    }
+
+    @Override
+    public void showInvitationReceived(String inviter, String groupName) {
+        //收到加入群组的邀请
+        Snackbar.make(layout, inviter + "邀请您加入群组" + groupName, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showRequestToJoinReceived(String applicant, String groupName, String reason) {
+
+        //收到加群申请
+        Snackbar.make(layout, applicant + "申请加入" + groupName + "：" + reason, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showRequestToJoinAccepted(String groupName) {
+
+        Snackbar.make(layout, "加入" + groupName + "群组的请求已被同意", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showRequestToJoinDeclined(String groupName) {
+        //加群申请被拒绝
+        Snackbar.make(layout, "加入" + groupName + "群组的请求已被拒绝", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showInvitationAccepted(String invitee, String groupId) {
+
+        String groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
+        //群组邀请被接受
+        Snackbar.make(layout, invitee + "已接受加入群组" + groupName, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showInvitationDeclined(String invitee, String groupId) {
+        String groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
+        //群组邀请被拒绝
+        Snackbar.make(layout, invitee + "拒绝加入群组" + groupName, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showUserRemoved(String groupName) {
+        Snackbar.make(layout, "您已被移除出群组" + groupName, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showGroupDestroyed(String groupName) {
+
+        //群组被创建者解散
+        Snackbar.make(layout, "群组" + groupName + "已被解散", Snackbar.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void showContactAdded(String username) {
+        Toast.makeText(this, "增加联系人：+" + username, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showContactDeleted(String username) {
+        Toast.makeText(this, "删除联系人：+" + username, Toast.LENGTH_SHORT).show();
+
+    }
+
+    @Override
+    public void showFriendRequestDeclined(String username) {
+        Toast.makeText(this, username + "拒绝了你的好友请求", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showContactInvited(String username) {
+        Toast.makeText(this, username + "发来好友请求", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showFriendRequestAccepted(String username) {
+        Toast.makeText(this, username + "同意了你的好友申请", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showDisconnectedInfo(int error) {
+        if (error == EMError.USER_REMOVED) {
+            // 显示帐号已经被移除
+            Toast.makeText(this, "帐号已经被移除", Toast.LENGTH_SHORT).show();
+        } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
+            // 显示帐号在其他设备登录
+            Toast.makeText(this, "帐号在其他设备登录", Toast.LENGTH_SHORT).show();
+        } else {
+            if (NetUtils.hasNetwork(this)) {
+                //连接不到聊天服务器
+                Toast.makeText(this, "连接不到聊天服务器", Toast.LENGTH_SHORT).show();
+            } else {
+                //当前网络不可用，请检查网络设置
+                Toast.makeText(this, "当前网络不可用，请检查网络设置", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

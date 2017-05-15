@@ -7,7 +7,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
-import com.mottc.chat.db.DBManager;
 
 /**
  * Created with Android Studio
@@ -18,7 +17,6 @@ import com.mottc.chat.db.DBManager;
 public class GroupAvatarUtils {
     public static void setAvatar(Context context, String groupId, ImageView imageView){
         String time = DBManager.getInstance().getAvatarInfo(groupId);
-//        String Url = AvatarURLDownloadUtils.downLoad(username);
         String Url = Constant.AVATAR_URL + groupId + ".png?v=" + time;
         Glide
                 .with(context)

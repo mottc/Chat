@@ -16,8 +16,6 @@ import android.widget.ImageButton;
 
 import com.mottc.chat.Activity.Adapter.NewFriendsMsgAdapter;
 import com.mottc.chat.R;
-import com.mottc.chat.db.InviteMessage;
-import com.mottc.chat.db.InviteMessageDao;
 
 import java.util.List;
 

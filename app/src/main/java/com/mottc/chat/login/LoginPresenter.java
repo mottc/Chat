@@ -4,13 +4,10 @@ import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.ChatApplication;
-import com.mottc.chat.db.DBManager;
-import com.mottc.chat.db.EaseUser;
+import com.mottc.chat.data.Model;
 import com.mottc.chat.utils.EaseCommonUtils;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with Android Studio
@@ -21,10 +18,12 @@ import java.util.Map;
 public class LoginPresenter implements LoginContract.Presenter {
 
     private LoginContract.View mView;
+    private Model mModel;
 
 
     public LoginPresenter(LoginContract.View view) {
         mView = view;
+        mModel = new Model();
     }
 
     @Override
@@ -135,14 +134,7 @@ public class LoginPresenter implements LoginContract.Presenter {
     private void getFriends() {
         try {
             List<String> userNames = EMClient.getInstance().contactManager().getAllContactsFromServer();
-            Map<String, EaseUser> users = new HashMap<String, EaseUser>();
-            for (String username : userNames) {
-                EaseUser user = new EaseUser(username);
-                users.put(username, user);
-            }
-
-            ChatApplication.getInstance().setContactList(users);
-
+            mModel.refreshAllContact(userNames);
         } catch (HyphenateException e) {
             e.printStackTrace();
         }

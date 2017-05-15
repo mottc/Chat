@@ -1,4 +1,4 @@
-package com.mottc.chat.db;
+package com.mottc.chat.data.sharedPreferences;
 
 import android.content.Context;
 import android.content.SharedPreferences;

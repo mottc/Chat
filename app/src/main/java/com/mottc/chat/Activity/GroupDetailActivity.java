@@ -21,7 +21,6 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
-import com.mottc.chat.db.DBManager;
 import com.mottc.chat.utils.GroupAvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
 import com.mottc.chat.utils.TimeUtils;
@@ -100,7 +99,6 @@ public class GroupDetailActivity extends AppCompatActivity {
         groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
         mDetailGroupName.setText(groupName);
 
-//        new AvatarURLDownloadUtils().downLoad(groupId, this, mDetailGroupAvatar,true);
         GroupAvatarUtils.setAvatar(this, groupId, mDetailGroupAvatar);
         //根据群组ID从服务器获取群组基本信息
 

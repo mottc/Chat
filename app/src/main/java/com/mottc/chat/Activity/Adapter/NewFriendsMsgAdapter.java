@@ -15,9 +15,7 @@ import android.widget.Toast;
 
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
-import com.mottc.chat.db.InviteMessage;
 import com.mottc.chat.db.InviteMessage.InviteMessageStatus;
-import com.mottc.chat.db.InviteMessageDao;
 
 import java.util.List;
 

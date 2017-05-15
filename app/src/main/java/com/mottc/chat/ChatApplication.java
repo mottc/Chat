@@ -8,14 +8,14 @@ import android.text.TextUtils;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMOptions;
-import com.mottc.chat.db.EaseUser;
-import com.mottc.chat.db.Myinfo;
-import com.mottc.chat.db.UserDao;
+import com.mottc.chat.data.local.DaoMaster;
+import com.mottc.chat.data.local.DaoSession;
+import com.mottc.chat.data.sharedPreferences.Myinfo;
 
-import java.util.ArrayList;
+import org.greenrobot.greendao.database.Database;
+
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created with Android Studio
@@ -29,8 +29,7 @@ public class ChatApplication extends Application {
     public static Context applicationContext;
     private static ChatApplication instance;
     private String username = "";
-    private Map<String, EaseUser> contactList;
-    private UserDao userDao;
+    public DaoSession mDaoSession;
 
     @Override
     public void onCreate() {
@@ -59,14 +58,9 @@ public class ChatApplication extends Application {
 
 //          TODO:设为调试模式，打成正式包时，最好设为false，以免消耗额外的资源
             EMClient.getInstance().setDebugMode(true);
-            // 初始化数据库
-            initDbDao(context);
         }
     }
 
-    private void initDbDao(Context context) {
-        userDao = new UserDao(context);
-    }
 
     public void setCurrentUserName(String username) {
         this.username = username;
@@ -151,28 +145,13 @@ public class ChatApplication extends Application {
         return processName;
     }
 
-    public void setContactList(Map<String, EaseUser> contactList) {
 
-        this.contactList = contactList;
+    public DaoSession getDaoSession() {
 
-        userDao.saveContactList(new ArrayList<EaseUser>(contactList.values()));
-
-    }
-
-    public Map<String, EaseUser> getContactList() {
-
-//        TODO:
-
-//        if (contactList == null) {
-//
-//            contactList = userDao.getContactList();
-//
-//        }
-
-
-        contactList = userDao.getContactList();
-        return contactList;
-
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), this.getCurrentUserName() + ".db");
+        Database db = helper.getWritableDb();
+        mDaoSession = new DaoMaster(db).newSession();
+        return mDaoSession;
     }
 
     /**
