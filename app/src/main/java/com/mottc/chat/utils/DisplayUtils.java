@@ -49,11 +49,8 @@ public class DisplayUtils {
         int top = leftTop[1];
         int bottom = top + view.getHeight();
         int right = left + view.getWidth();
-        if (event.getRawX() > left && event.getRawX() < right
-                && event.getRawY() > top && event.getRawY() < bottom){
-            return true;
-        }
-        return false;
+        return event.getRawX() > left && event.getRawX() < right
+                && event.getRawY() > top && event.getRawY() < bottom;
     }
 
     public static final boolean isShouldHideInput(View v, MotionEvent event){

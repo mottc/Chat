@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.os.PowerManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,17 +19,13 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.mottc.chat.Activity.GroupDetailActivity;
 import com.mottc.chat.Activity.UserDetailActivity;
-import com.mottc.chat.Constant;
 import com.mottc.chat.R;
 import com.mottc.chat.main.MainActivity;
 import com.mottc.chat.utils.DisplayUtils;
-import com.mottc.chat.utils.EaseCommonUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,22 +37,22 @@ import java.util.List;
  * Date: 2016/10/12
  * Time: 12:14
  */
-public class ChatActivity extends AppCompatActivity implements View.OnLayoutChangeListener {
+public class ChatActivity extends AppCompatActivity implements View.OnLayoutChangeListener, ChatContract.View {
 
     private ListView listView;
-    private int chatType;
-    private String toChatUsername;
     private Button btn_send;
     private ImageButton btn_back;
     private EditText et_content;
-    private List<EMMessage> msgList;
     private ImageButton detail;
     private MessageAdapter adapter;
-    private EMConversation conversation;
-    protected int pageSize = 20;
     private NotificationManager manager;//通知栏控制类
     protected PowerManager.WakeLock wakeLock;
     private List<View> hideInputExcludeViews = new ArrayList<>();
+    private ChatContract.Presenter mPresenter;
+    private TextView tv_toUsername;
+    private MessageListener mMessageListener;
+    private String toChatUsername;
+    private int chatType;
 
 
     @Override
@@ -69,33 +64,34 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         setContentView(R.layout.activity_chat);
-
-        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         toChatUsername = this.getIntent().getStringExtra("username");
         chatType = this.getIntent().getIntExtra("type", 1);
 
-        TextView tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
-        if (chatType == 1) {
-            tv_toUsername.setText(toChatUsername);
-        } else {
-            tv_toUsername.setText(EMClient.getInstance().groupManager().getGroup(toChatUsername).getGroupName());
-        }
+        mPresenter = new ChatPresenter(this);
+        mMessageListener = new MessageListener(toChatUsername, this);
+        manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        manager.cancel("", 0);
 
-        manager.cancel(toChatUsername, 0);
-        wakeLock = ((PowerManager) this.getSystemService(Context.POWER_SERVICE)).newWakeLock(
-                PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
-
+        tv_toUsername = (TextView) this.findViewById(R.id.tv_toUsername);
         listView = (ListView) this.findViewById(R.id.listView);
         btn_send = (Button) this.findViewById(R.id.btn_send);
         et_content = (EditText) this.findViewById(R.id.et_content);
         btn_back = (ImageButton) this.findViewById(R.id.back);
         detail = (ImageButton) findViewById(R.id.detail);
-        getAllMessage();
-        msgList = conversation.getAllMessages();
-        adapter = new MessageAdapter(msgList, toChatUsername, this);
+
+        wakeLock = ((PowerManager) this.getSystemService(Context.POWER_SERVICE)).newWakeLock(
+                PowerManager.SCREEN_DIM_WAKE_LOCK, "demo");
+
+
+        mPresenter.setInfo(toChatUsername, chatType);
+
+        mPresenter.start();
+
+        setChatToUsername(chatType, toChatUsername);
+
+        adapter = new MessageAdapter(this);
         listView.setAdapter(adapter);
         listView.setSelection(listView.getCount() - 1);
-
         hideInputExcludeViews.add(btn_send);
 
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -113,27 +109,23 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
                 if (TextUtils.isEmpty(content)) {
                     return;
                 }
-                setMessage(content);
+                mPresenter.sendMessage(content);
             }
 
         });
         detail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (chatType == 1) {
-                    startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", toChatUsername));
-                } else {
-                    startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class).putExtra("groupId", toChatUsername));
-                }
+                mPresenter.gotoDetailActivity();
             }
         });
 
-        EMClient.getInstance().chatManager().addMessageListener(msgListener);
+
+        mPresenter.loadAllMessages();
+        EMClient.getInstance().chatManager().addMessageListener(mMessageListener);
         listView.addOnLayoutChangeListener(this);
 
     }
-
-
 
 
     @Override
@@ -155,113 +147,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
         return super.dispatchTouchEvent(event);
     }
 
-    protected void getAllMessage() {
-        // 获取当前conversation对象
 
-        conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername,
-                EaseCommonUtils.getConversationType(chatType), true);
-        // 把此会话的未读数置为0
-        conversation.markAllMessagesAsRead();
-        // 初始化db时，每个conversation加载数目是getChatOptions().getNumberOfMessagesLoaded
-        // 这个数目如果比用户期望进入会话界面时显示的个数不一样，就多加载一些
-        final List<EMMessage> msgs = conversation.getAllMessages();
-        int msgCount = msgs != null ? msgs.size() : 0;
-        if (msgCount < conversation.getAllMsgCount() && msgCount < pageSize) {
-            String msgId = null;
-            if (msgs != null && msgs.size() > 0) {
-                msgId = msgs.get(0).getMsgId();
-            }
-            conversation.loadMoreMsgFromDB(msgId, pageSize - msgCount);
+    @Override
+    public void setChatToUsername(int chatType, String username) {
+        if (chatType == 1) {
+            tv_toUsername.setText(username);
+        } else {
+            tv_toUsername.setText(EMClient.getInstance().groupManager().getGroup(username).getGroupName());
         }
-
     }
 
-    private void setMessage(String content) {
-
-        // 创建一条文本消息，content为消息文字内容，toChatUsername为对方用户或者群聊的id，后文皆是如此
-        EMMessage message = EMMessage.createTxtSendMessage(content, toChatUsername);
-        // 如果是群聊，设置chattype，默认是单聊
-        if (chatType == Constant.CHATTYPE_GROUP)
-            message.setChatType(EMMessage.ChatType.GroupChat);
-        // 发送消息
-//        Log.i("ChatActivity", "setMesaage: " + message.getChatType().toString());
-        EMClient.getInstance().chatManager().sendMessage(message);
-        msgList.add(message);
-        adapter.notifyDataSetChanged();
-        if (msgList.size() > 0) {
-            listView.setSelection(listView.getCount() - 1);
-        }
-        et_content.setText("");
-        et_content.clearFocus();
-    }
-
-
-    EMMessageListener msgListener = new EMMessageListener() {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-
-            for (EMMessage message : messages) {
-                String username = null;
-                // 群组消息
-                if (message.getChatType() == EMMessage.ChatType.GroupChat) {
-                    username = message.getTo();
-                    Log.i("ChatActivity", "onMessageReceived: " + "g" + username);
-                } else {
-                    // 单聊消息
-                    username = message.getFrom();
-                    Log.i("ChatActivity", "onMessageReceived: " + "dan" + username);
-                }
-
-                // 如果是当前会话的消息，刷新聊天页面
-                if (username.equals(toChatUsername)) {
-                    msgList.addAll(messages);
-
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            adapter.notifyDataSetChanged();
-                            if (msgList.size() > 0) {
-                                listView.setSelection(listView.getCount() - 1);
-                            }
-                        }
-                    });
-                } else {
-                    //获取发来的消息
-                    String info = message.toString();
-                    int start = info.indexOf("txt:\"");
-                    int end = info.lastIndexOf("\"");
-                    info = info.substring((start + 5), end);
-                    sendNotification(username, info);//在通知栏发出通知
-                }
-            }
-            // 收到消息
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            // 收到透传消息
-        }
-
-        @Override
-        public void onMessageRead(List<EMMessage> messages) {
-
-        }
-
-        @Override
-        public void onMessageDelivered(List<EMMessage> messages) {
-
-        }
-
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            // 消息状态变动
-        }
-    };
-
-    //  收到新消息，在通知栏显示通知
-    private void sendNotification(String username, String info) {
+    @Override
+    public void sendNotification(String username, String info) {
 
         Intent intent = new Intent(ChatActivity.this, ChatActivity.class).putExtra("username", username);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
@@ -283,15 +180,54 @@ public class ChatActivity extends AppCompatActivity implements View.OnLayoutChan
     }
 
     @Override
+    public void clearContent() {
+
+        et_content.setText("");
+        et_content.clearFocus();
+    }
+
+    @Override
+    public void addMessage(EMMessage message) {
+        adapter.addMessage(message);
+    }
+
+
+
+    @Override
+    public void gotoListBottom() {
+        listView.setSelection(listView.getCount() - 1);
+    }
+
+    @Override
+    public void gotoUserDetailActivity(String toChatUsername) {
+        startActivity(new Intent(ChatActivity.this, UserDetailActivity.class).putExtra("username", toChatUsername));
+
+    }
+
+    @Override
+    public void gotoGroupDetailActivity(String toChatUsername) {
+
+        startActivity(new Intent(ChatActivity.this, GroupDetailActivity.class).putExtra("groupId", toChatUsername));
+
+    }
+
+    @Override
+    public void addMessages(List<EMMessage> messages) {
+        adapter.addMessages(messages);
+    }
+
+
+    @Override
     protected void onPause() {
         super.onPause();
-        conversation.markAllMessagesAsRead();
+        mPresenter.markAllMessagesAsRead();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
+        mPresenter.onDestroy();
+        EMClient.getInstance().chatManager().removeMessageListener(mMessageListener);
     }
 
 

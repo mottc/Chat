@@ -2,7 +2,6 @@ package com.mottc.chat.chat;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,10 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
-import com.mottc.chat.Activity.UserDetailActivity;
 import com.mottc.chat.R;
 import com.mottc.chat.utils.PersonAvatarUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -27,27 +26,25 @@ import java.util.List;
  */
 
 public class MessageAdapter extends BaseAdapter {
-    private List<EMMessage> msgs;
-    private Context context;
+    private List<EMMessage> mMessages;
+    private ChatContract.View mView;
     private LayoutInflater inflater;
-    private String tousername;
 
 
-    public MessageAdapter(List<EMMessage> msgs, String toUserName, Context context_) {
-        this.msgs = msgs;
-        this.context = context_;
-        inflater = LayoutInflater.from(context);
-        this.tousername = toUserName;
+    public MessageAdapter(ChatContract.View view) {
+        mView = view;
+        inflater = LayoutInflater.from((Context) view);
+        mMessages = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return msgs.size();
+        return mMessages.size();
     }
 
     @Override
     public EMMessage getItem(int position) {
-        return msgs.get(position);
+        return mMessages.get(position);
     }
 
     @Override
@@ -65,7 +62,7 @@ public class MessageAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        final EMMessage message = msgs.get(position);
+        final EMMessage message = mMessages.get(position);
         int viewType = getItemViewType(position);
 
         ViewHolderTxtReceive viewHolderTxtReceive = null;
@@ -82,12 +79,12 @@ public class MessageAdapter extends BaseAdapter {
                     viewHolderTxtReceive.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
 
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
+                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
                     viewHolderTxtReceive.toUsername.setText(message.getFrom());
                     viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                            mView.gotoUserDetailActivity(message.getFrom());
                         }
                     });
 
@@ -105,12 +102,12 @@ public class MessageAdapter extends BaseAdapter {
                     viewHolderTxtSent.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
 
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
+                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
 //                    viewHolderTxtSent.toUsername.setText(message.getFrom());
                     viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                            mView.gotoUserDetailActivity(message.getFrom());
                         }
                     });
 
@@ -129,12 +126,12 @@ public class MessageAdapter extends BaseAdapter {
             switch (viewType) {
                 case 0:
                     viewHolderTxtReceive = (ViewHolderTxtReceive) convertView.getTag();
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtReceive.mImageView);
+                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
                     viewHolderTxtReceive.toUsername.setText(message.getFrom());
                     viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                            mView.gotoUserDetailActivity(message.getFrom());
                         }
                     });
 
@@ -144,12 +141,13 @@ public class MessageAdapter extends BaseAdapter {
 
                 case 1:
                     viewHolderTxtSent = (ViewHolderTxtSent) convertView.getTag();
-                    PersonAvatarUtils.setAvatar(context, message.getFrom(), viewHolderTxtSent.mImageView);
+                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
 //                    viewHolderTxtSent.toUsername.setText(message.getFrom());
                     viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            context.startActivity(new Intent(context, UserDetailActivity.class).putExtra("username", message.getFrom()));
+                            mView.gotoUserDetailActivity(message.getFrom());
+
                         }
                     });
 
@@ -176,6 +174,26 @@ public class MessageAdapter extends BaseAdapter {
         }
 
     }
+
+    public void addMessage(EMMessage message) {
+        mMessages.add(message);
+        notifyDataSetChanged();
+        if (mMessages.size() > 0) {
+            mView.gotoListBottom();
+        }
+    }
+
+    public void addMessages(List<EMMessage> messages) {
+        mMessages.addAll(messages);
+        notifyDataSetChanged();
+        if (mMessages.size() > 0) {
+            mView.gotoListBottom();
+        }
+    }
+
+
+
+
 
     public class ViewHolderTxtReceive {
         TextView tv;

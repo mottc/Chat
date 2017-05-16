@@ -47,7 +47,6 @@ public class NewFriendsMsgActivity extends Activity{
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
         dao.saveUnreadMessageCount(0);
-
     }
 
 
