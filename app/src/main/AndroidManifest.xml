@@ -59,7 +59,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".Activity.AddContactActivity"
+            android:name=".addContact.AddContactActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity
@@ -76,7 +76,7 @@
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".Activity.AddGroupActivity"
+            android:name=".addGroup.AddGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity

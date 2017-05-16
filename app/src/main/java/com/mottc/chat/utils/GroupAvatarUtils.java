@@ -16,8 +16,7 @@ import com.mottc.chat.R;
  */
 public class GroupAvatarUtils {
     public static void setAvatar(Context context, String groupId, ImageView imageView){
-        String time = DBManager.getInstance().getAvatarInfo(groupId);
-        String Url = Constant.AVATAR_URL + groupId + ".png?v=" + time;
+        String Url = Constant.AVATAR_URL + groupId + ".png";
         Glide
                 .with(context)
                 .load(Url)
