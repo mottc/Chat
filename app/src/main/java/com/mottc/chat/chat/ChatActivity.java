@@ -22,7 +22,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.mottc.chat.Activity.GroupDetailActivity;
-import com.mottc.chat.Activity.UserDetailActivity;
+import com.mottc.chat.userdetail.UserDetailActivity;
 import com.mottc.chat.R;
 import com.mottc.chat.main.MainActivity;
 import com.mottc.chat.utils.DisplayUtils;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.hyphenate.chat.EMGroup;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.GroupAvatarUtils;
+import com.mottc.chat.utils.AvatarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mGroups.get(position);
         holder.mName.setText(mGroups.get(position).getGroupName());
-        GroupAvatarUtils.setAvatar(mContext, mGroups.get(position).getGroupId(), holder.mImageView);
+        AvatarUtils.setGroupAvatar(mContext, mGroups.get(position).getGroupId(), holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,8 +71,6 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
             mView = view;
             mName = (TextView) view.findViewById(R.id.tv_name);
             mImageView = (ImageView) view.findViewById(R.id.iv_avatar);
-
-
         }
 
     }

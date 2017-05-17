@@ -59,7 +59,7 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
-            android:name=".addContact.AddContactActivity"
+            android:name=".addcontact.AddContactActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity
@@ -72,15 +72,15 @@
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".Activity.CreateGroupActivity"
+            android:name=".creategroup.CreateGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".addGroup.AddGroupActivity"
+            android:name=".addgroup.AddGroupActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".Activity.UserDetailActivity"
+            android:name=".userdetail.UserDetailActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity
@@ -91,10 +91,6 @@
         </activity>
         <activity
             android:name=".Activity.InviteMembersActivity"
-            android:theme="@style/LoginTheme">
-        </activity>
-        <activity
-            android:name=".Activity.ShowImageActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity

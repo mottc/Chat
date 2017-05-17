@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#eee"
-    tools:context="com.mottc.chat.addGroup.AddGroupActivity">
+    tools:context="com.mottc.chat.addgroup.AddGroupActivity">
 
     <RelativeLayout
         android:id="@+id/title"

@@ -6,7 +6,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.data.Model;
-import com.mottc.chat.utils.EaseCommonUtils;
+import com.mottc.chat.utils.CommonUtils;
 
 import java.util.List;
 
@@ -39,7 +39,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     public void login(String loginUserName, String loginPassword) {
 
-        if (!EaseCommonUtils.isNetWorkConnected((LoginActivity) mView)) {
+        if (!CommonUtils.isNetWorkConnected((LoginActivity) mView)) {
             mView.showNoNet();
             return;
         }

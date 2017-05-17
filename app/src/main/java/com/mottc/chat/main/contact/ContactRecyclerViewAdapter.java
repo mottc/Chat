@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.main.contact.ContactFragment.OnListFragmentInteractionListener;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.AvatarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +39,7 @@ class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerVie
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getUserName());
-        PersonAvatarUtils.setAvatar(context,mValues.get(position).getUserName(),holder.mAvatar);
+        AvatarUtils.setAvatar(context,mValues.get(position).getUserName(),holder.mAvatar);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,4 +1,4 @@
-package com.mottc.chat.addContact;
+package com.mottc.chat.creategroup;
 
 import com.mottc.chat.BasePresenter;
 import com.mottc.chat.BaseView;
@@ -6,12 +6,12 @@ import com.mottc.chat.BaseView;
 /**
  * Created with Android Studio
  * User: mottc
- * Date: 2017/5/16
- * Time: 15:46
+ * Date: 2017/5/17
+ * Time: 18:53
  */
-public interface AddContactContract {
+public interface CreateGroupContract {
     interface View extends BaseView {
-        void showUsernameIsEmpty();
+        void showGroupNameIsEmpty();
 
         void showSuccess();
 
@@ -23,7 +23,7 @@ public interface AddContactContract {
     }
 
     interface Presenter extends BasePresenter {
-        void addContact(String username, String reason);
+        void createGroup(String groupName, String desc);
 
     }
 }

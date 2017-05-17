@@ -33,11 +33,11 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.util.NetUtils;
 import com.lzp.floatingactionbuttonplus.FabTagLayout;
 import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
-import com.mottc.chat.addContact.AddContactActivity;
-import com.mottc.chat.addGroup.AddGroupActivity;
-import com.mottc.chat.Activity.CreateGroupActivity;
+import com.mottc.chat.addcontact.AddContactActivity;
+import com.mottc.chat.addgroup.AddGroupActivity;
+import com.mottc.chat.creategroup.CreateGroupActivity;
 import com.mottc.chat.Activity.NewFriendsMsgActivity;
-import com.mottc.chat.Activity.UserDetailActivity;
+import com.mottc.chat.userdetail.UserDetailActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.chat.ChatActivity;
@@ -46,7 +46,7 @@ import com.mottc.chat.login.LoginActivity;
 import com.mottc.chat.main.contact.ContactFragment;
 import com.mottc.chat.main.conversation.ConversationFragment;
 import com.mottc.chat.main.group.GroupFragment;
-import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.AvatarUtils;
 
 public class MainActivity extends AppCompatActivity
         implements MainContract.View,
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        PersonAvatarUtils.setAvatar(this, currentUserName, imageView);
+        AvatarUtils.setAvatar(this, currentUserName, imageView);
     }
 
 

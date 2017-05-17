@@ -21,7 +21,8 @@ import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.Activity.Adapter.GroupMembersAdapter;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.GroupAvatarUtils;
+import com.mottc.chat.userdetail.UserDetailActivity;
+import com.mottc.chat.utils.AvatarUtils;
 import com.mottc.chat.utils.QiniuTokenUtils;
 import com.mottc.chat.utils.TimeUtils;
 import com.qiniu.android.http.ResponseInfo;
@@ -99,7 +100,7 @@ public class GroupDetailActivity extends AppCompatActivity {
         groupName = EMClient.getInstance().groupManager().getGroup(groupId).getGroupName();
         mDetailGroupName.setText(groupName);
 
-        GroupAvatarUtils.setAvatar(this, groupId, mDetailGroupAvatar);
+        AvatarUtils.setGroupAvatar(this, groupId, mDetailGroupAvatar);
         //根据群组ID从服务器获取群组基本信息
 
 
@@ -143,7 +144,7 @@ public class GroupDetailActivity extends AppCompatActivity {
                     } else {
                         DBManager.getInstance().saveAvatarInfo(groupId, TimeUtils.getCurrentTimeAsNumber());
                     }
-                    GroupAvatarUtils.setAvatar(this, groupId, mDetailGroupAvatar);
+                    AvatarUtils.setGroupAvatar(this, groupId, mDetailGroupAvatar);
                 }
                 break;
             case R.id.invite:

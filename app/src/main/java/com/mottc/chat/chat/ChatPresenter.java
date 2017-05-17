@@ -4,7 +4,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
 import com.mottc.chat.Constant;
-import com.mottc.chat.utils.EaseCommonUtils;
+import com.mottc.chat.utils.CommonUtils;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ChatPresenter implements ChatContract.Presenter {
         // 获取当前conversation对象
 
         conversation = EMClient.getInstance().chatManager().getConversation(toChatUsername,
-                EaseCommonUtils.getConversationType(chatType), true);
+                CommonUtils.getConversationType(chatType), true);
 
         conversation.markAllMessagesAsRead();
 

@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.mottc.chat.Constant;
 import com.mottc.chat.R;
+import com.mottc.chat.data.Model;
 
 /**
  * Created with Android Studio
@@ -14,18 +15,26 @@ import com.mottc.chat.R;
  * Date: 2016/11/23
  * Time: 16:59
  */
-public class PersonAvatarUtils {
-    public static void setAvatar(Context context, String username, ImageView imageView) {
+public class AvatarUtils {
+    public static void setPersonAvatar(Context context, String username, ImageView imageView) {
 
-        String time = DBManager.getInstance().getAvatarInfo(username);
+        String time = new Model().getAvatarInfo(username);
         String Url = Constant.AVATAR_URL + username + ".png?v=" + time;
-//        Log.i("PersonAvatarUtils", "setAvatar: " + Url);
-
         Glide
                 .with(context)
                 .load(Url)
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .error(R.mipmap.avatar)
+                .into(imageView);
+    }
+
+    public static void setGroupAvatar(Context context, String groupId, ImageView imageView){
+        String Url = Constant.AVATAR_URL + groupId + ".png";
+        Glide
+                .with(context)
+                .load(Url)
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .error(R.drawable.group_icon)
                 .into(imageView);
     }
 }

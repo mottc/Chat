@@ -1,4 +1,4 @@
-package com.mottc.chat.addContact;
+package com.mottc.chat.addcontact;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;

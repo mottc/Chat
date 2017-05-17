@@ -44,7 +44,7 @@
             android:layout_marginRight="5dp"
             android:background="#00000000"
             android:padding="5dp"
-            android:src="@mipmap/addf"
+            android:src="@mipmap/add"
             android:visibility="gone"
             />
 

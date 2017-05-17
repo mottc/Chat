@@ -21,7 +21,6 @@ import java.util.List;
 
 /**
  * 申请与通知
- *
  */
 public class NewFriendsMsgActivity extends Activity{
     private RecyclerView mRecyclerView;
@@ -48,7 +47,5 @@ public class NewFriendsMsgActivity extends Activity{
         mRecyclerView.setAdapter(adapter);
         dao.saveUnreadMessageCount(0);
     }
-
-
 
 }

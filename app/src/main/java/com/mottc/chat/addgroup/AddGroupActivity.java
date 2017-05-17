@@ -1,4 +1,4 @@
-package com.mottc.chat.addGroup;
+package com.mottc.chat.addgroup;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -19,8 +19,8 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.exceptions.HyphenateException;
 import com.mottc.chat.R;
+import com.mottc.chat.utils.AvatarUtils;
 import com.mottc.chat.utils.DisplayUtils;
-import com.mottc.chat.utils.GroupAvatarUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -187,6 +187,7 @@ public class AddGroupActivity extends AppCompatActivity implements AddGroupConta
         mSearchView.setVisibility(View.GONE);
         isVisible = true;
         mName.setText(value.getGroupName());
-        GroupAvatarUtils.setAvatar(this, groupNum, mAvatar);
+        AvatarUtils.setGroupAvatar(this, groupNum, mAvatar);
+
     }
 }

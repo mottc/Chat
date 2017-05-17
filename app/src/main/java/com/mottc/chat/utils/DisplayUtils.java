@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class DisplayUtils {
 
-    public static final void hideInputWhenTouchOtherView(Activity activity, MotionEvent ev, List<View> excludeViews){
+    public static void hideInputWhenTouchOtherView(Activity activity, MotionEvent ev, List<View> excludeViews){
 
 
         if (ev.getAction() == MotionEvent.ACTION_DOWN){
@@ -39,7 +39,7 @@ public class DisplayUtils {
 
         }
     }
-    public static final boolean isTouchView(View view, MotionEvent event){
+    private static boolean isTouchView(View view, MotionEvent event){
         if (view == null || event == null){
             return false;
         }
@@ -53,10 +53,7 @@ public class DisplayUtils {
                 && event.getRawY() > top && event.getRawY() < bottom;
     }
 
-    public static final boolean isShouldHideInput(View v, MotionEvent event){
-        if (v != null && (v instanceof EditText)){
-            return !isTouchView(v, event);
-        }
-        return false;
+    private static boolean isShouldHideInput(View v, MotionEvent event) {
+        return v != null && (v instanceof EditText) && !isTouchView(v, event);
     }
 }

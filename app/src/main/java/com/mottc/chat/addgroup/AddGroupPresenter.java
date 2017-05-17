@@ -1,4 +1,4 @@
-package com.mottc.chat.addGroup;
+package com.mottc.chat.addgroup;
 
 import android.text.TextUtils;
 

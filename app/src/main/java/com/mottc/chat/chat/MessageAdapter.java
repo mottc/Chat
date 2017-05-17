@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
 import com.mottc.chat.R;
-import com.mottc.chat.utils.PersonAvatarUtils;
+import com.mottc.chat.utils.AvatarUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +79,7 @@ public class MessageAdapter extends BaseAdapter {
                     viewHolderTxtReceive.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
 
-                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
+                    AvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
                     viewHolderTxtReceive.toUsername.setText(message.getFrom());
                     viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -102,7 +102,7 @@ public class MessageAdapter extends BaseAdapter {
                     viewHolderTxtSent.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 
 
-                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
+                    AvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
 //                    viewHolderTxtSent.toUsername.setText(message.getFrom());
                     viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -126,7 +126,7 @@ public class MessageAdapter extends BaseAdapter {
             switch (viewType) {
                 case 0:
                     viewHolderTxtReceive = (ViewHolderTxtReceive) convertView.getTag();
-                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
+                    AvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtReceive.mImageView);
                     viewHolderTxtReceive.toUsername.setText(message.getFrom());
                     viewHolderTxtReceive.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -141,7 +141,7 @@ public class MessageAdapter extends BaseAdapter {
 
                 case 1:
                     viewHolderTxtSent = (ViewHolderTxtSent) convertView.getTag();
-                    PersonAvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
+                    AvatarUtils.setAvatar((Context) mView, message.getFrom(), viewHolderTxtSent.mImageView);
 //                    viewHolderTxtSent.toUsername.setText(message.getFrom());
                     viewHolderTxtSent.mImageView.setOnClickListener(new View.OnClickListener() {
                         @Override

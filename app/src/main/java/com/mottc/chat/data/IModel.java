@@ -26,4 +26,10 @@ public interface IModel {
 
     void deleteMessage(String username,String groupId);
 
+    String getAvatarInfo(String username);
+
+    void updateAvatarInfo(String username);
+
+    boolean hasFriend(String username);
+
 }

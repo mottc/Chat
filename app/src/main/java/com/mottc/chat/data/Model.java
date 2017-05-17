@@ -6,6 +6,7 @@ import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.data.local.ChatInviteMessageDao;
 import com.mottc.chat.data.local.ChatUserDao;
 import com.mottc.chat.data.local.DaoSession;
+import com.mottc.chat.utils.TimeUtils;
 
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class Model implements IModel {
     }
 
     @Override
-    public void deleteMessage(String username,String groupId) {
+    public void deleteMessage(String username, String groupId) {
         ChatInviteMessage deletedChatInviteMessage = mChatInviteMessageDao
                 .queryBuilder()
                 .where(ChatInviteMessageDao.Properties.From.eq(username))
@@ -83,5 +84,46 @@ public class Model implements IModel {
                 .build()
                 .unique();
         mChatInviteMessageDao.deleteByKey(deletedChatInviteMessage.getId());
+    }
+
+    @Override
+    public String getAvatarInfo(String username) {
+        ChatUser chatUser = mChatUserDao
+                .queryBuilder()
+                .where(ChatUserDao.Properties.UserName.eq(username))
+                .build()
+                .unique();
+        if (chatUser != null) {
+            return chatUser.getAvatar();
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void updateAvatarInfo(String username) {
+        ChatUser chatUser = mChatUserDao
+                .queryBuilder()
+                .where(ChatUserDao.Properties.UserName.eq(username))
+                .build()
+                .unique();
+        if (chatUser == null) {
+            return;
+        }
+        ChatUser newChatUser = new ChatUser();
+        newChatUser.setId(chatUser.getId());
+        newChatUser.setUserName(chatUser.getUserName());
+        newChatUser.setAvatar(TimeUtils.getCurrentTimeAsNumber());
+        mChatUserDao.update(newChatUser);
+    }
+
+    @Override
+    public boolean hasFriend(String username) {
+        ChatUser chatUser = mChatUserDao
+                .queryBuilder()
+                .where(ChatUserDao.Properties.UserName.eq(username))
+                .build()
+                .unique();
+        return chatUser != null;
     }
 }
