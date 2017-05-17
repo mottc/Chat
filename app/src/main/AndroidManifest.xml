@@ -84,7 +84,7 @@
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".Activity.GroupDetailActivity"
+            android:name=".groupdetail.GroupDetailActivity"
             android:parentActivityName=".chat.ChatActivity"
             android:theme="@style/LoginTheme">
             >

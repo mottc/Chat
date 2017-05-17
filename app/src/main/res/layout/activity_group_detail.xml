@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context="com.mottc.chat.Activity.GroupDetailActivity">
+    tools:context="com.mottc.chat.groupdetail.GroupDetailActivity">
 
     <RelativeLayout
         android:id="@+id/title"
@@ -128,7 +128,7 @@
         android:layout_marginTop="10dp"
         android:background="#eee"
         app:layoutManager="LinearLayoutManager"
-        tools:context="com.mottc.chat.Activity.GroupDetailActivity"
+        tools:context="com.mottc.chat.groupdetail.GroupDetailActivity"
         tools:listitem="@layout/group_members_item"/>
 
 

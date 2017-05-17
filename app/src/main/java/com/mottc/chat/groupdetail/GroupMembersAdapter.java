@@ -1,4 +1,4 @@
-package com.mottc.chat.Activity.Adapter;
+package com.mottc.chat.groupdetail;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.hyphenate.chat.EMClient;
 import com.mottc.chat.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,25 +18,24 @@ import java.util.List;
  * Date: 2016/11/22
  * Time: 11:55
  */
-public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapter.ViewHolder> {
+class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapter.ViewHolder> {
 
 
-    private final List<String> members;
-    private final String owner;
+    private List<String> members;
+    private String owner;
     private OnGroupMembersListClickListener mOnGroupMembersListClickListener;
 
-    public GroupMembersAdapter(List<String> members, String owner) {
-        this.members = members;
+    GroupMembersAdapter(String owner) {
         this.owner = owner;
+        members = new ArrayList<>();
     }
 
 
-    public interface OnGroupMembersListClickListener {
-        // TODO: Update argument type and name
+    interface OnGroupMembersListClickListener {
         void OnGroupMembersListClick(String item);
     }
 
-    public void setOnGroupMembersListClickListener(OnGroupMembersListClickListener mOnGroupMembersListClickListener) {
+    void setOnGroupMembersListClickListener(OnGroupMembersListClickListener mOnGroupMembersListClickListener) {
         this.mOnGroupMembersListClickListener = mOnGroupMembersListClickListener;
     }
 
@@ -70,14 +70,19 @@ public class GroupMembersAdapter extends RecyclerView.Adapter<GroupMembersAdapte
         return members.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mName;
-        public final TextView mOwner;
-        public final TextView mSelf;
-        public String mItem;
+    void addAllMembers(List<String> groupMembers) {
+        members.addAll(groupMembers);
+        notifyDataSetChanged();
+    }
 
-        public ViewHolder(View view) {
+    class ViewHolder extends RecyclerView.ViewHolder {
+        public final View mView;
+        final TextView mName;
+        final TextView mOwner;
+        final TextView mSelf;
+        String mItem;
+
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mName = (TextView) view.findViewById(R.id.membersName);
