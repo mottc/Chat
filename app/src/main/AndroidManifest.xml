@@ -63,7 +63,7 @@
             android:theme="@style/LoginTheme">
         </activity>
         <activity
-            android:name=".Activity.NewFriendsMsgActivity"
+            android:name=".message.MessageActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity

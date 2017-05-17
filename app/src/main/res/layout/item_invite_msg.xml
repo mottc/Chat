@@ -47,6 +47,7 @@
         android:background="@color/colorMain"
         android:text="同意"
         android:textColor="#000"
+        android:visibility="invisible"
         android:textSize="14sp"/>
 
 </RelativeLayout>

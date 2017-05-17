@@ -36,7 +36,7 @@ import com.lzp.floatingactionbuttonplus.FloatingActionButtonPlus;
 import com.mottc.chat.addcontact.AddContactActivity;
 import com.mottc.chat.addgroup.AddGroupActivity;
 import com.mottc.chat.creategroup.CreateGroupActivity;
-import com.mottc.chat.Activity.NewFriendsMsgActivity;
+import com.mottc.chat.message.MessageActivity;
 import com.mottc.chat.userdetail.UserDetailActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity
             public void onItemClick(FabTagLayout tagView, int position) {
                 if (position == 0) {
 //                  好友请求界面
-                    startActivity(new Intent(MainActivity.this, NewFriendsMsgActivity.class));
+                    startActivity(new Intent(MainActivity.this, MessageActivity.class));
                 } else if (position == 1) {
 //                  添加好友界面
                     startActivity(new Intent(MainActivity.this, AddContactActivity.class));
@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        AvatarUtils.setAvatar(this, currentUserName, imageView);
+        AvatarUtils.setPersonAvatar(this, currentUserName, imageView);
     }
 
 
@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.add_friends) {
             startActivity(new Intent(MainActivity.this, AddContactActivity.class));
         } else if (id == R.id.notifition) {
-            startActivity(new Intent(MainActivity.this, NewFriendsMsgActivity.class));
+            startActivity(new Intent(MainActivity.this, MessageActivity.class));
         } else if (id == R.id.add_group) {
             startActivity(new Intent(MainActivity.this, AddGroupActivity.class));
         } else if (id == R.id.new_group) {
@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void sendNewFriendsAddGroupNotification(String applyer, String reason, String groupName) {
-        Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
+        Intent intent = new Intent(MainActivity.this, MessageActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标
@@ -314,7 +314,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void sendNewFriendsNotification(String username, String reason) {
 
-        Intent intent = new Intent(MainActivity.this, NewFriendsMsgActivity.class);
+        Intent intent = new Intent(MainActivity.this, MessageActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         Notification.Builder builder = new Notification.Builder(this);
         builder.setSmallIcon(R.mipmap.ic_launcher);//设置图标

@@ -1,6 +1,7 @@
 package com.mottc.chat.data;
 
 import com.mottc.chat.ChatApplication;
+import com.mottc.chat.Constant;
 import com.mottc.chat.data.bean.ChatInviteMessage;
 import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.data.local.ChatInviteMessageDao;
@@ -125,5 +126,19 @@ public class Model implements IModel {
                 .build()
                 .unique();
         return chatUser != null;
+    }
+
+    @Override
+    public void setMessageAgree(ChatInviteMessage messageAgree) {
+        ChatInviteMessage newChatInviteMessage = new ChatInviteMessage();
+        newChatInviteMessage.setStatus(Constant.AGREE);
+        newChatInviteMessage.setGroupId(messageAgree.getGroupId());
+        newChatInviteMessage.setId(messageAgree.getId());
+        newChatInviteMessage.setReason(messageAgree.getReason());
+        newChatInviteMessage.setTime(messageAgree.getTime());
+        newChatInviteMessage.setFrom(messageAgree.getFrom());
+        newChatInviteMessage.setGroupName(messageAgree.getGroupName());
+        mChatInviteMessageDao.update(newChatInviteMessage);
+
     }
 }

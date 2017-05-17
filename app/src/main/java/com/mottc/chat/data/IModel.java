@@ -32,4 +32,6 @@ public interface IModel {
 
     boolean hasFriend(String username);
 
+    void setMessageAgree(ChatInviteMessage messageAgree);
+
 }

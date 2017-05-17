@@ -3,6 +3,7 @@ package com.mottc.chat.main;
 import com.hyphenate.EMGroupChangeListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.exceptions.HyphenateException;
+import com.mottc.chat.Constant;
 import com.mottc.chat.data.IModel;
 import com.mottc.chat.data.Model;
 import com.mottc.chat.data.bean.ChatInviteMessage;
@@ -28,6 +29,23 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
     @Override
     public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
         mView.showInvitationReceived(inviter, groupName);
+        List<ChatInviteMessage> inviteMessages = mModel.getAllInviteMessage();
+
+        for (ChatInviteMessage inviteMessage : inviteMessages) {
+            if (inviteMessage.getGroupId().equals(groupId) && inviteMessage.getFrom().equals(inviter)) {
+                mModel.deleteMessage(inviter,groupId);
+            }
+        }
+        // 自己封装的javabean
+        ChatInviteMessage chatInviteMessage = new ChatInviteMessage();
+        chatInviteMessage.setFrom(inviter);
+        chatInviteMessage.setTime(System.currentTimeMillis());
+        chatInviteMessage.setGroupId(groupId);
+        chatInviteMessage.setGroupName(groupName);
+        chatInviteMessage.setReason(reason);
+        chatInviteMessage.setStatus(Constant.GROUPINVITEDUNHANDLE);
+
+        mModel.addMessage(chatInviteMessage);
     }
 
     @Override
@@ -52,7 +70,7 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
         chatInviteMessage.setGroupId(groupId);
         chatInviteMessage.setGroupName(groupName);
         chatInviteMessage.setReason(reason);
-        chatInviteMessage.setStatus(0);
+        chatInviteMessage.setStatus(Constant.GROUPASKDUNHANDLE);
 
         mModel.addMessage(chatInviteMessage);
     }

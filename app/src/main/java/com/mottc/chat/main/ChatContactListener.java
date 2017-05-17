@@ -1,6 +1,7 @@
 package com.mottc.chat.main;
 
 import com.hyphenate.EMContactListener;
+import com.mottc.chat.Constant;
 import com.mottc.chat.data.IModel;
 import com.mottc.chat.data.Model;
 import com.mottc.chat.data.bean.ChatInviteMessage;
@@ -47,7 +48,7 @@ class ChatContactListener implements EMContactListener {
         chatInviteMessage.setFrom(username);
         chatInviteMessage.setTime(System.currentTimeMillis());
         chatInviteMessage.setReason(reason);
-        chatInviteMessage.setStatus(0);
+        chatInviteMessage.setStatus(Constant.FRIENDUNHANDLE);
 
         mModel.addMessage(chatInviteMessage);
         mView.showContactInvited(username);

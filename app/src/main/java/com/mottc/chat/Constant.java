@@ -16,4 +16,10 @@ public class Constant {
     //MyInfo中保存环信账号
     static final String KEY_USERNAME = "username";
 
+    public static final int FRIENDUNHANDLE = 10;
+    public static final int GROUPINVITEDUNHANDLE = 11;
+    public static final int GROUPASKDUNHANDLE = 12;
+    public static final int AGREE = 1;
+    public static final int REFUSE = 2;
+
 }
