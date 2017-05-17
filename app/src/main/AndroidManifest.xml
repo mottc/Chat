@@ -90,7 +90,7 @@
             >
         </activity>
         <activity
-            android:name=".Activity.InviteMembersActivity"
+            android:name=".invitemembers.InviteMembersActivity"
             android:theme="@style/LoginTheme">
         </activity>
         <activity

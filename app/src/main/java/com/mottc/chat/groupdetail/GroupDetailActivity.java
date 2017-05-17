@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.mottc.chat.Activity.InviteMembersActivity;
+import com.mottc.chat.invitemembers.InviteMembersActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
 import com.mottc.chat.userdetail.UserDetailActivity;
