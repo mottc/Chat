@@ -27,13 +27,20 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
     }
 
     @Override
-    public void onInvitationReceived(String groupId, String groupName, String inviter, String reason) {
-        mView.showInvitationReceived(inviter, groupName);
+    public void onInvitationReceived(String groupId, final String groupName, final String inviter, String reason) {
+
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showInvitationReceived(inviter, groupName);
+            }
+        });
+
         List<ChatInviteMessage> inviteMessages = mModel.getAllInviteMessage();
 
         for (ChatInviteMessage inviteMessage : inviteMessages) {
             if (inviteMessage.getGroupId().equals(groupId) && inviteMessage.getFrom().equals(inviter)) {
-                mModel.deleteMessage(inviter,groupId);
+                mModel.deleteMessage(inviter, groupId);
             }
         }
         // 自己封装的javabean
@@ -49,18 +56,23 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
     }
 
     @Override
-    public void onRequestToJoinReceived(String groupId, String groupName, String applicant, String reason) {
+    public void onRequestToJoinReceived(String groupId, final String groupName, final String applicant, final String reason) {
 
-        mView.showRequestToJoinReceived(applicant, groupName, reason);
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showRequestToJoinReceived(applicant, groupName, reason);
 
-        mView.sendNewFriendsAddGroupNotification(applicant, reason, groupName);
+                mView.sendNewFriendsAddGroupNotification(applicant, reason, groupName);
+            }
+        });
 
 
         List<ChatInviteMessage> inviteMessages = mModel.getAllInviteMessage();
 
         for (ChatInviteMessage inviteMessage : inviteMessages) {
             if (inviteMessage.getGroupId().equals(groupId) && inviteMessage.getFrom().equals(applicant)) {
-                mModel.deleteMessage(applicant,groupId);
+                mModel.deleteMessage(applicant, groupId);
             }
         }
         // 自己封装的javabean
@@ -76,7 +88,7 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
     }
 
     @Override
-    public void onRequestToJoinAccepted(String groupId, String groupName, String accepter) {
+    public void onRequestToJoinAccepted(String groupId, final String groupName, String accepter) {
 
         //加群申请被同意
         try {
@@ -85,20 +97,37 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
             e.printStackTrace();
         }
 
-        mView.showRequestToJoinAccepted(groupName);
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showRequestToJoinAccepted(groupName);
+            }
+        });
+
     }
 
     @Override
-    public void onRequestToJoinDeclined(String groupId, String groupName, String decliner, String reason) {
+    public void onRequestToJoinDeclined(String groupId, final String groupName, String decliner, String reason) {
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showRequestToJoinDeclined(groupName);
+            }
+        });
 
-        mView.showRequestToJoinDeclined(groupName);
     }
 
     @Override
-    public void onInvitationAccepted(String groupId, String invitee, String reason) {
+    public void onInvitationAccepted(final String groupId, final String invitee, String reason) {
 
-        mView.showInvitationAccepted(invitee, groupId);
 
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showInvitationAccepted(invitee, groupId);
+
+            }
+        });
 
         final String id = groupId;
         final String name = invitee;
@@ -115,26 +144,43 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
     }
 
     @Override
-    public void onInvitationDeclined(String groupId, String invitee, String reason) {
+    public void onInvitationDeclined(final String groupId, final String invitee, String reason) {
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showInvitationDeclined(invitee, groupId);
+            }
+        });
 
-        mView.showInvitationDeclined(invitee, groupId);
     }
 
     @Override
-    public void onUserRemoved(String groupId, String groupName) {
+    public void onUserRemoved(final String groupId, final String groupName) {
         //当前用户被管理员移除出群组
         try {
             EMClient.getInstance().groupManager().getJoinedGroupsFromServer();
         } catch (HyphenateException e) {
             e.printStackTrace();
         }
-        mView.showUserRemoved(groupName);
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showUserRemoved(groupName);
+
+            }
+        });
     }
 
     @Override
-    public void onGroupDestroyed(String groupId, String groupName) {
+    public void onGroupDestroyed(String groupId, final String groupName) {
 
-        mView.showGroupDestroyed(groupName);
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showGroupDestroyed(groupName);
+
+            }
+        });
     }
 
     @Override

@@ -39,14 +39,26 @@ public class AddContactPresenter implements AddContactContract.Presenter {
         EMClient.getInstance().contactManager().aysncAddContact(username, reason, new EMCallBack() {
             @Override
             public void onSuccess() {
-                mView.dialogDismiss();
-                mView.showSuccess();
+                ((AddContactActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.dialogDismiss();
+                        mView.showSuccess();
+                    }
+                });
+
             }
 
             @Override
-            public void onError(int code, String error) {
-                mView.dialogDismiss();
-                mView.showFailure(error);
+            public void onError(int code, final String error) {
+                ((AddContactActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.dialogDismiss();
+                        mView.showFailure(error);
+                    }
+                });
+
             }
 
             @Override

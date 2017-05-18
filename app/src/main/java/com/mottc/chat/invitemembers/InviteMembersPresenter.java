@@ -50,12 +50,22 @@ public class InviteMembersPresenter implements InviteMembersContract.Presenter {
                 EMClient.getInstance().groupManager().asyncAddUsersToGroup(groupId, newMembers, new EMCallBack() {
                     @Override
                     public void onSuccess() {
-                        mView.inviteSuccess();
+                        ((InviteMembersActivity)mView).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mView.inviteSuccess();
+                            }
+                        });
                     }
 
                     @Override
                     public void onError(int code, String error) {
-                        mView.inviteFailure();
+                        ((InviteMembersActivity)mView).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mView.inviteFailure();
+                            }
+                        });
                     }
 
                     @Override

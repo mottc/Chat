@@ -23,25 +23,30 @@ public class MessageListener implements EMMessageListener {
     @Override
     public void onMessageReceived(List<EMMessage> messages) {
 
-        for (EMMessage message : messages) {
+        for (final EMMessage message : messages) {
             String username = null;
             if (message.getChatType() == EMMessage.ChatType.GroupChat) {
                 username = message.getTo();
             } else {
                 username = message.getFrom();
             }
+            final String finalUsername = username;
+            ((ChatActivity)mView).runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (finalUsername.equals(toChatUsername)) {
+                        mView.addMessage(message);
+                    } else {
+                        //获取发来的消息
+                        String info = message.toString();
+                        int start = info.indexOf("txt:\"");
+                        int end = info.lastIndexOf("\"");
+                        info = info.substring((start + 5), end);
+                        mView.sendNotification(finalUsername, info);//在通知栏发出通知
+                    }
+                }
+            });
 
-            if (username.equals(toChatUsername)) {
-                mView.addMessage(message);
-
-            } else {
-                //获取发来的消息
-                String info = message.toString();
-                int start = info.indexOf("txt:\"");
-                int end = info.lastIndexOf("\"");
-                info = info.substring((start + 5), end);
-                mView.sendNotification(username, info);//在通知栏发出通知
-            }
         }
         // 收到消息
     }

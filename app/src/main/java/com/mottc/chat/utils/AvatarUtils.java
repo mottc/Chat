@@ -33,7 +33,8 @@ public class AvatarUtils {
         Glide
                 .with(context)
                 .load(Url)
-                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
                 .error(R.drawable.group_icon)
                 .into(imageView);
     }

@@ -39,7 +39,7 @@ public class ConversationFragment extends Fragment implements ConversationContra
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.start();
+        mConversationRecyclerViewAdapter = new ConversationRecyclerViewAdapter(getActivity(), mConversationListener);
         EMClient.getInstance().chatManager().addMessageListener(mChatMessageListener);
     }
 
@@ -53,9 +53,9 @@ public class ConversationFragment extends Fragment implements ConversationContra
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-
-            mConversationRecyclerViewAdapter = new ConversationRecyclerViewAdapter(getActivity(), mConversationListener);
             recyclerView.setAdapter(mConversationRecyclerViewAdapter);
+            mPresenter.start();
+
         }
         return view;
     }

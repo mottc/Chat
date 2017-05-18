@@ -34,8 +34,7 @@ public class ContactFragment extends Fragment implements ContactContract.View{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mContactPresenter.start();
+        mContactRecyclerViewAdapter = new ContactRecyclerViewAdapter(getActivity(), mListener);
     }
 
 
@@ -49,8 +48,9 @@ public class ContactFragment extends Fragment implements ContactContract.View{
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mContactRecyclerViewAdapter = new ContactRecyclerViewAdapter(getActivity(), mListener);
             recyclerView.setAdapter(mContactRecyclerViewAdapter);
+            mContactPresenter.start();
+
         }
 
         return view;

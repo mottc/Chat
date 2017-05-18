@@ -49,15 +49,27 @@ public class CreateGroupPresenter implements CreateGroupContract.Presenter {
         EMClient.getInstance().groupManager().asyncCreateGroup(groupName, desc, new String[0], null, option, new EMValueCallBack<EMGroup>() {
             @Override
             public void onSuccess(EMGroup value) {
-                mView.dialogDismiss();
-                mView.showSuccess();
+                ((CreateGroupActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.dialogDismiss();
+                        mView.showSuccess();
+                    }
+                });
+
             }
 
             @Override
-            public void onError(int error, String errorMsg) {
+            public void onError(int error, final String errorMsg) {
 
-                mView.dialogDismiss();
-                mView.showFailure(errorMsg);
+                ((CreateGroupActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.dialogDismiss();
+                        mView.showFailure(errorMsg);
+                    }
+                });
+
 
             }
         });

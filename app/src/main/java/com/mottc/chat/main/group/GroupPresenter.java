@@ -24,13 +24,23 @@ public class GroupPresenter implements Presenter {
     public void start() {
         EMClient.getInstance().groupManager().asyncGetJoinedGroupsFromServer(new EMValueCallBack<List<EMGroup>>() {
             @Override
-            public void onSuccess(List<EMGroup> value) {
-                mView.loadGroups(value);
+            public void onSuccess(final List<EMGroup> value) {
+                ((GroupFragment)mView).getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.loadGroups(value);
+                    }
+                });
             }
 
             @Override
-            public void onError(int error, String errorMsg) {
-                mView.loadGroupsError(errorMsg);
+            public void onError(int error, final String errorMsg) {
+                ((GroupFragment)mView).getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.loadGroupsError(errorMsg);
+                    }
+                });
             }
         });
     }

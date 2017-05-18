@@ -42,19 +42,32 @@ public class AddGroupPresenter implements AddGroupContact.Presenter {
 
             EMClient.getInstance().groupManager().asyncGetGroupFromServer(groupNum, new EMValueCallBack<EMGroup>() {
                 @Override
-                public void onSuccess(EMGroup value) {
-                    mView.searchDialogDismiss();
-                    mView.showSearchedLayout(value);
+                public void onSuccess(final EMGroup value) {
+
+                    ((AddGroupActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.searchDialogDismiss();
+                            mView.showSearchedLayout(value);
+                        }
+                    });
                 }
 
                 @Override
-                public void onError(int error, String errorMsg) {
-                    mView.searchDialogDismiss();
-                    if (error == EMError.GROUP_INVALID_ID) {
-                        mView.canNotFindGroup();
-                    } else {
-                        mView.findGroupFailure();
-                    }
+                public void onError(final int error, String errorMsg) {
+
+                    ((AddGroupActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.searchDialogDismiss();
+                            if (error == EMError.GROUP_INVALID_ID) {
+                                mView.canNotFindGroup();
+                            } else {
+                                mView.findGroupFailure();
+                            }
+                        }
+                    });
+
                 }
             });
         }
@@ -67,14 +80,28 @@ public class AddGroupPresenter implements AddGroupContact.Presenter {
         EMClient.getInstance().groupManager().asyncApplyJoinToGroup(groupNum, "", new EMCallBack() {
             @Override
             public void onSuccess() {
-                mView.askDialogDismiss();
-                mView.showAskSuccess();
+
+                ((AddGroupActivity) mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.askDialogDismiss();
+                        mView.showAskSuccess();
+                    }
+                });
+
             }
 
             @Override
-            public void onError(int code, String error) {
-                mView.askDialogDismiss();
-                mView.showAskFailure(error);
+            public void onError(int code, final String error) {
+
+                ((AddGroupActivity) mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mView.askDialogDismiss();
+                        mView.showAskFailure(error);
+                    }
+                });
+
             }
 
             @Override

@@ -20,12 +20,24 @@ public class ChatMessageListener implements EMMessageListener {
 
     @Override
     public void onMessageReceived(List<EMMessage> messages) {
-        mView.update();
+
+
+        ((ConversationFragment)mView).getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.update();
+            }
+        });
     }
 
     @Override
     public void onCmdMessageReceived(List<EMMessage> messages) {
-        mView.update();
+        ((ConversationFragment)mView).getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.update();
+            }
+        });
     }
 
     @Override
@@ -40,6 +52,11 @@ public class ChatMessageListener implements EMMessageListener {
 
     @Override
     public void onMessageChanged(EMMessage message, Object change) {
-        mView.update();
+        ((ConversationFragment)mView).getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.update();
+            }
+        });
     }
 }

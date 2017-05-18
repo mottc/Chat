@@ -24,20 +24,32 @@ class ChatContactListener implements EMContactListener {
     }
 
     @Override
-    public void onContactAdded(String username) {
+    public void onContactAdded(final String username) {
 
         mModel.addContact(username);
-        mView.showContactAdded(username);
+
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showContactAdded(username);
+            }
+        });
     }
 
     @Override
-    public void onContactDeleted(String username) {
+    public void onContactDeleted(final String username) {
         mModel.deleteContact(username);
-        mView.showContactDeleted(username);
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showContactDeleted(username);
+
+            }
+        });
     }
 
     @Override
-    public void onContactInvited(String username, String reason) {
+    public void onContactInvited(final String username, final String reason) {
         List<ChatInviteMessage> inviteMessages = mModel.getAllInviteMessage();
         for (ChatInviteMessage inviteMessage : inviteMessages) {
             if (inviteMessage.getGroupId() == null && inviteMessage.getFrom().equals(username)) {
@@ -51,17 +63,35 @@ class ChatContactListener implements EMContactListener {
         chatInviteMessage.setStatus(Constant.FRIENDUNHANDLE);
 
         mModel.addMessage(chatInviteMessage);
-        mView.showContactInvited(username);
-        mView.sendNewFriendsNotification(username, reason);
+
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showContactInvited(username);
+                mView.sendNewFriendsNotification(username, reason);
+            }
+        });
+
     }
 
     @Override
-    public void onFriendRequestAccepted(String username) {
-        mView.showFriendRequestAccepted(username);
+    public void onFriendRequestAccepted(final String username) {
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showFriendRequestAccepted(username);
+
+            }
+        });
     }
 
     @Override
-    public void onFriendRequestDeclined(String username) {
-        mView.showFriendRequestDeclined(username);
+    public void onFriendRequestDeclined(final String username) {
+        ((MainActivity) mView).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mView.showFriendRequestDeclined(username);
+            }
+        });
     }
 }

@@ -21,7 +21,12 @@ class ChatConnectionListener implements EMConnectionListener {
     }
 
     @Override
-    public void onDisconnected(int error) {
-        view.showDisconnectedInfo(error);
+    public void onDisconnected(final int error) {
+        ((MainActivity) view).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                view.showDisconnectedInfo(error);
+            }
+        });
     }
 }

@@ -39,7 +39,7 @@ class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerVie
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mName.setText(mValues.get(position).getUserName());
-        AvatarUtils.setAvatar(context,mValues.get(position).getUserName(),holder.mAvatar);
+        AvatarUtils.setPersonAvatar(context,mValues.get(position).getUserName(),holder.mAvatar);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

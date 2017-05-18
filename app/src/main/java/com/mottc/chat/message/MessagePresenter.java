@@ -50,18 +50,30 @@ public class MessagePresenter implements MessageContract.Presenter {
             EMClient.getInstance().contactManager().asyncAcceptInvitation(msg.getFrom(), new EMCallBack() {
                 @Override
                 public void onSuccess() {
-                    mModel.setMessageAgree(msg);
-                    mView.agree();
-                    mView.dialogDismiss();
-                    buttonAgree.setText("已同意");
-                    buttonAgree.setBackgroundDrawable(null);
-                    buttonAgree.setEnabled(false);
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mModel.setMessageAgree(msg);
+                            mView.agree();
+                            mView.dialogDismiss();
+                            buttonAgree.setText("已同意");
+                            buttonAgree.setBackgroundDrawable(null);
+                            buttonAgree.setEnabled(false);
+                        }
+                    });
+
                 }
 
                 @Override
                 public void onError(int code, String error) {
-                    mView.tryAgain();
-                    mView.dialogDismiss();
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.tryAgain();
+                            mView.dialogDismiss();
+                        }
+                    });
+
                 }
 
                 @Override
@@ -73,18 +85,30 @@ public class MessagePresenter implements MessageContract.Presenter {
             EMClient.getInstance().groupManager().asyncAcceptApplication(msg.getFrom(), msg.getGroupId(), new EMCallBack() {
                 @Override
                 public void onSuccess() {
-                    mModel.setMessageAgree(msg);
-                    mView.agree();
-                    mView.dialogDismiss();
-                    buttonAgree.setText("已同意");
-                    buttonAgree.setBackgroundDrawable(null);
-                    buttonAgree.setEnabled(false);
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mModel.setMessageAgree(msg);
+                            mView.agree();
+                            mView.dialogDismiss();
+                            buttonAgree.setText("已同意");
+                            buttonAgree.setBackgroundDrawable(null);
+                            buttonAgree.setEnabled(false);
+                        }
+                    });
+
                 }
 
                 @Override
                 public void onError(int code, String error) {
-                    mView.tryAgain();
-                    mView.dialogDismiss();
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.tryAgain();
+                            mView.dialogDismiss();
+                        }
+                    });
+
                 }
 
                 @Override
@@ -96,21 +120,32 @@ public class MessagePresenter implements MessageContract.Presenter {
             EMClient.getInstance().groupManager().asyncAcceptInvitation(msg.getGroupId(), msg.getFrom(), new EMValueCallBack<EMGroup>() {
                 @Override
                 public void onSuccess(EMGroup value) {
-                    mModel.setMessageAgree(msg);
-                    mView.agree();
-                    mView.dialogDismiss();
-                    buttonAgree.setText("已同意");
-                    buttonAgree.setBackgroundDrawable(null);
-                    buttonAgree.setEnabled(false);
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mModel.setMessageAgree(msg);
+                            mView.agree();
+                            mView.dialogDismiss();
+                            buttonAgree.setText("已同意");
+                            buttonAgree.setBackgroundDrawable(null);
+                            buttonAgree.setEnabled(false);
+                        }
+                    });
+
                 }
 
                 @Override
                 public void onError(int error, String errorMsg) {
-                    mView.tryAgain();
-                    mView.dialogDismiss();
+                    ((MessageActivity) mView).runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mView.tryAgain();
+                            mView.dialogDismiss();
+                        }
+                    });
+
                 }
             });
-
         }
     }
 }

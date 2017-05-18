@@ -58,12 +58,19 @@ class GroupDetailPresenter implements GroupDetailContract.Presenter {
             public void onSuccess(EMGroup value) {
                 members = value.getMembers();//获取群成员
                 owner = value.getOwner();//获取群主
-                if (ChatApplication.getInstance().getCurrentUserName().equals(owner)) {
-                    mView.showInvite();
-                    ((GroupDetailActivity) mView).groupOwner = owner;
-                }
-                mView.setGroupSize(members.size());
-                mView.addGroupMembers(members);
+
+                ((GroupDetailActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (ChatApplication.getInstance().getCurrentUserName().equals(owner)) {
+                            mView.showInvite();
+                            ((GroupDetailActivity) mView).groupOwner = owner;
+                        }
+                        mView.setGroupSize(members.size());
+                        mView.addGroupMembers(members);
+                    }
+                });
+
             }
 
             @Override

@@ -39,7 +39,6 @@ public class MessageActivity extends Activity implements MessageContract.View {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_friends_msg);
         mPresenter = new MessagePresenter(this);
-        mPresenter.start();
         btn_newfriends_back = (ImageButton) findViewById(R.id.back);
         btn_newfriends_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,6 +50,7 @@ public class MessageActivity extends Activity implements MessageContract.View {
         adapter = new MessageAdapter(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(adapter);
+        mPresenter.start();
     }
 
     @Override

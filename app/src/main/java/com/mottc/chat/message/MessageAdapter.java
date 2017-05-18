@@ -53,7 +53,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
         holder.mReason.setText(mChatInviteMessages.get(orderNum).getReason());
         if (mChatInviteMessages.get(orderNum).getStatus() == Constant.AGREE) {
             holder.mReason.setText(str1);
-        } else if (mChatInviteMessages.get(orderNum).getStatus() == Constant.UNHANDLE) {
+        } else if (mChatInviteMessages.get(orderNum).getStatus() == Constant.GROUPINVITEDUNHANDLE||
+                mChatInviteMessages.get(orderNum).getStatus() == Constant.GROUPASKDUNHANDLE||
+                mChatInviteMessages.get(orderNum).getStatus() == Constant.FRIENDUNHANDLE) {
             holder.mAgree.setVisibility(View.VISIBLE);
             holder.mAgree.setEnabled(true);
             holder.mAgree.setText(str2);

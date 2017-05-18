@@ -43,7 +43,7 @@ public class GroupFragment extends Fragment implements GroupContract.View{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPresenter.start();
+        mGroupRecyclerViewAdapter = new GroupRecyclerViewAdapter(getActivity(), mListener);
     }
 
 
@@ -55,9 +55,8 @@ public class GroupFragment extends Fragment implements GroupContract.View{
             Context context = view.getContext();
             recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            mGroupRecyclerViewAdapter = new GroupRecyclerViewAdapter(getActivity(), mListener);
             recyclerView.setAdapter(mGroupRecyclerViewAdapter);
-            
+            mPresenter.start();
         }
         return view;
     }
