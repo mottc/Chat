@@ -64,8 +64,8 @@ class GroupDetailPresenter implements GroupDetailContract.Presenter {
                     public void run() {
                         if (ChatApplication.getInstance().getCurrentUserName().equals(owner)) {
                             mView.showInvite();
-                            ((GroupDetailActivity) mView).groupOwner = owner;
                         }
+                        ((GroupDetailActivity) mView).groupOwner = owner;
                         mView.setGroupSize(members.size());
                         mView.addGroupMembers(members);
                     }

@@ -127,9 +127,14 @@ public class LoginPresenter implements LoginContract.Presenter {
 
         EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
             @Override
-            public void onSuccess(List<String> value) {
-                mModel.refreshAllContact(value);
-                mView.go2MainActivity();
+            public void onSuccess(final List<String> value) {
+                ((LoginActivity)mView).runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mModel.refreshAllContact(value);
+                        mView.go2MainActivity();
+                    }
+                });
             }
 
             @Override

@@ -13,9 +13,9 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.mottc.chat.invitemembers.InviteMembersActivity;
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.R;
+import com.mottc.chat.invitemembers.InviteMembersActivity;
 import com.mottc.chat.userdetail.UserDetailActivity;
 import com.mottc.chat.utils.AvatarUtils;
 
@@ -59,15 +59,6 @@ public class GroupDetailActivity extends AppCompatActivity implements GroupDetai
         mPresenter = new GroupDetailPresenter(this);
         mPresenter.start();
         mMembersList.setLayoutManager(new LinearLayoutManager(this));
-        groupMembersAdapter = new GroupMembersAdapter(groupOwner);
-        mMembersList.setAdapter(groupMembersAdapter);
-
-        groupMembersAdapter.setOnGroupMembersListClickListener(new GroupMembersAdapter.OnGroupMembersListClickListener() {
-            @Override
-            public void OnGroupMembersListClick(String item) {
-                startActivity(new Intent(GroupDetailActivity.this, UserDetailActivity.class).putExtra("username", item));
-            }
-        });
     }
 
 
@@ -155,6 +146,15 @@ public class GroupDetailActivity extends AppCompatActivity implements GroupDetai
 
     @Override
     public void addGroupMembers(List<String> groupMembers) {
+        groupMembersAdapter = new GroupMembersAdapter(groupOwner);
+        mMembersList.setAdapter(groupMembersAdapter);
+
+        groupMembersAdapter.setOnGroupMembersListClickListener(new GroupMembersAdapter.OnGroupMembersListClickListener() {
+            @Override
+            public void OnGroupMembersListClick(String item) {
+                startActivity(new Intent(GroupDetailActivity.this, UserDetailActivity.class).putExtra("username", item));
+            }
+        });
         groupMembersAdapter.addAllMembers(groupMembers);
     }
 }

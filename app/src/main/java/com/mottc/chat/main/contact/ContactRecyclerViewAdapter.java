@@ -56,6 +56,7 @@ class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerVie
     }
 
     public void loadAllContract(List<ChatUser> chatUsers) {
+        mValues.clear();
         mValues.addAll(chatUsers);
         notifyDataSetChanged();
     }

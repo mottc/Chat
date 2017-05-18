@@ -50,7 +50,6 @@ public class ContactFragment extends Fragment implements ContactContract.View{
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(mContactRecyclerViewAdapter);
             mContactPresenter.start();
-
         }
 
         return view;

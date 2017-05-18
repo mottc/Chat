@@ -31,7 +31,6 @@ public class Model implements IModel {
     @Override
     public void refreshAllContact(List<String> userNames) {
         mChatUserDao.deleteAll();
-
         for (String userName : userNames) {
             ChatUser cozeUser = new ChatUser(null, userName, null);
             mChatUserDao.insert(cozeUser);

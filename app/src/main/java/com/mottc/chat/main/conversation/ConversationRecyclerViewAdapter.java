@@ -98,6 +98,7 @@ public class ConversationRecyclerViewAdapter extends RecyclerView.Adapter<Conver
     }
 
     public void loadAllConversation(List<EMConversation> conversationList) {
+        mValues.clear();
         mValues.addAll(conversationList);
         notifyDataSetChanged();
     }

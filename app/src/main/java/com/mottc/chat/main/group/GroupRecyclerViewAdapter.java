@@ -51,6 +51,7 @@ public class GroupRecyclerViewAdapter extends RecyclerView.Adapter<GroupRecycler
     }
 
     public void loadAllGroups(List<EMGroup> groupList) {
+        mGroups.clear();
         mGroups.addAll(groupList);
         notifyDataSetChanged();
     }
