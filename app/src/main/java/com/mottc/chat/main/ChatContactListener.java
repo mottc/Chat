@@ -43,7 +43,6 @@ class ChatContactListener implements EMContactListener {
             @Override
             public void run() {
                 mView.showContactDeleted(username);
-
             }
         });
     }

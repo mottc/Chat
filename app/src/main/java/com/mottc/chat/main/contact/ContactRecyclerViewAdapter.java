@@ -2,6 +2,7 @@ package com.mottc.chat.main.contact;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +59,7 @@ class ContactRecyclerViewAdapter extends RecyclerView.Adapter<ContactRecyclerVie
     public void loadAllContract(List<ChatUser> chatUsers) {
         mValues.clear();
         mValues.addAll(chatUsers);
+        Log.i("Adapter", "loadAllContract: " + chatUsers.size());
         notifyDataSetChanged();
     }
 

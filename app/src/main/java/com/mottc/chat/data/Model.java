@@ -1,5 +1,7 @@
 package com.mottc.chat.data;
 
+import android.util.Log;
+
 import com.mottc.chat.ChatApplication;
 import com.mottc.chat.Constant;
 import com.mottc.chat.data.bean.ChatInviteMessage;
@@ -7,6 +9,7 @@ import com.mottc.chat.data.bean.ChatUser;
 import com.mottc.chat.data.local.ChatInviteMessageDao;
 import com.mottc.chat.data.local.ChatUserDao;
 import com.mottc.chat.data.local.DaoSession;
+import com.mottc.chat.login.LoginContract;
 import com.mottc.chat.utils.TimeUtils;
 
 import java.util.List;
@@ -21,24 +24,29 @@ public class Model implements IModel {
 
     private ChatUserDao mChatUserDao;
     private ChatInviteMessageDao mChatInviteMessageDao;
+    private DaoSession daoSession;
 
     public Model() {
-        DaoSession daoSession = ChatApplication.getInstance().getDaoSession();
+        daoSession = ChatApplication.getInstance().getDaoSession();
         mChatUserDao = daoSession.getChatUserDao();
         mChatInviteMessageDao = daoSession.getChatInviteMessageDao();
     }
 
     @Override
-    public void refreshAllContact(List<String> userNames) {
+    public void refreshAllContact(List<String> userNames, LoginContract.RefreshAllContactListener refreshAllContactListener) {
         mChatUserDao.deleteAll();
         for (String userName : userNames) {
             ChatUser cozeUser = new ChatUser(null, userName, null);
             mChatUserDao.insert(cozeUser);
         }
+        Log.i("Model", "refreshAllContact: " + userNames.size());
+
+        refreshAllContactListener.onSuccess();
     }
 
     @Override
     public List<ChatUser> getAllContact() {
+        Log.i("Model", "getAllContact: " +  (mChatUserDao.loadAll().size()));
         return mChatUserDao.loadAll();
     }
 

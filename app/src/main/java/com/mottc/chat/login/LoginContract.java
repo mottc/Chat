@@ -45,4 +45,10 @@ public interface LoginContract {
 
     }
 
+    interface RefreshAllContactListener {
+        void onSuccess();
+
+        void onFailure();
+    }
+
 }

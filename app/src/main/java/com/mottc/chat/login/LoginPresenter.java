@@ -1,5 +1,7 @@
 package com.mottc.chat.login;
 
+import android.util.Log;
+
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMValueCallBack;
 import com.hyphenate.chat.EMClient;
@@ -37,15 +39,14 @@ public class LoginPresenter implements LoginContract.Presenter {
         mView = null;
     }
 
-    public void login(String loginUserName, String loginPassword) {
+    public void login(final String loginUserName, String loginPassword) {
 
         if (!CommonUtils.isNetWorkConnected((LoginActivity) mView)) {
             mView.showNoNet();
             return;
         }
 
-        // reset current loginUserName name before login
-        ChatApplication.getInstance().setCurrentUserName(loginUserName);
+
 
         mView.showLoginProgressDialog();
 
@@ -53,6 +54,8 @@ public class LoginPresenter implements LoginContract.Presenter {
 
             @Override
             public void onSuccess() {
+                // reset current loginUserName name before login
+                ChatApplication.getInstance().setCurrentUserName(loginUserName);
 
                 ((LoginActivity) mView).runOnUiThread(new Runnable() {
                     @Override
@@ -128,11 +131,21 @@ public class LoginPresenter implements LoginContract.Presenter {
         EMClient.getInstance().contactManager().aysncGetAllContactsFromServer(new EMValueCallBack<List<String>>() {
             @Override
             public void onSuccess(final List<String> value) {
-                ((LoginActivity)mView).runOnUiThread(new Runnable() {
+                Log.i("LoginPresenter", "onSuccess: " + value.size());
+                mModel.refreshAllContact(value, new LoginContract.RefreshAllContactListener() {
                     @Override
-                    public void run() {
-                        mModel.refreshAllContact(value);
-                        mView.go2MainActivity();
+                    public void onSuccess() {
+                        ((LoginActivity) mView).runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mView.go2MainActivity();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure() {
+
                     }
                 });
             }

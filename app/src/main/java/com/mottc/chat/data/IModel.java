@@ -2,6 +2,7 @@ package com.mottc.chat.data;
 
 import com.mottc.chat.data.bean.ChatInviteMessage;
 import com.mottc.chat.data.bean.ChatUser;
+import com.mottc.chat.login.LoginContract;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * Time: 16:50
  */
 public interface IModel {
-    void refreshAllContact(List<String> userNames);
+    void refreshAllContact(List<String> userNames, LoginContract.RefreshAllContactListener refreshAllContactListener);
 
     List<ChatUser> getAllContact();
 

@@ -4,6 +4,7 @@ import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
@@ -71,6 +72,7 @@ public class ChatApplication extends Application {
         if (TextUtils.isEmpty(username)) {
             username = Myinfo.getInstance(instance).getUserInfo(Constant.KEY_USERNAME);
         }
+        Log.i("ChatApplication", "getCurrentUserName: " + username);
         return username;
 
     }
@@ -148,7 +150,7 @@ public class ChatApplication extends Application {
 
     public DaoSession getDaoSession() {
 
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), this.getCurrentUserName() + ".db");
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(getApplicationContext(), getCurrentUserName() + ".db");
         Database db = helper.getWritableDb();
         mDaoSession = new DaoMaster(db).newSession();
         return mDaoSession;
