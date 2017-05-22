@@ -23,7 +23,7 @@ class ChatGroupChangeListener implements EMGroupChangeListener {
 
     ChatGroupChangeListener(MainContract.View mView) {
         this.mView = mView;
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
     @Override

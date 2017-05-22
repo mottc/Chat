@@ -26,7 +26,7 @@ public class LoginPresenter implements LoginContract.Presenter {
 
     public LoginPresenter(LoginContract.View view) {
         mView = view;
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
     @Override

@@ -18,7 +18,7 @@ import com.mottc.chat.data.Model;
 public class AvatarUtils {
     public static void setPersonAvatar(Context context, String username, ImageView imageView) {
 
-        String time = new Model().getAvatarInfo(username);
+        String time = Model.getInstance().getAvatarInfo(username);
         String Url = Constant.AVATAR_URL + username + ".png?v=" + time;
         Glide
                 .with(context)

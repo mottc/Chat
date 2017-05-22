@@ -16,7 +16,7 @@ class ContactPresenter implements ContactContract.Presenter{
 
     ContactPresenter(ContactContract.View view) {
         mView = view;
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
 

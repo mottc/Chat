@@ -37,7 +37,7 @@ public class UserDetailPresenter implements UserDetailContract.Presenter {
     public UserDetailPresenter(UserDetailContract.View mView) {
         this.mView = mView;
         uploadManager = new UploadManager();
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
     @Override

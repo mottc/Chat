@@ -23,7 +23,7 @@ public class MessagePresenter implements MessageContract.Presenter {
 
     public MessagePresenter(MessageContract.View view) {
         mView = view;
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
     @Override

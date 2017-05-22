@@ -20,7 +20,7 @@ class ChatContactListener implements EMContactListener {
 
     ChatContactListener(MainContract.View view) {
         mView = view;
-        mModel = new Model();
+        mModel = Model.getInstance();
     }
 
     @Override

@@ -24,12 +24,16 @@ public class Model implements IModel {
 
     private ChatUserDao mChatUserDao;
     private ChatInviteMessageDao mChatInviteMessageDao;
-    private DaoSession daoSession;
+    private static Model sModel = new Model();
 
-    public Model() {
-        daoSession = ChatApplication.getInstance().getDaoSession();
+    private Model() {
+        DaoSession daoSession = ChatApplication.getInstance().getDaoSession();
         mChatUserDao = daoSession.getChatUserDao();
         mChatInviteMessageDao = daoSession.getChatInviteMessageDao();
+    }
+
+    public static Model getInstance() {
+        return sModel;
     }
 
     @Override
